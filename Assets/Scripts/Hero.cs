@@ -11,5 +11,7 @@ public class Hero : ScriptableObject
     public int spirit;
 
     public int movementDice;
+    public Weapon baseWeapon;
+    public Armor baseArmor;
 
 }
