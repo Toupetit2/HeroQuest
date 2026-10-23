@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Android;
 
 public class GameManager : MonoBehaviour
 {
@@ -35,23 +33,13 @@ public class GameManager : MonoBehaviour
                 ". . . ."
             );
 
-    // Show Intro UI -> Hero choice UI -> Spell choice UI
+        // Show Intro UI -> Hero choice UI -> Spell choice UI
+    }
 
-}
-
-    private void Update()
+    public void StartGame()
     {
-        if (!isGameStarted) 
-        {
-            // Choix position escalier
-
-            isGameStarted = true;
-        }
-
-        if (gameState.gameStatus != GameStatus.Playing) 
-        {
-            return;
-        }
+        isGameStarted = true;
+        StartTurn();
     }
 
     public void StartTurn() 
@@ -72,5 +60,16 @@ public class GameManager : MonoBehaviour
         StartTurn();
     }
 
+    public void MoveAction() 
+    {
+        hasMoveAction = false;
+        // Move
+    }
+
+    public void AttackAction() 
+    {
+        hasAction = false;
+        // Attack
+    }
 }
 
