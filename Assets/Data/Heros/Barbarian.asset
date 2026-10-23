@@ -18,3 +18,6 @@ MonoBehaviour:
   health: 8
   spirit: 2
   movementDice: 2
+  baseWeapon: {fileID: 0}
+  baseArmor: {fileID: 0}
+  baseGold: 0

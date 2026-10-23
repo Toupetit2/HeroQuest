@@ -15,4 +15,11 @@ public class Tile
     {
         return zone == ".";
     }
+
+
+    // Temp function to edit or delete
+    public bool isWalkable() 
+    {
+        return true;
+    }
 }
