@@ -15,4 +15,8 @@ public class Tile
     {
         return zone == ".";
     }
+
+
+    // state and behavior of the tile can be added here, such as whether it is occupied, what type of tile it is, etc.
+    
 }
