@@ -33,7 +33,10 @@ public static class HQCreatePCGScene
         Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
         GameObject board = (GameObject)PrefabUtility.InstantiatePrefab(originalBoard, scene);
         board.name = "Plateau";
-        board.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+        board.transform.SetPositionAndRotation(
+            Vector3.zero,
+            Quaternion.Euler(0f, 180f, 0f)
+        );
         board.transform.localScale = Vector3.one;
 
         // L'archive originale contient une référence de matériau manquante.

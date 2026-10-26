@@ -2,8 +2,8 @@
   "questNumber": 3,
   "title": "Lair of the Orc Warlord",
   "questBookPdfPage": 18,
-  "digitization": "REFERENCE ONLY - éléments 3D encore à retranscrire depuis la carte",
-  "description": "Carte de référence officielle fournie ; placements incomplets. Aucun contenu aléatoire dans le mode campagne.",
+  "digitization": "TRANSCRIPTION PARTIELLE - mobilier/escalier relu visuellement; portes/monstres et notes restant à vérifier (0 portes, 7 objets)",
+  "description": "Relevé partiel depuis les cartes du Quest Book. Ne pas confondre avec une quête complète et testée.",
   "rockRows": [
     "11111111111111111111111111",
     "00000111000011111111111111",
@@ -26,7 +26,71 @@
     "11111111111111111111111111"
   ],
   "doors": [],
-  "objects": [],
+  "objects": [
+    {
+      "group": "stairs",
+      "id": 5,
+      "x": 9,
+      "y": 1,
+      "width": 2,
+      "height": 2,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 25,
+      "x": 4,
+      "y": 1,
+      "width": 1,
+      "height": 3,
+      "angle": 90
+    },
+    {
+      "group": "furniture",
+      "id": 22,
+      "x": 1,
+      "y": 4,
+      "width": 3,
+      "height": 1,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 17,
+      "x": 6,
+      "y": 5,
+      "width": 2,
+      "height": 3,
+      "angle": 90
+    },
+    {
+      "group": "furniture",
+      "id": 23,
+      "x": 1,
+      "y": 10,
+      "width": 1,
+      "height": 3,
+      "angle": 90
+    },
+    {
+      "group": "furniture",
+      "id": 13,
+      "x": 8,
+      "y": 10,
+      "width": 1,
+      "height": 1,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 17,
+      "x": 7,
+      "y": 15,
+      "width": 2,
+      "height": 3,
+      "angle": 90
+    }
+  ],
   "specialNotes": [],
   "wanderingMonster": "Orc",
   "summaryBriefFR": "Affronter Ulag, le chef de guerre orc.",

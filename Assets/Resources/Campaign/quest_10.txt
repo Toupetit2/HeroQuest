@@ -2,8 +2,8 @@
   "questNumber": 10,
   "title": "Castle of Mystery",
   "questBookPdfPage": 25,
-  "digitization": "REFERENCE ONLY - éléments 3D encore à retranscrire depuis la carte",
-  "description": "Carte de référence officielle fournie ; placements incomplets. Aucun contenu aléatoire dans le mode campagne.",
+  "digitization": "TRANSCRIPTION PARTIELLE - mobilier/escalier relu visuellement; portes/monstres et notes restant à vérifier (0 portes, 1 objets)",
+  "description": "Relevé partiel depuis les cartes du Quest Book. Ne pas confondre avec une quête complète et testée.",
   "rockRows": [
     "11111111111111111111111111",
     "11111111000011000111100001",
@@ -26,7 +26,17 @@
     "11111111111111111111111111"
   ],
   "doors": [],
-  "objects": [],
+  "objects": [
+    {
+      "group": "stairs",
+      "id": 5,
+      "x": 1,
+      "y": 16,
+      "width": 2,
+      "height": 2,
+      "angle": 0
+    }
+  ],
   "specialNotes": [],
   "wanderingMonster": "Événement spécial",
   "summaryBriefFR": "Explorer le château aux portes magiques pour trouver les richesses.",

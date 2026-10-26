@@ -82,8 +82,12 @@ public class HQCampaignQuestLoader : MonoBehaviour
             foreach (HQCampaignObjectData item in quest.objects)
                 if (item != null && item.group == "stairs")
                 {
-                    Vector2Int c = ConvertTopLeft(item.x, item.y,
-                        Mathf.Max(1, item.height));
+                    Vector2Int c = ConvertTopLeft(
+                        item.x,
+                        item.y,
+                        Mathf.Max(1, item.width),
+                        Mathf.Max(1, item.height)
+                    );
                     if (Inside(c)) stairsRoom = GetRoom(c);
                     break;
                 }
@@ -138,8 +142,15 @@ public class HQCampaignQuestLoader : MonoBehaviour
         return dict;
     }
 
-    private Vector2Int ConvertTopLeft(int x, int y, int height)
-        => new Vector2Int(x, Height - y - height);
+    // Les fichiers Quest Book utilisent (0,0) en haut à gauche.
+    // Le prefab Plateau est affiché avec une rotation Y=180 dans la scène.
+    // En coordonnées LOCALES du prefab, la carte des salles est déjà renversée :
+    // miroir horizontal X seulement, Y progresse vers +Z.
+    // ATTENTION : ne pas inverser Y ici, sinon les objets sont à l'envers.
+    private Vector2Int ConvertTopLeft(int x, int y, int width, int height)
+    {
+        return new Vector2Int(Width - x - width, y);
+    }
 
     private bool Inside(Vector2Int p)
         => p.x >= 0 && p.y >= 0 && p.x < Width && p.y < Height;
@@ -165,11 +176,23 @@ public class HQCampaignQuestLoader : MonoBehaviour
 
     private bool CreateDoor(HQCampaignDoorData record)
     {
-        Vector2Int a = ConvertTopLeft(record.x, record.y, 1);
-        Vector2Int b = a;
-        if (record.direction == "E") b.x++;
-        else if (record.direction == "S") b.y--;
-        else return false;
+        Vector2Int a;
+        Vector2Int b;
+
+        if (record.direction == "E")
+        {
+            a = ConvertTopLeft(record.x, record.y, 1, 1);
+            b = ConvertTopLeft(record.x + 1, record.y, 1, 1);
+        }
+        else if (record.direction == "S")
+        {
+            a = ConvertTopLeft(record.x, record.y, 1, 1);
+            b = ConvertTopLeft(record.x, record.y + 1, 1, 1);
+        }
+        else
+        {
+            return false;
+        }
         if (!Inside(a) || !Inside(b)) return false;
         Transform wall;
         if (!wallAt.TryGetValue(MidpointKey(a, b), out wall))
@@ -209,8 +232,13 @@ public class HQCampaignQuestLoader : MonoBehaviour
         else return false;
 
         Vector2Int size = new Vector2Int(Mathf.Max(1, record.width), Mathf.Max(1, record.height));
-        Vector2Int anchor = ConvertTopLeft(record.x, record.y, size.y);
-        if (!FootprintValid(anchor, size)) return false;
+        Vector2Int anchor = ConvertTopLeft(record.x, record.y, size.x, size.y);
+        if (!FootprintValid(anchor, size))
+        {
+            Debug.LogWarning($"Quete {selectedQuest:00}: objet {record.group}/{record.id} " +
+                $"({record.x},{record.y}) {size.x}x{size.y} refuse: chevauchement, mur ou hors plateau.", this);
+            return false;
+        }
         int room = GetRoom(anchor);
         // Regle choisie par l'equipe : AUCUN ennemi dans la salle de l'escalier.
         if (kind == HeroQuestSimplePCG.ContentKind.Monster && stairsRoom >= 0 && room == stairsRoom)
@@ -260,15 +288,21 @@ public class HQCampaignQuestLoader : MonoBehaviour
             trap.Initialize(record.id, anchor, false);
         }
         foreach (Vector2Int c in OccupiedTiles(anchor, size)) occupied.Add(c);
-        // Les pieges ont deja leur propre invisibilite (HQHiddenTrap).
-        if (kind != HeroQuestSimplePCG.ContentKind.Trap) ConcealRoomObject(room, go);
+        // Les escaliers sont visibles dès le départ ; les pièges ont leur
+        // propre système de dissimulation. Tous les autres objets restent
+        // masqués jusqu'à la découverte de leur salle.
+        if (!isStairs && kind != HeroQuestSimplePCG.ContentKind.Trap)
+            ConcealRoomObject(room, go);
         return true;
     }
 
     // ---- Visibilite : meme logique que la version procedurale -------------
     private void ConcealRoomObject(int room, GameObject instance)
     {
-        if (room <= 0 || !hideUnexploredRoomContents || revealedRooms.Contains(room)) return;
+        if (instance == null || !hideUnexploredRoomContents || revealedRooms.Contains(room))
+            return;
+        // Ne pas rendre visible automatiquement une quête partielle.
+        // room == 0 (couloir) est également masqué jusqu'à découverte/test.
         List<GameObject> list;
         if (!hiddenContents.TryGetValue(room, out list))
         {
@@ -282,7 +316,7 @@ public class HQCampaignQuestLoader : MonoBehaviour
     // Appele quand un heros ouvre une porte (voir HQGeneratedDoor.Open).
     public void RevealRoom(int roomId)
     {
-        if (roomId < 1 || hiddenContents == null) return;
+        if (roomId < 0 || hiddenContents == null) return;
         revealedRooms.Add(roomId);
         List<GameObject> list;
         if (!hiddenContents.TryGetValue(roomId, out list)) return;
@@ -332,7 +366,7 @@ public class HQCampaignQuestLoader : MonoBehaviour
             for (int c = 0; c < row.Length && c < Width; c++)
             {
                 if (row[c] != '1') continue;
-                Vector2Int tile = new Vector2Int(c, Height - 1 - r);
+                Vector2Int tile = ConvertTopLeft(c, r, 1, 1);
                 GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 go.name = "Roche_" + c + "_" + r;
                 go.transform.SetParent(rockRoot, true);
@@ -357,7 +391,10 @@ public class HQCampaignQuestLoader : MonoBehaviour
         int zone = GetRoom(origin);
         if (zone < 0) return false;
         foreach (Vector2Int c in OccupiedTiles(origin, size))
-            if (!Inside(c) || GetRoom(c) != zone || occupied.Contains(c)) return false;
+            // Les S1..S22 du vieux board_prefab.txt ne concordent pas toujours
+            // avec les murs reels du prefab. Les segments de murs ci-dessous
+            // font autorite pour l'empreinte des meubles multicases.
+            if (!Inside(c) || occupied.Contains(c)) return false;
         for (int y = 0; y < size.y; y++)
         for (int x = 0; x < size.x; x++)
         {

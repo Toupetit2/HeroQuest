@@ -2,8 +2,8 @@
   "questNumber": 14,
   "title": "Return to Barak Tor",
   "questBookPdfPage": 29,
-  "digitization": "REFERENCE ONLY - éléments 3D encore à retranscrire depuis la carte",
-  "description": "Carte de référence officielle fournie ; placements incomplets. Aucun contenu aléatoire dans le mode campagne.",
+  "digitization": "TRANSCRIPTION PARTIELLE - mobilier/escalier relu visuellement; portes/monstres et notes restant à vérifier (0 portes, 2 objets)",
+  "description": "Relevé partiel depuis les cartes du Quest Book. Ne pas confondre avec une quête complète et testée.",
   "rockRows": [
     "00000000000000000000000000",
     "00000000000000111000000000",
@@ -26,7 +26,26 @@
     "11111111111111111111111111"
   ],
   "doors": [],
-  "objects": [],
+  "objects": [
+    {
+      "group": "stairs",
+      "id": 5,
+      "x": 1,
+      "y": 14,
+      "width": 2,
+      "height": 2,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 14,
+      "x": 1,
+      "y": 11,
+      "width": 3,
+      "height": 2,
+      "angle": 0
+    }
+  ],
   "specialNotes": [],
   "wanderingMonster": "Mummy",
   "summaryBriefFR": "Affronter le Witch Lord à Barak Tor.",

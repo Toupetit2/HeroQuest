@@ -16,6 +16,13 @@ public class HQCampaignQuestData
     public HQCampaignDoorData[] doors;
     public HQCampaignObjectData[] objects;
     public string[] specialNotes;
+    // Metadata already present in Resources/Campaign/*.txt.
+    // Keeping these fields ensures the editor does not discard them on Save.
+    public string referenceMap;
+    public string boardPreset;
+    public string summaryBriefFR;
+    public string source;
+    public bool transcriptionVerified;
 }
 
 [Serializable]

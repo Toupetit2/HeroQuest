@@ -2,8 +2,8 @@
   "questNumber": 1,
   "title": "The Trial",
   "questBookPdfPage": 16,
-  "digitization": "PARTIAL - 9 portes et 4 exemples de pièces; vérifier le plan original",
-  "description": "Carte de référence officielle fournie ; placements incomplets. Aucun contenu aléatoire dans le mode campagne.",
+  "digitization": "TRANSCRIPTION PARTIELLE - mobilier/escalier relu visuellement; portes/monstres et notes restant à vérifier (9 portes, 21 objets)",
+  "description": "Relevé partiel depuis les cartes du Quest Book. Ne pas confondre avec une quête complète et testée.",
   "rockRows": [
     "11111111111111111111111111",
     "00000000000011111111111111",
@@ -18,11 +18,11 @@
     "00000111100000000111111111",
     "00000111100000000111111111",
     "00000111100000000111111111",
-    "00000111100000000111111111",
+    "00000000100000000011111111",
     "00000000000000000111111111",
     "00000000000000000111111111",
-    "00000000000000000111111111",
-    "00000000000000000111111111",
+    "00000000000000000011111111",
+    "00000000000000000001111111",
     "00000000000000011111111111"
   ],
   "doors": [
@@ -114,6 +114,159 @@
       "id": 13,
       "x": 10,
       "y": 5,
+      "width": 1,
+      "height": 1,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 14,
+      "x": 10,
+      "y": 1,
+      "width": 2,
+      "height": 3,
+      "angle": 90
+    },
+    {
+      "group": "furniture",
+      "id": 19,
+      "x": 1,
+      "y": 5,
+      "width": 2,
+      "height": 3,
+      "angle": 90
+    },
+    {
+      "group": "furniture",
+      "id": 17,
+      "x": 6,
+      "y": 5,
+      "width": 3,
+      "height": 2,
+      "angle": 0
+    },
+    {
+      "group": "obstacle",
+      "id": 18,
+      "x": 12,
+      "y": 5,
+      "width": 2,
+      "height": 1,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 13,
+      "x": 11,
+      "y": 7,
+      "width": 1,
+      "height": 1,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 22,
+      "x": 12,
+      "y": 7,
+      "width": 3,
+      "height": 1,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 17,
+      "x": 11,
+      "y": 9,
+      "width": 3,
+      "height": 2,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 24,
+      "x": 3,
+      "y": 10,
+      "width": 2,
+      "height": 3,
+      "angle": 90
+    },
+    {
+      "group": "furniture",
+      "id": 16,
+      "x": 5,
+      "y": 13,
+      "width": 3,
+      "height": 1,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 23,
+      "x": 15,
+      "y": 13,
+      "width": 3,
+      "height": 1,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 20,
+      "x": 5,
+      "y": 15,
+      "width": 2,
+      "height": 3,
+      "angle": 90
+    },
+    {
+      "group": "furniture",
+      "id": 25,
+      "x": 11,
+      "y": 15,
+      "width": 1,
+      "height": 3,
+      "angle": 90
+    },
+    {
+      "group": "furniture",
+      "id": 16,
+      "x": 16,
+      "y": 17,
+      "width": 3,
+      "height": 1,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 13,
+      "x": 17,
+      "y": 16,
+      "width": 1,
+      "height": 1,
+      "angle": 0
+    },
+    {
+      "group": "obstacle",
+      "id": 15,
+      "x": 0,
+      "y": 1,
+      "width": 1,
+      "height": 1,
+      "angle": 0
+    },
+    {
+      "group": "obstacle",
+      "id": 15,
+      "x": 17,
+      "y": 9,
+      "width": 1,
+      "height": 1,
+      "angle": 0
+    },
+    {
+      "group": "obstacle",
+      "id": 15,
+      "x": 14,
+      "y": 18,
       "width": 1,
       "height": 1,
       "angle": 0

@@ -2,15 +2,15 @@
   "questNumber": 9,
   "title": "Race Against Time",
   "questBookPdfPage": 24,
-  "digitization": "REFERENCE ONLY - éléments 3D encore à retranscrire depuis la carte",
-  "description": "Carte de référence officielle fournie ; placements incomplets. Aucun contenu aléatoire dans le mode campagne.",
+  "digitization": "TRANSCRIPTION PARTIELLE - mobilier/escalier relu visuellement; portes/monstres et notes restant à vérifier (0 portes, 5 objets)",
+  "description": "Relevé partiel depuis les cartes du Quest Book. Ne pas confondre avec une quête complète et testée.",
   "rockRows": [
     "00000011111111111111111111",
     "00000111111111111111111111",
     "00000111111111111111111111",
     "00000111111111111111111111",
-    "00000111111111111111111111",
-    "00000000111111111111111111",
+    "00000110011111111111111111",
+    "00000000011111111111111111",
     "00000000011111111111111111",
     "00000000011111111111111111",
     "00000000011111111111111111",
@@ -26,7 +26,53 @@
     "00000000000000000000001111"
   ],
   "doors": [],
-  "objects": [],
+  "objects": [
+    {
+      "group": "stairs",
+      "id": 5,
+      "x": 7,
+      "y": 4,
+      "width": 2,
+      "height": 2,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 17,
+      "x": 5,
+      "y": 16,
+      "width": 3,
+      "height": 2,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 22,
+      "x": 1,
+      "y": 15,
+      "width": 1,
+      "height": 3,
+      "angle": 90
+    },
+    {
+      "group": "furniture",
+      "id": 13,
+      "x": 6,
+      "y": 10,
+      "width": 1,
+      "height": 1,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 13,
+      "x": 6,
+      "y": 12,
+      "width": 1,
+      "height": 1,
+      "angle": 0
+    }
+  ],
   "specialNotes": [],
   "wanderingMonster": "Abomination",
   "summaryBriefFR": "Échapper au donjon avant que le temps ne soit écoulé.",

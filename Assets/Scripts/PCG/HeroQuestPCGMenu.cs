@@ -128,6 +128,7 @@ public class HeroQuestPCGMenu : MonoBehaviour
         GUILayout.Space(4);
         campaign.hideUnexploredRoomContents = GUILayout.Toggle(campaign.hideUnexploredRoomContents,
             "Cacher le contenu des salles fermees (au prochain chargement)");
+        GUILayout.Label("Objets des salles non decouvertes caches (y compris quetes sans portes).");
         bool rock = GUILayout.Toggle(campaign.showRockZones, "Afficher la roche pleine (blocs sombres)");
         if (rock != campaign.showRockZones) campaign.SetRockZones(rock);
         GUILayout.Label("DEBUG VIEW (pas les regles du jeu)");

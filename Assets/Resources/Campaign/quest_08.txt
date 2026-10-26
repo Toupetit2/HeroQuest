@@ -2,8 +2,8 @@
   "questNumber": 8,
   "title": "The Fire Mage",
   "questBookPdfPage": 23,
-  "digitization": "REFERENCE ONLY - éléments 3D encore à retranscrire depuis la carte",
-  "description": "Carte de référence officielle fournie ; placements incomplets. Aucun contenu aléatoire dans le mode campagne.",
+  "digitization": "TRANSCRIPTION PARTIELLE - mobilier/escalier relu visuellement; portes/monstres et notes restant à vérifier (0 portes, 6 objets)",
+  "description": "Relevé partiel depuis les cartes du Quest Book. Ne pas confondre avec une quête complète et testée.",
   "rockRows": [
     "01000000000000000000000000",
     "00000111111100111111111110",
@@ -26,7 +26,62 @@
     "01000001000000000000000000"
   ],
   "doors": [],
-  "objects": [],
+  "objects": [
+    {
+      "group": "stairs",
+      "id": 5,
+      "x": 21,
+      "y": 7,
+      "width": 2,
+      "height": 2,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 19,
+      "x": 10,
+      "y": 8,
+      "width": 2,
+      "height": 3,
+      "angle": 90
+    },
+    {
+      "group": "furniture",
+      "id": 16,
+      "x": 13,
+      "y": 7,
+      "width": 3,
+      "height": 1,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 16,
+      "x": 13,
+      "y": 11,
+      "width": 3,
+      "height": 1,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 17,
+      "x": 14,
+      "y": 14,
+      "width": 3,
+      "height": 2,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 13,
+      "x": 21,
+      "y": 11,
+      "width": 1,
+      "height": 1,
+      "angle": 0
+    }
+  ],
   "specialNotes": [],
   "wanderingMonster": "Abomination",
   "summaryBriefFR": "Vaincre le mage du feu Balur.",
