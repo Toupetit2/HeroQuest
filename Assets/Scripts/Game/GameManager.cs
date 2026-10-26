@@ -137,5 +137,10 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
+    public void ChangeQuest(int questNb) 
+    {
+        questNumber = questNb;
+        //map id
+    }
 }
 
