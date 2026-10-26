@@ -62275,6 +62275,7 @@ GameObject:
   - component: {fileID: 1425306976}
   - component: {fileID: 1425306975}
   - component: {fileID: 1425306974}
+  - component: {fileID: 1425306977}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -62356,6 +62357,30 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1425306977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1425306973}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3da28570cf1ca874ca390f993b52b79a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraController
+  board: {fileID: 2039815719}
+  distance: 25
+  minDistance: 5
+  maxDistance: 60
+  zoomSpeed: 4
+  yaw: 0
+  pitch: 55
+  minPitch: 15
+  maxPitch: 89
+  rotateSpeed: 3
+  keyPanSpeed: 0.8
+  dragPanSpeed: 0.004
 --- !u!1 &1426737735
 GameObject:
   m_ObjectHideFlags: 0
@@ -71540,6 +71565,55 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1625650844}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1626209505
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1626209507}
+  - component: {fileID: 1626209506}
+  m_Layer: 0
+  m_Name: Mouse
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1626209506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1626209505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa28da889e0fa0c479d442aadc8d85db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MouseInput
+  board: {fileID: 2039815719}
+  cam: {fileID: 1425306975}
+  clickedTile:
+  - 
+  - 
+--- !u!4 &1626209507
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1626209505}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 24.7664, y: 0.28343, z: -13.1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1626679885
 GameObject:
   m_ObjectHideFlags: 0
@@ -95852,3 +95926,4 @@ SceneRoots:
   - {fileID: 1425306976}
   - {fileID: 1093378889}
   - {fileID: 2039815720}
+  - {fileID: 1626209507}
