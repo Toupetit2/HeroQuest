@@ -1,3 +1,4 @@
+using UnityEditor.Search;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -71,5 +72,46 @@ public class GameManager : MonoBehaviour
         hasAction = false;
         // Attack
     }
+
+    public void SpellAction() 
+    {
+        
+    }
+
+    public void SearchTreasureAction() 
+    {
+    
+    }
+
+    public void SearchSecretDoorAction() 
+    {
+        
+    }
+
+    public void DetectTrapAction() 
+    {
+    
+    }
+    
+    public void DisableTrapAction() 
+    {
+    
+    }
+    
+    public void OpenDoorFreeAction() 
+    {
+        
+    }
+
+    public void GiveItemFreeAction() 
+    {
+        
+    }
+
+    public void GetLootFreeAction() 
+    {
+        
+    }
+
 }
 
