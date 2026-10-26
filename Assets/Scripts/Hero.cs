@@ -12,6 +12,7 @@ public class Hero
 
     public List<Equipment> inventory;
     public List<Equipment> equippedItems;
+    public List<SpellType> spells;
 
     public Vector2Int position;
 
@@ -64,5 +65,10 @@ public class Hero
         }
 
         return total;
+    }
+
+    public void GiveSpellType(SpellType type) 
+    {
+        spells.Add(type);
     }
 }

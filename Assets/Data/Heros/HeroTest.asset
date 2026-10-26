@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eea52db0d8dd8c4cbdfd269ee3185ce, type: 3}
+  m_Name: HeroTest
+  m_EditorClassIdentifier: Assembly-CSharp::HeroData
+  heroClass: 0
+  attackDices: 0
+  defenseDices: 0
+  health: 0
+  spirit: 0
+  movementDice: 0
+  baseWeapon: {fileID: 0}
+  baseArmor: {fileID: 0}
+  canUseSpells: 0
+  spells: 0000000002000000
+  baseGold: 0

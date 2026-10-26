@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 [CreateAssetMenu(fileName = "Hero", menuName = "Scriptable Objects/Hero")]
 public class HeroData : ScriptableObject
@@ -12,6 +13,8 @@ public class HeroData : ScriptableObject
     public int movementDice;
     public Weapon baseWeapon;
     public Armor baseArmor;
+
+    public bool canUseSpells;
 
     public int baseGold;
 }
