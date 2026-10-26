@@ -125,6 +125,16 @@ public class HeroQuestPCGMenu : MonoBehaviour
             message = campaign.loadReport;
         }
         if (GUILayout.Button("Effacer la campagne")) campaign.ClearCampaign();
+        GUILayout.Space(4);
+        campaign.hideUnexploredRoomContents = GUILayout.Toggle(campaign.hideUnexploredRoomContents,
+            "Cacher le contenu des salles fermees (au prochain chargement)");
+        bool rock = GUILayout.Toggle(campaign.showRockZones, "Afficher la roche pleine (blocs sombres)");
+        if (rock != campaign.showRockZones) campaign.SetRockZones(rock);
+        GUILayout.Label("DEBUG VIEW (pas les regles du jeu)");
+        if (GUILayout.Button("Reveler toutes les salles (test)")) campaign.RevealAllRoomsForTesting();
+        if (GUILayout.Button("Decouvrir portes secretes (test)")) campaign.DiscoverAllSecretDoorsForTesting();
+        if (GUILayout.Button("Reveler les pieges (test)")) campaign.RevealAllTrapsForTesting();
+        GUILayout.Space(4);
         GUILayout.Label(campaign.loadReport);
         GUILayout.Label("IMPORTANT : les quetes marquees PARTIAL ou REFERENCE ONLY " +
                         "ne sont PAS integralement retranscrites.");

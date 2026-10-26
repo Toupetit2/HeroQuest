@@ -8,8 +8,7 @@ using UnityEngine.SceneManagement;
 // Ne reconstruit PAS les murs/sols en cubes et ne modifie PAS Git/board.txt.
 public static class HQCreatePCGScene
 {
-    private const string MenuPath = "HeroQuest/Creer scene PCG avec Plateau.prefab";
-    private const string OldMenuPath = "HeroQuest/Creer scene PCG compatible Git";
+    private const string MenuPath = "HeroQuest/Creer plateau";
     private const string BoardAssetPath = "Assets/Prefabs/HeroQuest/Plateau.prefab";
     private const string MapAssetPath = "Assets/Data/PCG/board_prefab.txt";
     private const string StoneAssetPath = "Assets/Prefabs/HeroQuest/HQStoneFallback.mat";
@@ -96,17 +95,29 @@ public static class HQCreatePCGScene
                 "Les données du jeu Git n'ont pas été modifiées.", board);
     }
 
-    // Ancienne commande : redirection explicite, plus de cubes générés.
-    [MenuItem(OldMenuPath)]
-    public static void CreateFromOldMenu() => CreateScene();
-
     [MenuItem(MenuPath, true)]
-    [MenuItem(OldMenuPath, true)]
     private static bool CanCreateScene() =>
         !EditorApplication.isPlayingOrWillChangePlaymode && !EditorApplication.isCompiling;
 
     private static void RepairMissingMaterials(GameObject board)
     {
+        // Murs plus sombres pour qu'ils ressortent en vue de dessus
+        Transform wallsRoot = board.transform.Find("Walls");
+        if (wallsRoot != null)
+        {
+            const string wallMatPath = "Assets/Prefabs/HeroQuest/HQWallDark.mat";
+            Material wallMat = AssetDatabase.LoadAssetAtPath<Material>(wallMatPath);
+            if (wallMat == null)
+            {
+                Shader shader = Shader.Find("Universal Render Pipeline/Lit");
+                if (shader == null) shader = Shader.Find("Standard");
+                wallMat = new Material(shader) { name = "HQWallDark" };
+                wallMat.color = new Color(0.23f, 0.25f, 0.30f);
+                AssetDatabase.CreateAsset(wallMat, wallMatPath);
+            }
+            foreach (Renderer r in wallsRoot.GetComponentsInChildren<Renderer>(true))
+                r.sharedMaterial = wallMat;
+        }
         Material fallback = AssetDatabase.LoadAssetAtPath<Material>(StoneAssetPath);
         if (fallback == null)
         {

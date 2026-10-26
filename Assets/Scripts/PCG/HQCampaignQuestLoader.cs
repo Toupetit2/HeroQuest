@@ -12,6 +12,10 @@ public class HQCampaignQuestLoader : MonoBehaviour
     [TextArea(2, 5)] public string loadReport = "Choisissez une quête.";
     public HQCampaignQuestData loadedQuest;
     public bool showReferenceMap = true;
+    [Tooltip("Cache monstres/meubles d'une salle tant qu'aucune porte vers elle n'est ouverte.")]
+    public bool hideUnexploredRoomContents = true;
+    [Tooltip("Affiche la roche pleine (rockRows) sous forme de blocs sombres.")]
+    public bool showRockZones = true;
 
     private const int Width = 26;
     private const int Height = 19;
@@ -21,6 +25,9 @@ public class HQCampaignQuestLoader : MonoBehaviour
     private HashSet<GameObject> removedWalls;
     private Map logicalMap;
     private int stairsRoom = -1;
+    private Dictionary<int, List<GameObject>> hiddenContents;
+    private HashSet<int> revealedRooms;
+    private Transform rockRoot;
 
     public Texture2D ReferenceMap => Resources.Load<Texture2D>(
         "CampaignMaps/quest_" + selectedQuest.ToString("00"));
@@ -64,6 +71,9 @@ public class HQCampaignQuestLoader : MonoBehaviour
         loadedQuest = quest;
         selectedQuest = questNumber;
         currentTitle = quest.title;
+        hiddenContents = new Dictionary<int, List<GameObject>>();
+        revealedRooms = new HashSet<int>();
+        BuildRockZones(quest);
 
         // Réserve d'abord TOUTE la zone d'escalier, et interdit ses monstres.
         // On ne transforme pas une carte officielle en version procédurale.
@@ -77,6 +87,9 @@ public class HQCampaignQuestLoader : MonoBehaviour
                     if (Inside(c)) stairsRoom = GetRoom(c);
                     break;
                 }
+
+        // La salle de depart (escalier) est visible des le debut.
+        if (stairsRoom > 0) revealedRooms.Add(stairsRoom);
 
         int doorCount = 0, pieceCount = 0, warnings = 0;
         if (quest.doors != null)
@@ -247,7 +260,90 @@ public class HQCampaignQuestLoader : MonoBehaviour
             trap.Initialize(record.id, anchor, false);
         }
         foreach (Vector2Int c in OccupiedTiles(anchor, size)) occupied.Add(c);
+        // Les pieges ont deja leur propre invisibilite (HQHiddenTrap).
+        if (kind != HeroQuestSimplePCG.ContentKind.Trap) ConcealRoomObject(room, go);
         return true;
+    }
+
+    // ---- Visibilite : meme logique que la version procedurale -------------
+    private void ConcealRoomObject(int room, GameObject instance)
+    {
+        if (room <= 0 || !hideUnexploredRoomContents || revealedRooms.Contains(room)) return;
+        List<GameObject> list;
+        if (!hiddenContents.TryGetValue(room, out list))
+        {
+            list = new List<GameObject>();
+            hiddenContents[room] = list;
+        }
+        list.Add(instance);
+        instance.SetActive(false);
+    }
+
+    // Appele quand un heros ouvre une porte (voir HQGeneratedDoor.Open).
+    public void RevealRoom(int roomId)
+    {
+        if (roomId < 1 || hiddenContents == null) return;
+        revealedRooms.Add(roomId);
+        List<GameObject> list;
+        if (!hiddenContents.TryGetValue(roomId, out list)) return;
+        foreach (GameObject obj in list) if (obj != null) obj.SetActive(true);
+    }
+
+    public void RevealAllRoomsForTesting()
+    {
+        if (hiddenContents == null) return;
+        foreach (int roomId in new List<int>(hiddenContents.Keys)) RevealRoom(roomId);
+    }
+
+    public void DiscoverAllSecretDoorsForTesting()
+    {
+        if (campaignRoot == null) return;
+        foreach (HQGeneratedDoor door in campaignRoot.GetComponentsInChildren<HQGeneratedDoor>(true))
+            if (door.isSecret) door.DiscoverSecretDoor();
+    }
+
+    public void RevealAllTrapsForTesting()
+    {
+        if (campaignRoot == null) return;
+        foreach (HQHiddenTrap trap in campaignRoot.GetComponentsInChildren<HQHiddenTrap>(true))
+            trap.Reveal();
+    }
+
+    public void SetRockZones(bool visible)
+    {
+        showRockZones = visible;
+        if (rockRoot != null) rockRoot.gameObject.SetActive(visible);
+    }
+
+    // rockRows : ligne 0 = haut de la carte, '1' = roche pleine (case inutilisable).
+    private void BuildRockZones(HQCampaignQuestData quest)
+    {
+        rockRoot = null;
+        if (quest.rockRows == null || quest.rockRows.Length == 0) return;
+        rockRoot = new GameObject("RochePleine").transform;
+        rockRoot.SetParent(campaignRoot, false);
+        Shader shader = Shader.Find("Universal Render Pipeline/Lit");
+        if (shader == null) shader = Shader.Find("Standard");
+        Material mat = shader != null ? new Material(shader) : null;
+        if (mat != null) mat.color = new Color(0.10f, 0.10f, 0.12f);
+        for (int r = 0; r < quest.rockRows.Length && r < Height; r++)
+        {
+            string row = quest.rockRows[r];
+            for (int c = 0; c < row.Length && c < Width; c++)
+            {
+                if (row[c] != '1') continue;
+                Vector2Int tile = new Vector2Int(c, Height - 1 - r);
+                GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                go.name = "Roche_" + c + "_" + r;
+                go.transform.SetParent(rockRoot, true);
+                go.transform.SetPositionAndRotation(
+                    transform.TransformPoint(CellLocal(tile) + Vector3.up * 1.1f),
+                    transform.rotation);
+                go.transform.localScale = new Vector3(board.cellSize, 2.2f, board.cellSize);
+                if (mat != null) go.GetComponent<Renderer>().sharedMaterial = mat;
+            }
+        }
+        rockRoot.gameObject.SetActive(showRockZones);
     }
 
     private IEnumerable<Vector2Int> OccupiedTiles(Vector2Int origin, Vector2Int size)
@@ -308,6 +404,9 @@ public class HQCampaignQuestLoader : MonoBehaviour
             else DestroyImmediate(child.gameObject);
         }
         loadedQuest = null;
+        hiddenContents = null;
+        revealedRooms = null;
+        rockRoot = null;
         loadReport = "Quête effacée.";
     }
 }

@@ -60,6 +60,13 @@ public class HQGeneratedDoor : MonoBehaviour
         {
             dungeon.RevealRoom(zoneA);
             dungeon.RevealRoom(zoneB);
+            // Mode campagne : meme logique, geree par le chargeur de quete.
+            HQCampaignQuestLoader campaign = dungeon.GetComponent<HQCampaignQuestLoader>();
+            if (campaign != null)
+            {
+                campaign.RevealRoom(zoneA);
+                campaign.RevealRoom(zoneB);
+            }
         }
     }
 
