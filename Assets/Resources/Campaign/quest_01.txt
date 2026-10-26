@@ -1,0 +1,135 @@
+{
+  "questNumber": 1,
+  "title": "The Trial",
+  "questBookPdfPage": 16,
+  "digitization": "PARTIAL - 9 portes et 4 exemples de pièces; vérifier le plan original",
+  "description": "Carte de référence officielle fournie ; placements incomplets. Aucun contenu aléatoire dans le mode campagne.",
+  "rockRows": [
+    "11111111111111111111111111",
+    "00000000000011111111111111",
+    "00000000000011111111111111",
+    "00000000000011111111111111",
+    "00000000000011111111111111",
+    "00000000000000111111111111",
+    "00000000000000000111111111",
+    "00000000000000000111111111",
+    "00000000000000000111111111",
+    "00000000000000000011111111",
+    "00000111100000000111111111",
+    "00000111100000000111111111",
+    "00000111100000000111111111",
+    "00000111100000000111111111",
+    "00000000000000000111111111",
+    "00000000000000000111111111",
+    "00000000000000000111111111",
+    "00000000000000000111111111",
+    "00000000000000011111111111"
+  ],
+  "doors": [
+    {
+      "x": 0,
+      "y": 11,
+      "direction": "E",
+      "secret": false
+    },
+    {
+      "x": 4,
+      "y": 2,
+      "direction": "E",
+      "secret": false
+    },
+    {
+      "x": 3,
+      "y": 8,
+      "direction": "S",
+      "secret": false
+    },
+    {
+      "x": 7,
+      "y": 8,
+      "direction": "S",
+      "secret": false
+    },
+    {
+      "x": 3,
+      "y": 17,
+      "direction": "S",
+      "secret": false
+    },
+    {
+      "x": 7,
+      "y": 17,
+      "direction": "S",
+      "secret": false
+    },
+    {
+      "x": 8,
+      "y": 15,
+      "direction": "E",
+      "secret": false
+    },
+    {
+      "x": 13,
+      "y": 15,
+      "direction": "E",
+      "secret": false
+    },
+    {
+      "x": 15,
+      "y": 9,
+      "direction": "E",
+      "secret": false
+    }
+  ],
+  "objects": [
+    {
+      "group": "stairs",
+      "id": 5,
+      "x": 1,
+      "y": 14,
+      "width": 2,
+      "height": 2,
+      "angle": 0
+    },
+    {
+      "group": "monster",
+      "id": 8,
+      "x": 2,
+      "y": 2,
+      "width": 1,
+      "height": 1,
+      "angle": 0
+    },
+    {
+      "group": "monster",
+      "id": 8,
+      "x": 3,
+      "y": 2,
+      "width": 1,
+      "height": 1,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 13,
+      "x": 10,
+      "y": 5,
+      "width": 1,
+      "height": 1,
+      "angle": 0
+    }
+  ],
+  "specialNotes": [
+    "A: The weapons in the weapons rack are unusable; see Quest Book page 5.",
+    "B: The treasure chest is empty.",
+    "C: Fellmarg’s guardian mummy has a quest-specific attack value.",
+    "D: A treasure search grants a fixed gold reward.",
+    "E: A treasure search grants a fixed gold reward."
+  ],
+  "wanderingMonster": "Orc",
+  "summaryBriefFR": "Vaincre le gargouille Verag dans les catacombes.",
+  "referenceMap": "CampaignMaps/quest_01",
+  "boardPreset": "Plateau.prefab / board_prefab.txt",
+  "transcriptionVerified": false,
+  "source": "Quest Book HeroQuest fourni (PDF), page PDF 16"
+}

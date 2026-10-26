@@ -92,7 +92,7 @@ public class MovementSystem
                 if (map.HasWall(currentPosition.x, currentPosition.y, direction.x, direction.y))
                     continue;
 
-                if (!map.tiles[nextPosition.x, nextPosition.y].isWalkable())
+                if (!map.tiles[nextPosition.x, nextPosition.y].isWalkable)
                     continue;
 
                 queue.Enqueue(nextPosition);

@@ -3,6 +3,7 @@ public class Tile
     public int x;
     public int y;
     public string zone; // "." = couloir, "S1".."S22" = salle
+    public bool isWalkable = true;
 
     public Tile(int x, int y, string zone)
     {
@@ -14,12 +15,5 @@ public class Tile
     public bool IsCorridor()
     {
         return zone == ".";
-    }
-
-
-    // Temp function to edit or delete
-    public bool isWalkable() 
-    {
-        return true;
     }
 }
