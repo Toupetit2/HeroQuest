@@ -21,8 +21,6 @@ public class GameManager : MonoBehaviour
     public bool hasMoveAction = true;
     public bool hasAction = true;
 
-    private Map map;
-
     [Button]
     public void Test() 
     {
@@ -32,7 +30,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         // Generate Map
-        map = new Map(
+        gameState.map = new Map(
                 ". . . .\n" +
                 ". . . .\n" +
                 ". . . ."

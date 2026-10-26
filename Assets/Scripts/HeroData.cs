@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-[CreateAssetMenu(fileName = "Hero", menuName = "Scriptable Objects/Hero")]
+[CreateAssetMenu(fileName = "HeroData", menuName = "Scriptable Objects/Hero")]
 public class HeroData : ScriptableObject
 {
     public HeroClass heroClass;
