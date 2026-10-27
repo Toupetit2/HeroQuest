@@ -3,12 +3,12 @@ public class Door
 {
     public int x;
     public int y;
-    public string side;     // "N", "E", "S" ou "W"
+    public Side side;
     public bool isOpen;
     public bool isSecret;
     public bool isFound;    // porte secrete trouvee par une recherche
 
-    public Door(int x, int y, string side, bool isSecret)
+    public Door(int x, int y, Side side, bool isSecret)
     {
         this.x = x;
         this.y = y;
@@ -21,10 +21,10 @@ public class Door
     {
         int nx = x;
         int ny = y;
-        if (side == "N") ny--;
-        if (side == "S") ny++;
-        if (side == "E") nx++;
-        if (side == "W") nx--;
+        if (side == Side.North) ny--;
+        if (side == Side.South) ny++;
+        if (side == Side.East) nx++;
+        if (side == Side.West) nx--;
 
         bool sameOrder = x1 == x && y1 == y && x2 == nx && y2 == ny;
         bool otherOrder = x2 == x && y2 == y && x1 == nx && y1 == ny;

@@ -40,12 +40,12 @@ public class BoardBuilder : MonoBehaviour
                 PlaceFloor(t);
 
                 // on ne teste que l'est et le sud pour ne pas poser deux fois le meme mur
-                if (map.HasWall(x, y, x + 1, y)) PlaceWall(x, y, "E");
-                if (map.HasWall(x, y, x, y + 1)) PlaceWall(x, y, "S");
+                if (map.HasWall(x, y, x + 1, y)) PlaceWall(x, y, Side.East);
+                if (map.HasWall(x, y, x, y + 1)) PlaceWall(x, y, Side.South);
 
                 // bords nord et ouest du plateau
-                if (y == 0) PlaceWall(x, y, "N");
-                if (x == 0) PlaceWall(x, y, "W");
+                if (y == 0) PlaceWall(x, y, Side.North);
+                if (x == 0) PlaceWall(x, y, Side.West);
             }
         }
 
@@ -65,27 +65,27 @@ public class BoardBuilder : MonoBehaviour
     }
 
     // le mur sur le bord "side" de la case (x, y), ou null s'il n'y en a pas
-    public GameObject GetWall(int x, int y, string side)
+    public GameObject GetWall(int x, int y, Side side)
     {
         GameObject wall;
         walls.TryGetValue(WallKey(x, y, side), out wall);
         return wall;
     }
 
-    string WallKey(int x, int y, string side)
+    string WallKey(int x, int y, Side side)
     {
         return x + "_" + y + "_" + side;
     }
 
     // range le mur sous son nom, et sous le nom du meme bord vu depuis la case voisine
-    void RegisterWall(int x, int y, string side, GameObject wall)
+    void RegisterWall(int x, int y, Side side, GameObject wall)
     {
         walls[WallKey(x, y, side)] = wall;
 
-        if (side == "E") walls[WallKey(x + 1, y, "W")] = wall;
-        if (side == "W") walls[WallKey(x - 1, y, "E")] = wall;
-        if (side == "S") walls[WallKey(x, y + 1, "N")] = wall;
-        if (side == "N") walls[WallKey(x, y - 1, "S")] = wall;
+        if (side == Side.East) walls[WallKey(x + 1, y, Side.West)] = wall;
+        if (side == Side.West) walls[WallKey(x - 1, y, Side.East)] = wall;
+        if (side == Side.South) walls[WallKey(x, y + 1, Side.North)] = wall;
+        if (side == Side.North) walls[WallKey(x, y - 1, Side.South)] = wall;
     }
 
     // centre de la case en coordonnees monde (y du plateau vers -Z)
@@ -140,16 +140,16 @@ public class BoardBuilder : MonoBehaviour
         return null;
     }
 
-    void PlaceWall(int x, int y, string side)
+    void PlaceWall(int x, int y, Side side)
     {
         Vector3 pos = CellToWorld(x, y);
         float h = cellSize * 0.5f;
         float rotY = 0f;
 
-        if (side == "E") { pos += new Vector3(h, 0f, 0f); rotY = 90f; }
-        if (side == "W") { pos += new Vector3(-h, 0f, 0f); rotY = 90f; }
-        if (side == "S") { pos += new Vector3(0f, 0f, -h); }
-        if (side == "N") { pos += new Vector3(0f, 0f, h); }
+        if (side == Side.East) { pos += new Vector3(h, 0f, 0f); rotY = 90f; }
+        if (side == Side.West) { pos += new Vector3(-h, 0f, 0f); rotY = 90f; }
+        if (side == Side.South) { pos += new Vector3(0f, 0f, -h); }
+        if (side == Side.North) { pos += new Vector3(0f, 0f, h); }
 
         // conteneur vide, cree a l'origine sans rotation pour mesurer le modele
         GameObject wall = new GameObject("Wall_" + x + "_" + y + "_" + side);
