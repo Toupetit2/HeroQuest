@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BoardBuilder : MonoBehaviour
@@ -21,6 +22,9 @@ public class BoardBuilder : MonoBehaviour
     public ZoneStyle[] zoneStyles;
 
     public Map map;
+
+    // chaque mur est range sous ses deux noms : "5_3_E" et "6_3_W" donnent le meme mur
+    Dictionary<string, GameObject> walls = new Dictionary<string, GameObject>();
 
     [ContextMenu("Generate")]
     public void Generate()
@@ -57,6 +61,31 @@ public class BoardBuilder : MonoBehaviour
             if (Application.isPlaying) Destroy(child);
             else DestroyImmediate(child);
         }
+        walls.Clear();
+    }
+
+    // le mur sur le bord "side" de la case (x, y), ou null s'il n'y en a pas
+    public GameObject GetWall(int x, int y, string side)
+    {
+        GameObject wall;
+        walls.TryGetValue(WallKey(x, y, side), out wall);
+        return wall;
+    }
+
+    string WallKey(int x, int y, string side)
+    {
+        return x + "_" + y + "_" + side;
+    }
+
+    // range le mur sous son nom, et sous le nom du meme bord vu depuis la case voisine
+    void RegisterWall(int x, int y, string side, GameObject wall)
+    {
+        walls[WallKey(x, y, side)] = wall;
+
+        if (side == "E") walls[WallKey(x + 1, y, "W")] = wall;
+        if (side == "W") walls[WallKey(x - 1, y, "E")] = wall;
+        if (side == "S") walls[WallKey(x, y + 1, "N")] = wall;
+        if (side == "N") walls[WallKey(x, y - 1, "S")] = wall;
     }
 
     // centre de la case en coordonnees monde (y du plateau vers -Z)
@@ -137,6 +166,8 @@ public class BoardBuilder : MonoBehaviour
         wall.transform.SetParent(transform);
         wall.transform.position = pos;
         wall.transform.rotation = Quaternion.Euler(0f, rotY, 0f);
+
+        RegisterWall(x, y, side, wall);
     }
 
     // redimensionne le modele pour qu'il remplisse une boite de taille "size",
