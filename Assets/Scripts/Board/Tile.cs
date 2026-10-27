@@ -8,6 +8,7 @@ public class Tile
     public bool revealed;         // false = cachee par le brouillard
     public Furniture furniture;   // meuble qui couvre la case, null si aucun
     public Trap trap;             // piege sur la case, null si aucun
+    public bool rock;             // roche pleine : inaccessible dans cette quete
 
     public Tile(int x, int y, string zone)
     {
