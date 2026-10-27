@@ -1,3 +1,4 @@
+using NUnit.Framework.Constraints;
 using System.Collections.Generic;
 using UnityEditor.Search;
 using UnityEngine;
@@ -12,13 +13,15 @@ public class GameManager : MonoBehaviour
     public bool isGameStarted = false;
     public GameState gameState;
 
-    public List<HeroClass> turnOrder;
+    public List<HeroClass> turnOrder = new();
 
     public int currentPlayerIndex = 0;
 
     [Header("État du tour")]    
     public bool hasMoveAction = true;
     public bool hasAction = true;
+
+    public MovementController movementController;
 
     [Button]
     public void Test() 
@@ -35,6 +38,7 @@ public class GameManager : MonoBehaviour
                 ". . . ."
             );
 
+        movementController = new MovementController(this, gameState.map);
         // Show Intro UI -> Hero choice UI -> Spell choice UI
     }
 
@@ -136,5 +140,40 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
+    public Hero GetCurrentHero() 
+    {
+        foreach (Hero h in gameState.heroList) 
+        {
+            if (h.data.heroClass == turnOrder[currentPlayerIndex]) 
+            {
+                return h;
+            }
+        }
+        return null;
+    }
+
+    public void ChangeQuest(int questNb) 
+    {
+        questNumber = questNb;
+        //map id
+    }
+
+    [Button]
+    public void SeDeplacer()
+    {
+        if (movementController.CanRoll())
+            movementController.RollDices();
+    }
+
+    public void ChoisirDestination(Tile tile)
+    {
+        movementController.SelectTile(tile);
+    }
+
+    [Button]
+    public void ConfirmerDeplacement() 
+    {
+        movementController.ConfirmMove();
+    }
 }
 
