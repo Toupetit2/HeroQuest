@@ -174,7 +174,7 @@ public class BoardBuilder : MonoBehaviour
     // centree en X et Z et posee sur y = 0
     // on met l'echelle sur le conteneur (a l'origine, sans rotation) et pas sur le modele :
     // un modele importe peut etre tourne (ex : -90 en X depuis Blender), ses axes ne seraient plus ceux du monde
-    void FitInBox(GameObject container, GameObject model, Vector3 size)
+    public void FitInBox(GameObject container, GameObject model, Vector3 size)
     {
         Bounds b = GetBounds(model);
         if (b.size == Vector3.zero)

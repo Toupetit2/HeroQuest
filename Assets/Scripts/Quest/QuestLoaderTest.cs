@@ -1,10 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// outil de test : charge une quete et affiche le resultat dans la Console, sans rien poser dans la scene
+// outil de test : genere le plateau, charge une quete et l'affiche
+// sans BoardBuilder ni QuestView, affiche seulement le resultat dans la Console
 public class QuestLoaderTest : MonoBehaviour
 {
-    public TextAsset boardFile;
+    public BoardBuilder board;      // optionnel : genere le plateau dans la scene
+    public QuestView view;          // optionnel : affiche la quete dans la scene
+    public TextAsset boardFile;     // utilise seulement sans BoardBuilder
     public TextAsset questFile;
     public List<MonsterData> monsterDatas;
 
@@ -12,10 +15,17 @@ public class QuestLoaderTest : MonoBehaviour
     public void Test()
     {
         GameState gameState = new GameState();
-        gameState.map = new Map(boardFile.text);
+        if (board != null)
+        {
+            board.Generate();
+            gameState.map = board.map;
+        }
+        else gameState.map = new Map(boardFile.text);
 
         QuestLoader loader = new QuestLoader(gameState, monsterDatas);
         loader.Load(questFile.text);
+
+        if (view != null) view.Show(gameState);
 
         // plateau en texte : # roche, X bloquee, M meuble, * visible (salle de depart), . cachee
         Map map = gameState.map;
