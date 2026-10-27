@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     public bool hasAction = true;
 
     public MovementController movementController;
+    public AttackController attackController;
 
     [Button]
     public void Test() 
@@ -39,6 +40,7 @@ public class GameManager : MonoBehaviour
             );
 
         movementController = new MovementController(this, gameState.map);
+        attackController = new AttackController(this);
         // Show Intro UI -> Hero choice UI -> Spell choice UI
     }
 
@@ -158,22 +160,44 @@ public class GameManager : MonoBehaviour
         //map id
     }
 
+    // Deplacement
     [Button]
-    public void SeDeplacer()
+    public void MovementRollDices()
     {
         if (movementController.CanRoll())
             movementController.RollDices();
     }
 
-    public void ChoisirDestination(Tile tile)
+    public void SetSelectedTile(Tile tile)
     {
         movementController.SelectTile(tile);
     }
 
     [Button]
-    public void ConfirmerDeplacement() 
+    public void MovementConfirmMove() 
     {
         movementController.ConfirmMove();
+    }
+
+    // Attaque
+    [Button]
+    public void Attack() 
+    {
+        if (attackController.CanAttack()) 
+        {
+            attackController.StartAttack();
+        }
+    }
+
+    public void SetSelectedMonster(Monster monster)
+    {
+        attackController.SelectTarget(monster);
+    }
+
+    [Button]
+    public void AttackConfirm() 
+    {
+        attackController.ConfirmAttack();
     }
 }
 
