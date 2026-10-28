@@ -5,11 +5,11 @@ public class AttackController
     private GameManager gameManager;
     private AttackSystem attackSystem;
     private AttackStates attackState = AttackStates.None;
-    private Monster selectedTarget;
 
     public AttackController(GameManager gameManager)
     {
         this.gameManager = gameManager;
+        attackSystem = new AttackSystem(gameManager.gameState);
     }
 
     public bool CanAttack() 
@@ -26,20 +26,14 @@ public class AttackController
         attackState = AttackStates.ChoosingTarget;
     }
 
-    public void SelectTarget(Monster monster) 
+    public void ConfirmAttack(Monster target) 
     {
-        selectedTarget = monster;
-    }
-
-    public void ConfirmAttack() 
-    {
-        if (selectedTarget != null) 
+        if (target != null) 
         {
-            attackSystem.ResolveAttack(gameManager.GetCurrentHero(), selectedTarget);
-            selectedTarget = null;
+            attackSystem.ResolveAttack(gameManager.GetCurrentHero(), target);
+            target = null;
             attackState = AttackStates.None;
             gameManager.hasAction = false;
         }
-
     }
 }

@@ -7,8 +7,6 @@ public class MovementController
 
     private MovementStates movementState;
 
-    private Tile selectedTile;
-
     public MovementController(GameManager gameManager, Map map)
     {
         this.gameManager = gameManager;
@@ -30,18 +28,7 @@ public class MovementController
         movementState = MovementStates.ChoosingDestination;
     }
 
-    public void SelectTile(Tile tile)
-    {
-        if (movementState != MovementStates.ChoosingDestination)
-            return;
-
-        if (!movementSystem.CanMoveTo(gameManager.GetCurrentHero(), tile))
-            return;
-
-        selectedTile = tile;
-    }
-
-    public void ConfirmMove()
+    public void ConfirmMove(Tile selectedTile)
     {
         if (movementState != MovementStates.ChoosingDestination || selectedTile == null)
             return;

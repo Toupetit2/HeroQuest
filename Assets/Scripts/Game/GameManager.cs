@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
     public bool hasMoveAction = true;
     public bool hasAction = true;
 
+    public Tile selectedTile;
+
     public MovementController movementController;
     public AttackController attackController;
 
@@ -160,6 +162,17 @@ public class GameManager : MonoBehaviour
         //map id
     }
 
+    public void SetSelectedTile(Tile tile)
+    {
+        selectedTile = tile;
+    }
+
+    public Map GetMap() 
+    {
+        return gameState.map;
+    }
+
+
     // Deplacement
     [Button]
     public void MovementRollDices()
@@ -168,15 +181,10 @@ public class GameManager : MonoBehaviour
             movementController.RollDices();
     }
 
-    public void SetSelectedTile(Tile tile)
-    {
-        movementController.SelectTile(tile);
-    }
-
     [Button]
     public void MovementConfirmMove() 
     {
-        movementController.ConfirmMove();
+        movementController.ConfirmMove(selectedTile);
     }
 
     // Attaque
@@ -189,15 +197,23 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void SetSelectedMonster(Monster monster)
+    private Monster GetMonsterFromTile(Tile tile) 
     {
-        attackController.SelectTarget(monster);
+        foreach (Monster monster in gameState.monsterList) 
+        {
+            if (monster.position == new Vector2Int(tile.x, tile.y)) 
+            {
+                return monster;
+            }
+        }
+        return null;
     }
 
     [Button]
     public void AttackConfirm() 
     {
-        attackController.ConfirmAttack();
+        Monster monster = GetMonsterFromTile(selectedTile);
+        attackController.ConfirmAttack(monster);
     }
 }
 

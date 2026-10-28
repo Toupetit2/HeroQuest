@@ -1,0 +1,89 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Pathfinding
+{
+    public static bool CanStep(Map map, Vector2Int from, Vector2Int direction, Vector2Int to)
+    {
+        if (!map.InBounds(to.x, to.y))
+            return false;
+
+        if (map.HasWall(from.x, from.y, direction.x, direction.y))
+            return false;
+
+        if (!map.tiles[to.x, to.y].isWalkable())
+            return false;
+
+        return true;
+    }
+
+    private static List<Vector2Int> FindPath(Map map, Vector2Int start, Vector2Int destination)
+    {
+        Queue<Vector2Int> queue = new();
+        queue.Enqueue(start);
+
+        List<Vector2Int> visited = new();
+        visited.Add(start);
+
+        Dictionary<Vector2Int, Vector2Int> previousPositions = new();
+
+        Vector2Int[] directions =
+        {
+            Vector2Int.up,
+            Vector2Int.down,
+            Vector2Int.left,
+            Vector2Int.right
+        };
+
+        while (queue.Count > 0)
+        {
+            Vector2Int currentPosition = queue.Dequeue();
+
+            if (currentPosition == destination)
+            {
+                List<Vector2Int> path = new();
+                Vector2Int position = destination;
+
+                path.Add(position);
+
+                while (position != start)
+                {
+                    position = previousPositions[position];
+                    path.Add(position);
+                }
+
+                path.Reverse();
+                return path;
+            }
+
+            foreach (Vector2Int direction in directions)
+            {
+                Vector2Int nextPosition = currentPosition + direction;
+
+                if (visited.Contains(nextPosition))
+                    continue;
+
+                if (!CanStep(map, currentPosition, direction, nextPosition))
+                    continue;
+
+                queue.Enqueue(nextPosition);
+                visited.Add(nextPosition);
+                previousPositions.Add(nextPosition, currentPosition);
+            }
+        }
+
+        return new List<Vector2Int>();
+    }
+
+    public static bool IsInRange(Map map, Vector2Int pos, Vector2Int target, int maxDistance) 
+    {
+        List<Vector2Int> path = FindPath(map, pos, target);
+
+        if (path.Count != 0 && path.Count - 1 < maxDistance)
+        {
+            return true;
+        }
+
+        return false;
+    }
+}
