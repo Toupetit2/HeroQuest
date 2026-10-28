@@ -22,4 +22,14 @@ public class Monster
     {
         return data.defenseDices;
     }
+
+    public int GetHealth()
+    {
+        return currentHealth;
+    }
+
+    public void SetHealth(int newHealth) 
+    {
+        currentHealth = newHealth;
+    }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 public class MonsterData : ScriptableObject
 {
     public MonsterClass monsterClass;
+    public MonsterTypes monsterType;
 
     public int attackDices;
     public int defenseDices;
