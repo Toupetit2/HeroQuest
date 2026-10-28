@@ -46,7 +46,11 @@ public class GameManager : MonoBehaviour
         // Show Intro UI -> Hero choice UI -> Spell choice UI
 
         // Hero Choice
-        uiManager.ShowHeroChoice(true);
+        //uiManager.ShowHeroChoice(true);
+
+        // Spell Choice
+        uiManager.ShowSpellChoice(true);
+
     }
 
     public void StartGame()
