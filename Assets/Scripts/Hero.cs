@@ -1,17 +1,74 @@
-
+using System.Collections.Generic;
+using System.Numerics;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Hero", menuName = "Scriptable Objects/Hero")]
-public class Hero : ScriptableObject
+public class Hero
 {
-    public HeroClass heroClass;
-    public int attackDices;
-    public int defenseDices;
-    public int health;
-    public int spirit;
+    public HeroData data;
 
-    public int movementDice;
-    public Weapon baseWeapon;
-    public Armor baseArmor;
+    public int currentHealth;
+    public int currentSpirit;
+    public int currentGold;
 
+    public List<Equipment> inventory;
+    public List<Equipment> equippedItems;
+    public List<SpellType> spells;
+
+    public Vector2Int position;
+
+
+    public Hero(HeroData heroData)
+    {
+        data = heroData;
+
+        currentHealth = data.health;
+        currentSpirit = data.spirit;
+        currentGold = data.baseGold;
+
+        if (data.baseWeapon != null) 
+        {
+            inventory.Add(data.baseWeapon);
+            equippedItems.Add(data.baseWeapon);
+        }
+        if (data.baseArmor != null)
+        {
+            inventory.Add(data.baseArmor);
+            equippedItems.Add(data.baseWeapon);
+        }
+    }
+
+    public int GetDefenseDice() 
+    {
+        int total = data.defenseDices;
+
+        foreach (Equipment item in equippedItems)
+        {
+            if (item is Armor armor)
+            {
+                total += armor.defenseDice;
+            }
+        }
+
+        return total;
+    }
+
+    public int GetAttackDice() 
+    {
+        int total = data.defenseDices;
+
+        foreach (Equipment item in equippedItems)
+        {
+            if (item is Weapon weapon)
+            {
+                total += weapon.attackDice;
+            }
+        }
+
+        return total;
+    }
+
+    public void GiveSpellType(SpellType type) 
+    {
+        spells.Add(type);
+    }
 }
