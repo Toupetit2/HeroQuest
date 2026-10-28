@@ -12,6 +12,7 @@ public class QuestView : MonoBehaviour
     public GameObject secretDoorPrefab;
     public GameObject blockedPrefab;
     public GameObject stairsPrefab;
+    public GameObject allyPrefab;
     public FurniturePrefab[] furniturePrefabs;
     public MonsterPrefab[] monsterPrefabs;
 
@@ -31,6 +32,7 @@ public class QuestView : MonoBehaviour
     // chaque objet pose et les cases qu'il couvre (pour le brouillard)
     Dictionary<GameObject, RectInt> placed = new Dictionary<GameObject, RectInt>();
     Dictionary<Monster, GameObject> monsterObjects = new Dictionary<Monster, GameObject>();
+    Dictionary<Ally, GameObject> allyObjects = new Dictionary<Ally, GameObject>();
     Dictionary<Door, GameObject> doorObjects = new Dictionary<Door, GameObject>();
     Dictionary<Color, Material> colorMaterials = new Dictionary<Color, Material>();
 
@@ -67,6 +69,14 @@ public class QuestView : MonoBehaviour
             monsterObjects[m] = go;
         }
 
+        foreach (Ally a in gameState.allyList)
+        {
+            RectInt rect = new RectInt(a.position.x, a.position.y, 1, 1);
+            GameObject go = Place("Ally_" + a.id, allyPrefab, rect, monsterHeight, 0, Color.blue);
+            placed.Remove(go); // les allies bougent aussi
+            allyObjects[a] = go;
+        }
+
         Refresh();
     }
 
@@ -81,6 +91,14 @@ public class QuestView : MonoBehaviour
             pair.Key.SetActive(showAll || IsRevealed(pair.Value));
 
         foreach (KeyValuePair<Monster, GameObject> pair in monsterObjects)
+        {
+            Vector2Int p = pair.Key.position;
+            RectInt rect = new RectInt(p.x, p.y, 1, 1);
+            pair.Value.transform.position = RectCenter(rect);
+            pair.Value.SetActive(showAll || (!pair.Key.isHidden && IsRevealed(rect)));
+        }
+
+        foreach (KeyValuePair<Ally, GameObject> pair in allyObjects)
         {
             Vector2Int p = pair.Key.position;
             RectInt rect = new RectInt(p.x, p.y, 1, 1);
@@ -118,6 +136,7 @@ public class QuestView : MonoBehaviour
 
         placed.Clear();
         monsterObjects.Clear();
+        allyObjects.Clear();
         doorObjects.Clear();
         gameState = null;
     }

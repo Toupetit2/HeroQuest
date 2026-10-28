@@ -18,8 +18,16 @@ public class QuestDefinition
     public FurnitureEntry[] furniture;
     public MonsterEntry[] monsters;
     public TrapEntry[] traps;
-    public string wanderingMonster;     // nom de MonsterClass, ex : "Orc"
+    public string wanderingMonster;     // nom de MonsterClass, ex : "Orc" ; vide = aucun (quete 10)
     public VictoryEntry victory;
+
+    // tout ce qui suit est optionnel
+    public string intro;                // texte lu aux joueurs au debut, ecrit par nous (pas le texte officiel)
+    public TreasureEntry[] treasures;   // tresors speciaux des notes
+    public AllyEntry[] allies;          // personnages a escorter
+    public MarkerEntry[] markers;       // reperes X, XX, numeros...
+    public string[] rules;              // noms de QuestRule
+    public RewardEntry reward;
 }
 
 [Serializable]
@@ -79,6 +87,12 @@ public class MonsterEntry
     public int defense;
     public int body;
     public int mind;
+
+    public string item;    // objet lache a sa mort
+    public bool hidden;    // pas sur le plateau au depart
+    public bool statue;    // statue jusqu'a son reveil
+    public string wakeOn;  // nom de MonsterTrigger, vide = "Aucun"
+    public string wakeRoom;
 }
 
 [Serializable]
@@ -103,4 +117,51 @@ public class ObjectiveEntry
     public string target;
     public int count;
     public string room;
+}
+
+// la case (x, y) donne la salle du tresor
+[Serializable]
+public class TreasureEntry
+{
+    public int x;
+    public int y;
+    public int gold;
+    public string item;             // vide = aucun
+    public bool trapped;
+    public int trapDamage;
+    public string[] requiredKills;  // ids des monstres a tuer avant
+}
+
+[Serializable]
+public class AllyEntry
+{
+    public string id;      // ex : "ragnar"
+    public int x;
+    public int y;
+    public int attack;
+    public int defense;
+    public int body;
+}
+
+[Serializable]
+public class MarkerEntry
+{
+    public string label;   // ex : "X", "7", "Mine"
+    public int x;
+    public int y;
+}
+
+[Serializable]
+public class RewardEntry
+{
+    public int goldShared;
+    public int goldEach;
+    public BountyEntry[] bounties;
+}
+
+[Serializable]
+public class BountyEntry
+{
+    public string monster; // nom de MonsterClass
+    public int gold;
 }

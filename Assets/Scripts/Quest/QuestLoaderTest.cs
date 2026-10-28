@@ -45,7 +45,12 @@ public class QuestLoaderTest : MonoBehaviour
         }
         Debug.Log(text);
 
+        string wandering = gameState.hasWanderingMonster ? gameState.wanderingMonster.ToString() : "aucun";
         Debug.Log("Victoire : " + gameState.victory.mode + ", " + gameState.victory.objectives.Count
-            + " objectifs, monstre errant : " + gameState.wanderingMonster);
+            + " objectifs, monstre errant : " + wandering);
+
+        foreach (Treasure t in gameState.treasureList)
+            Debug.Log("Tresor " + t.room + " (" + t.x + ", " + t.y + ") : " + t.gold + " or, objet : "
+                + (string.IsNullOrEmpty(t.item) ? "aucun" : t.item) + (t.isTrapped ? ", piege -" + t.trapDamage : ""));
     }
 }

@@ -27,6 +27,12 @@ public class QuestLoader
         gameState.doorList = new List<Door>();
         gameState.furnitureList = new List<Furniture>();
         gameState.trapList = new List<Trap>();
+        gameState.treasureList = new List<Treasure>();
+        gameState.allyList = new List<Ally>();
+        gameState.markerList = new List<Marker>();
+        gameState.rules = new List<QuestRule>();
+        gameState.reward = new Reward();
+        gameState.intro = quest.intro;
         monstersById.Clear();
 
         // escalier
@@ -67,7 +73,55 @@ public class QuestLoader
         // monstres
         foreach (MonsterEntry m in quest.monsters) AddMonster(m);
 
-        gameState.wanderingMonster = ParseEnum<MonsterClass>(quest.wanderingMonster, "monstre errant");
+        // monstre errant : vide = aucun
+        gameState.hasWanderingMonster = !string.IsNullOrEmpty(quest.wanderingMonster);
+        if (gameState.hasWanderingMonster)
+            gameState.wanderingMonster = ParseEnum<MonsterClass>(quest.wanderingMonster, "monstre errant");
+
+        // tresors speciaux (apres les monstres, pour verifier les ids)
+        if (quest.treasures != null)
+            foreach (TreasureEntry t in quest.treasures) AddTreasure(t);
+
+        // allies a escorter
+        if (quest.allies != null)
+        {
+            foreach (AllyEntry a in quest.allies)
+            {
+                GetTile(a.x, a.y, "allie " + a.id);
+                Ally ally = new Ally();
+                ally.id = a.id;
+                ally.position = new Vector2Int(a.x, a.y);
+                ally.attack = a.attack;
+                ally.defense = a.defense;
+                ally.body = a.body;
+                ally.currentHealth = a.body;
+                gameState.allyList.Add(ally);
+            }
+        }
+
+        // reperes
+        if (quest.markers != null)
+        {
+            foreach (MarkerEntry m in quest.markers)
+            {
+                GetTile(m.x, m.y, "repere " + m.label);
+                gameState.markerList.Add(new Marker(m.label, m.x, m.y));
+            }
+        }
+
+        // regles speciales
+        if (quest.rules != null)
+            foreach (string r in quest.rules) gameState.rules.Add(ParseEnum<QuestRule>(r, "regle"));
+
+        // recompense
+        if (quest.reward != null)
+        {
+            gameState.reward.goldShared = quest.reward.goldShared;
+            gameState.reward.goldEach = quest.reward.goldEach;
+            if (quest.reward.bounties != null)
+                foreach (BountyEntry b in quest.reward.bounties)
+                    gameState.reward.bounties[ParseEnum<MonsterClass>(b.monster, "prime")] = b.gold;
+        }
 
         // victoire
         Victory victory = new Victory();
@@ -91,7 +145,7 @@ public class QuestLoader
 
         Debug.Log("Quete " + quest.number + " chargee : " + gameState.doorList.Count + " portes, "
             + gameState.furnitureList.Count + " meubles, " + gameState.monsterList.Count + " monstres, "
-            + gameState.trapList.Count + " pieges");
+            + gameState.trapList.Count + " pieges, " + gameState.treasureList.Count + " tresors");
     }
 
     void AddDoor(DoorEntry d, bool isSecret, bool isFalse)
@@ -131,9 +185,63 @@ public class QuestLoader
         GetTile(m.x, m.y, "monstre " + m.type);
         Monster monster = new Monster(data);
         monster.position = new Vector2Int(m.x, m.y);
+        monster.id = m.id;
+        monster.item = m.item;
+        monster.isHidden = m.hidden;
+        monster.isStatue = m.statue;
+
+        // reveil : vide = aucun ; sinon il faut une salle qui existe
+        if (!string.IsNullOrEmpty(m.wakeOn))
+            monster.wakeOn = ParseEnum<MonsterTrigger>(m.wakeOn, "reveil");
+        if (monster.wakeOn != MonsterTrigger.Aucun)
+        {
+            if (!ZoneExists(m.wakeRoom))
+                throw new Exception("Monstre (" + m.x + ", " + m.y + ") : salle de reveil inconnue \"" + m.wakeRoom + "\"");
+            monster.wakeRoom = m.wakeRoom;
+        }
+
         gameState.monsterList.Add(monster);
 
         if (!string.IsNullOrEmpty(m.id)) monstersById[m.id] = monster;
+    }
+
+    void AddTreasure(TreasureEntry t)
+    {
+        // les regles : on ne trouve des tresors que dans les salles
+        Tile tile = GetTile(t.x, t.y, "tresor");
+        if (tile.zone == ".")
+            throw new Exception("Tresor (" + t.x + ", " + t.y + ") : la case est dans un couloir");
+
+        Treasure treasure = new Treasure();
+        treasure.x = t.x;
+        treasure.y = t.y;
+        treasure.room = tile.zone;
+        treasure.gold = t.gold;
+        treasure.item = t.item;
+        treasure.isTrapped = t.trapped;
+        treasure.trapDamage = t.trapDamage;
+
+        if (t.requiredKills != null)
+        {
+            foreach (string id in t.requiredKills)
+            {
+                if (!monstersById.ContainsKey(id))
+                    throw new Exception("Tresor (" + t.x + ", " + t.y + ") : monstre inconnu \"" + id + "\"");
+                treasure.requiredKills.Add(id);
+            }
+        }
+
+        gameState.treasureList.Add(treasure);
+    }
+
+    bool ZoneExists(string zone)
+    {
+        if (string.IsNullOrEmpty(zone)) return false;
+        foreach (Tile tile in gameState.map.tiles)
+        {
+            if (tile.zone == zone) return true;
+        }
+        return false;
     }
 
     MonsterData FindData(MonsterClass monsterClass)
