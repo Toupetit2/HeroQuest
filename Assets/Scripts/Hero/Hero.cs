@@ -108,4 +108,14 @@ public class Hero
     {
         currentHealth = newHealth;
     }
+
+    public void AddEquipment(Equipment equipment) 
+    {
+        inventory.Add(equipment);
+    }
+
+    public void RemoveEquipment(Equipment equipment) 
+    {
+        inventory.Remove(equipment);
+    }
 }
