@@ -1,10 +1,11 @@
-using NUnit.Framework.Constraints;
 using System.Collections.Generic;
 using UnityEditor.Search;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public UIManager uiManager;
+
     [Header("Quête")]
     public int questNumber = 1;
 
@@ -31,6 +32,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        /*
         // Generate Map
         gameState.map = new Map(
                 ". . . .\n" +
@@ -39,7 +41,12 @@ public class GameManager : MonoBehaviour
             );
 
         movementController = new MovementController(this, gameState.map);
+        */
+
         // Show Intro UI -> Hero choice UI -> Spell choice UI
+
+        // Hero Choice
+        uiManager.ShowHeroChoice(true);
     }
 
     public void StartGame()
