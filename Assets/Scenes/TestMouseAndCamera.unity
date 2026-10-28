@@ -41667,7 +41667,7 @@ MonoBehaviour:
   board: {fileID: 1417857011}
   distance: 25
   minDistance: 5
-  maxDistanceFactor: 1.2
+  maxDistanceFactor: 0.4
   zoomSpeed: 4
   yaw: 0
   pitch: 55
@@ -41676,6 +41676,7 @@ MonoBehaviour:
   rotateSpeed: 3
   keyPanSpeed: 0.8
   dragPanSpeed: 0.004
+  panMargin: -1.5
 --- !u!1 &923383332
 GameObject:
   m_ObjectHideFlags: 0

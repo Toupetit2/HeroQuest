@@ -12,7 +12,7 @@ public class CameraController : MonoBehaviour
     [Header("Zoom")]
     public float distance = 25f;
     public float minDistance = 5f;
-    public float maxDistanceFactor = 1.2f; // distance max = plus grand cote du plateau x ce facteur
+    public float maxDistanceFactor = 0.4f; // distance max = plus grand cote du plateau x ce facteur
     public float zoomSpeed = 4f;
 
     [Header("Rotation")]
@@ -25,7 +25,7 @@ public class CameraController : MonoBehaviour
     [Header("Deplacement")]
     public float keyPanSpeed = 0.8f;    // multiplie par la distance
     public float dragPanSpeed = 0.004f; // multiplie par la distance
-    public float panMargin = 0f;        // en cases : marge autorisee au-dela des bords du plateau
+    public float panMargin = -1.5f;        // en cases : marge autorisee au-dela des bords du plateau
 
     Vector3 target;
     bool initialized;
