@@ -3,14 +3,16 @@ using System.Collections.Generic;
 
 public class AttackSystem
 {
+    private GameManager gameManager;
     private GameState gameState;
 
     private List<Vector2Int> diagonals = new List<Vector2Int>();
     
 
-    public AttackSystem(GameState gameState)
+    public AttackSystem(GameManager gameManager)
     {
-        this.gameState = gameState;
+        this.gameManager = gameManager;
+        this.gameState = gameManager.gameState;
 
         diagonals.Add(new Vector2Int(1, 1));
         diagonals.Add(new Vector2Int(-1, 1));
@@ -74,7 +76,34 @@ public class AttackSystem
 
         target.currentHealth -= totalAttack - totalDefense;
 
+
+        if (IsThrown(hero.position, target.position, hero.CanAttackDiagonaly())) 
+        {
+            foreach (Weapon weapon in hero.inventory)
+            {
+                if (weapon.lostWhenThrown)
+                {
+                    gameManager.lootController.DropLoot(weapon, target.position);
+                }
+            }
+        }
+
+        
+
         return target.currentHealth;
         
+    }
+
+    private bool IsThrown(Vector2Int pos1, Vector2Int pos2, bool canAttackDiagonaly)
+    {
+        int dx = Mathf.Abs(pos1.x - pos2.x);
+        int dy = Mathf.Abs(pos1.y - pos2.y);
+
+        if (canAttackDiagonaly)
+        {
+            return Mathf.Max(dx, dy) > 1;
+        }
+
+        return dx + dy > 1;
     }
 }

@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
     public AttackController attackController;
     public PotionController potionController;
     public EquipmentController equipmentController;
+    public LootController lootController;
 
     [Button]
     public void Test() 
@@ -52,6 +53,7 @@ public class GameManager : MonoBehaviour
         attackController = new AttackController(this);
         potionController = new PotionController(this);
         equipmentController = new EquipmentController(this);
+        lootController = new LootController(this);
 
         // Show Intro UI
         //
@@ -136,7 +138,7 @@ public class GameManager : MonoBehaviour
 
     public void GetLootFreeAction() 
     {
-        
+        lootController.PickUpLoot(GetCurrentHero(), GetCurrentHero().position);
     }
 
     private Hero GetHero(HeroClass hero) 
