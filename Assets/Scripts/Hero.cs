@@ -10,6 +10,9 @@ public class Hero
     public int currentSpirit;
     public int currentGold;
 
+    public int bonusAttackDice;
+    public int bonusMovementDice;
+
     public List<Equipment> inventory;
     public List<Equipment> equippedItems;
     public List<SpellType> spells;

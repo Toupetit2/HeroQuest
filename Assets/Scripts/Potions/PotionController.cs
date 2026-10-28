@@ -20,9 +20,6 @@ public class PotionController
     {
         potionsState = PotionsStates.UsingPotion;
 
-        gameManager.GetCurrentHero()
-            {
-            
-        }
+        Hero hero = gameManager.GetCurrentHero();
     }
 }
