@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Armor
   equipmentName: Spiked Leather
   description: 
-  illustration: {fileID: 21300000, guid: b40b0a30916573b40929f97e042113f0, type: 3}
-  price: 475
+  illustration: {fileID: 21300000, guid: 3e1ee267e0b01914a843969cea99107e, type: 3}
+  price: 950
   effect: {fileID: 0}
   bannedHeros: 03000000
   bannedEquipments: []
-  defenseDice: 1
+  defenseDice: 2
   stacksWith:
   - {fileID: 11400000, guid: 5659955ef2e2eed4e9d10bc4cdc8a171, type: 2}

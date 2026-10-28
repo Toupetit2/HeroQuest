@@ -18,6 +18,11 @@ MonoBehaviour:
   price: 125
   effect: {fileID: 0}
   bannedHeros: 03000000
-  bannedEquipments: []
+  bannedEquipments:
+  - {fileID: 11400000, guid: 8957204087fbf6847940292859bce7e1, type: 2}
+  - {fileID: 11400000, guid: 91ba08384cffcb84b976a3519dc84c3a, type: 2}
+  - {fileID: 11400000, guid: 5afdd6cefcd322944b924e2e4acb2321, type: 2}
+  - {fileID: 11400000, guid: 1c341a891665fe24b858f886fbc45aa7, type: 2}
+  - {fileID: 11400000, guid: e12f475566cfb1049a4b39ecab7b22dc, type: 2}
   defenseDice: 1
   stacksWith: []

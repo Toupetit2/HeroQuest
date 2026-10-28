@@ -12,14 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b86c90d46f306d04691e12fa1437c570, type: 3}
   m_Name: Warhammer
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
-  equipmentName: 
+  equipmentName: Warhammer
   description: 
-  illustration: {fileID: 0}
-  price: 0
+  illustration: {fileID: 21300000, guid: 285dcccd184e10942a3cc68d585534b7, type: 3}
+  price: 350
   effect: {fileID: 0}
-  bannedHeros: 
-  bannedEquipments: []
-  attackDice: 0
+  bannedHeros: 03000000
+  bannedEquipments:
+  - {fileID: 11400000, guid: 5659955ef2e2eed4e9d10bc4cdc8a171, type: 2}
+  attackDice: 3
   canAttackDiagonally: 0
   canBeThrown: 0
   lostWhenThrown: 0
