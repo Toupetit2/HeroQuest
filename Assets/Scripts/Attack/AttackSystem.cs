@@ -50,8 +50,11 @@ public class AttackSystem
     {
 
         int totalAttack = 0;
+        int heroAttackDices = hero.GetAttackDice();
+        heroAttackDices += hero.bonusAttackDice;
+        hero.bonusAttackDice = 0;
 
-        for (int i = 0; i < hero.GetAttackDice(); i++)
+        for (int i = 0; i < heroAttackDices; i++)
         {
             if (Dices.RollCombatDice() == CombatDiceFace.Skull) 
             {

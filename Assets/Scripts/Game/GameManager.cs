@@ -23,9 +23,11 @@ public class GameManager : MonoBehaviour
     public bool hasAction = true;
 
     public Tile selectedTile;
+    public Potion selectedPotion;
 
     public MovementController movementController;
     public AttackController attackController;
+    public PotionController potionController;
 
     [Button]
     public void Test() 
@@ -46,6 +48,7 @@ public class GameManager : MonoBehaviour
 
         movementController = new MovementController(this, gameState.map);
         attackController = new AttackController(this);
+        potionController = new PotionController(this);
 
         // Show Intro UI
         //
@@ -109,24 +112,9 @@ public class GameManager : MonoBehaviour
 
     public void SearchTreasureAction() // une fois par joueur par pièce
     {
+        
+    }
     
-    }
-
-    public void SearchSecretDoorAction() 
-    {
-        if (UseAction())
-        {
-            Search.DetectSecretDoor(gameState, GetCurrentHero());
-        }
-    }
-
-    public void DetectTrapAction() 
-    {
-        if (UseAction()) 
-        {
-            Search.DetectTrap(gameState.map, GetCurrentHero());
-        }
-    }
     
     public void DisableTrapAction() 
     {
@@ -231,5 +219,43 @@ public class GameManager : MonoBehaviour
         Monster monster = GetMonsterFromTile(selectedTile);
         attackController.ConfirmAttack(monster);
     }
+
+    [Button]
+    public void SearchSecretDoorAction()
+    {
+        if (UseAction())
+        {
+            Search.DetectSecretDoor(gameState, GetCurrentHero());
+        }
+    }
+
+    [Button]
+    public void DetectTrapAction()
+    {
+        if (UseAction())
+        {
+            Search.DetectTrap(gameState.map, GetCurrentHero());
+        }
+    }
+
+    [Button]
+    public void PotionStart() 
+    {
+        potionController.StartPotionAction();
+    }
+
+    public void SetSelectedPotion(Potion potion) 
+    {
+        selectedPotion = potion;
+    }
+
+    [Button]
+    public void PotionConfirm() 
+    {
+        potionController.UsePotionAction(selectedPotion);
+    }
+
+    
+    
 }
 

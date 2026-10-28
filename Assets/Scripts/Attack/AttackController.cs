@@ -15,9 +15,22 @@ public class AttackController
 
     public bool CanAttack() 
     {
-        if (attackState == AttackStates.None && gameManager.hasAction) 
+        
+        if (attackState == AttackStates.None) 
         {
-            return true;
+            if (gameManager.hasAction) 
+            {
+                gameManager.hasAction = false;
+                return true;
+            }
+
+            Hero hero = gameManager.GetCurrentHero();
+            
+            if (hero.canAttackTwice) 
+            {
+                hero.canAttackTwice = false;
+                return true;
+            }
         }
         return false;
     }

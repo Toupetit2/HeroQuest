@@ -10,6 +10,10 @@ public class Hero
     public int currentSpirit;
     public int currentGold;
 
+    public int bonusAttackDice = 0;
+    public int bonusMovementDice = 0;
+    public bool canAttackTwice = false;
+
     public List<Equipment> inventory;
     public List<Equipment> equippedItems;
     public List<SpellType> spells;
@@ -94,5 +98,14 @@ public class Hero
             }
         }
         return false;
+    }
+
+    public int GetHealth() 
+    {
+        return currentHealth;
+    }
+    public void SetHealth(int newHealth) 
+    {
+        currentHealth = newHealth;
     }
 }
