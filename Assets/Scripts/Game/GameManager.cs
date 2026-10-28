@@ -109,24 +109,9 @@ public class GameManager : MonoBehaviour
 
     public void SearchTreasureAction() // une fois par joueur par pièce
     {
+        
+    }
     
-    }
-
-    public void SearchSecretDoorAction() 
-    {
-        if (UseAction())
-        {
-            Search.DetectSecretDoor(gameState, GetCurrentHero());
-        }
-    }
-
-    public void DetectTrapAction() 
-    {
-        if (UseAction()) 
-        {
-            Search.DetectTrap(gameState.map, GetCurrentHero());
-        }
-    }
     
     public void DisableTrapAction() 
     {
@@ -231,5 +216,26 @@ public class GameManager : MonoBehaviour
         Monster monster = GetMonsterFromTile(selectedTile);
         attackController.ConfirmAttack(monster);
     }
+
+    [Button]
+    public void SearchSecretDoorAction()
+    {
+        if (UseAction())
+        {
+            Search.DetectSecretDoor(gameState, GetCurrentHero());
+        }
+    }
+
+    [Button]
+    public void DetectTrapAction()
+    {
+        if (UseAction())
+        {
+            Search.DetectTrap(gameState.map, GetCurrentHero());
+        }
+    }
+
+    
+    
 }
 
