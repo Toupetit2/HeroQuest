@@ -12,6 +12,5 @@ public class GameState
     public MonsterClass wanderingMonster;
     public Victory victory;
     public GameStatus gameStatus = GameStatus.Playing;
-    //MAP temp ?
     public Map map;
 }
