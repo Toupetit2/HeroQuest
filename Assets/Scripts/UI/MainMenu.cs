@@ -13,6 +13,11 @@ public class MainMenu : MonoBehaviour
         // Choose Quest
     }
 
+    public void QuestEditor()
+    {
+        // Quest Editor
+    }
+
     public void QuitGame()
     {
 #if UNITY_EDITOR
