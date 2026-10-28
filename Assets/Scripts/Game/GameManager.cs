@@ -80,24 +80,12 @@ public class GameManager : MonoBehaviour
         GetHero(turnOrder[currentPlayerIndex]).spells.Add(type);
     }
 
-    public void MoveAction() 
-    {
-        hasMoveAction = false;
-        // Move
-    }
-
-    public void AttackAction() 
-    {
-        hasAction = false;
-        // Attack
-    }
-
     public void SpellAction() 
     {
         
     }
 
-    public void SearchTreasureAction() 
+    public void SearchTreasureAction() // une fois par joueur par pièce
     {
     
     }
@@ -189,7 +177,7 @@ public class GameManager : MonoBehaviour
 
     // Attaque
     [Button]
-    public void Attack() 
+    public void AttackStart() 
     {
         if (attackController.CanAttack()) 
         {

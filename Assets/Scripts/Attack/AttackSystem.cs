@@ -5,9 +5,17 @@ public class AttackSystem
 {
     private GameState gameState;
 
+    private List<Vector2Int> diagonals = new List<Vector2Int>();
+    
+
     public AttackSystem(GameState gameState)
     {
         this.gameState = gameState;
+
+        diagonals.Add(new Vector2Int(1, 1));
+        diagonals.Add(new Vector2Int(-1, 1));
+        diagonals.Add(new Vector2Int(1, -1));
+        diagonals.Add(new Vector2Int(-1, -1));
     }
 
     public List<Monster> GetTargetInRange(Hero hero) 
@@ -15,9 +23,24 @@ public class AttackSystem
         List<Monster> inRange = new List<Monster>();
         foreach (Monster monster in gameState.monsterList) 
         {
-            if (Pathfinding.IsInRange(gameState.map, hero.position, monster.position, 1))  // Return si a 1 de distance
+            if (hero.CanThrow() && Raycast.CanSee(gameState.map, hero.position, monster.position)) 
             {
                 inRange.Add(monster);
+            }
+
+            if (Pathfinding.IsInRange(gameState.map, hero.position, monster.position, 1))
+            {
+                inRange.Add(monster);
+            }
+
+            if (hero.CanAttackDiagonaly()) {
+                foreach (Vector2Int offset in diagonals) 
+                {
+                    if (monster.position == hero.position + offset) 
+                    {
+                        inRange.Add(monster);
+                    }
+                }
             }
         }
         return inRange;
