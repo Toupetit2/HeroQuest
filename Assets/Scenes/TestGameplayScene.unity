@@ -1476,7 +1476,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
   heroChoice: {fileID: 1026575219}
-  spellChoice: {fileID: 0}
+  spellChoice: {fileID: 1200558705}
 --- !u!4 &1034546954
 Transform:
   m_ObjectHideFlags: 0

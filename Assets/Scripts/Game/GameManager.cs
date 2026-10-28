@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        // Le generate map empeche la suite d'etre executé donc a fix
         /*
         // Generate Map
         gameState.map = new Map(
@@ -43,13 +44,14 @@ public class GameManager : MonoBehaviour
         movementController = new MovementController(this, gameState.map);
         */
 
-        // Show Intro UI -> Hero choice UI -> Spell choice UI
+        // Show Intro UI
+        //
 
         // Hero Choice
         //uiManager.ShowHeroChoice(true);
 
         // Spell Choice
-        uiManager.ShowSpellChoice(true);
+        //uiManager.ShowSpellChoice(true);
 
     }
 
