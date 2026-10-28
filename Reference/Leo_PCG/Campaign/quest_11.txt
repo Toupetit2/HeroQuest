@@ -1,0 +1,119 @@
+{
+  "questNumber": 11,
+  "title": "Bastion of Dread",
+  "questBookPdfPage": 26,
+  "digitization": "TRANSCRIPTION PARTIELLE - mobilier/escalier relu visuellement; portes/monstres et notes restant à vérifier (0 portes, 9 objets)",
+  "description": "Relevé partiel depuis les cartes du Quest Book. Ne pas confondre avec une quête complète et testée.",
+  "rockRows": [
+    "11111111111111111111111111",
+    "11111111000011111111111111",
+    "11111111000011111111111111",
+    "01111111000011111111111111",
+    "01110000000011111111111111",
+    "00000000000001111111111111",
+    "00000000000001111111111111",
+    "00000000000000001111111111",
+    "00000000000000000111111110",
+    "00000000000000000000000000",
+    "00000000000000000000011110",
+    "00000000000000000000011110",
+    "00000000010000000000011110",
+    "00000000000011111000011110",
+    "00000000000000111000011110",
+    "00000000000000111000000000",
+    "00000000000000111000000000",
+    "00000000000000111000000000",
+    "00000000000000000000000001"
+  ],
+  "doors": [],
+  "objects": [
+    {
+      "group": "stairs",
+      "id": 5,
+      "x": 7,
+      "y": 10,
+      "width": 2,
+      "height": 2,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 24,
+      "x": 9,
+      "y": 1,
+      "width": 3,
+      "height": 2,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 16,
+      "x": 4,
+      "y": 4,
+      "width": 1,
+      "height": 3,
+      "angle": 90
+    },
+    {
+      "group": "furniture",
+      "id": 17,
+      "x": 5,
+      "y": 4,
+      "width": 3,
+      "height": 2,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 20,
+      "x": 1,
+      "y": 12,
+      "width": 3,
+      "height": 2,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 22,
+      "x": 9,
+      "y": 13,
+      "width": 3,
+      "height": 1,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 17,
+      "x": 12,
+      "y": 8,
+      "width": 2,
+      "height": 3,
+      "angle": 90
+    },
+    {
+      "group": "furniture",
+      "id": 23,
+      "x": 20,
+      "y": 10,
+      "width": 1,
+      "height": 3,
+      "angle": 90
+    },
+    {
+      "group": "furniture",
+      "id": 25,
+      "x": 18,
+      "y": 14,
+      "width": 1,
+      "height": 3,
+      "angle": 90
+    }
+  ],
+  "specialNotes": [],
+  "wanderingMonster": "Abomination",
+  "summaryBriefFR": "Affronter les guerriers de la Bastion of Dread.",
+  "referenceMap": "CampaignMaps/quest_11",
+  "boardPreset": "Plateau.prefab / board_prefab.txt",
+  "transcriptionVerified": false,
+  "source": "Quest Book HeroQuest fourni (PDF), page PDF 26"
+}

@@ -1,0 +1,86 @@
+{
+  "number": 1,
+  "title": "L'Epreuve",
+  "stairs": { "x": 1, "y": 14, "width": 2, "height": 2 },
+  "start": { "type": "stairs", "room": "" },
+
+  "doors": [
+    { "x": 4, "y": 2, "side": "East" },
+    { "x": 8, "y": 2, "side": "East" },
+    { "x": 3, "y": 3, "side": "South" },
+    { "x": 3, "y": 8, "side": "South" },
+    { "x": 7, "y": 8, "side": "South" },
+    { "x": 15, "y": 9, "side": "East" },
+    { "x": 0, "y": 11, "side": "East" },
+    { "x": 10, "y": 12, "side": "South" },
+    { "x": 8, "y": 15, "side": "East" },
+    { "x": 13, "y": 15, "side": "East" },
+    { "x": 3, "y": 17, "side": "South" },
+    { "x": 7, "y": 17, "side": "South" }
+  ],
+  "secretDoors": [],
+
+  "blocked": [
+    { "x": 0, "y": 1 },
+    { "x": 12, "y": 5 },
+    { "x": 13, "y": 5 },
+    { "x": 17, "y": 9 },
+    { "x": 14, "y": 18 }
+  ],
+
+  "furniture": [
+    { "type": "Tombeau", "x": 10, "y": 1, "width": 2, "height": 3, "rotation": 90 },
+    { "type": "Coffre", "x": 10, "y": 5, "width": 1, "height": 1, "rotation": 0 },
+    { "type": "TableSorcier", "x": 1, "y": 5, "width": 2, "height": 3, "rotation": 90 },
+    { "type": "Table", "x": 6, "y": 5, "width": 3, "height": 2, "rotation": 0 },
+    { "type": "Coffre", "x": 11, "y": 7, "width": 1, "height": 1, "rotation": 0 },
+    { "type": "Cheminee", "x": 12, "y": 7, "width": 3, "height": 1, "rotation": 0 },
+    { "type": "Trone", "x": 10, "y": 8, "width": 1, "height": 1, "rotation": 0 },
+    { "type": "Table", "x": 11, "y": 9, "width": 3, "height": 2, "rotation": 0 },
+    { "type": "Chevalet", "x": 3, "y": 10, "width": 2, "height": 3, "rotation": 90 },
+    { "type": "Bibliotheque", "x": 5, "y": 13, "width": 3, "height": 1, "rotation": 0 },
+    { "type": "Bibliotheque", "x": 15, "y": 13, "width": 3, "height": 1, "rotation": 0 },
+    { "type": "EtabliAlchimiste", "x": 5, "y": 15, "width": 2, "height": 3, "rotation": 90 },
+    { "type": "RatelierArmes", "x": 11, "y": 15, "width": 1, "height": 3, "rotation": 90 },
+    { "type": "Coffre", "x": 17, "y": 16, "width": 1, "height": 1, "rotation": 90 },
+    { "type": "Bibliotheque", "x": 15, "y": 17, "width": 3, "height": 1, "rotation": 0 }
+  ],
+
+  "monsters": [
+    { "type": "Squelette", "x": 2, "y": 2 },
+    { "type": "Squelette", "x": 3, "y": 2 },
+    { "type": "Zombie", "x": 6, "y": 1 },
+    { "id": "gardienFellmarg", "type": "Momie", "x": 6, "y": 2, "attack": 4 },
+    { "type": "Zombie", "x": 6, "y": 3 },
+    { "type": "Squelette", "x": 9, "y": 1 },
+    { "type": "Squelette", "x": 9, "y": 3 },
+    { "type": "Momie", "x": 9, "y": 4 },
+    { "type": "Orc", "x": 4, "y": 5 },
+    { "type": "Gobelin", "x": 3, "y": 6 },
+    { "type": "Gobelin", "x": 6, "y": 7 },
+    { "type": "Gobelin", "x": 7, "y": 7 },
+    { "id": "verag", "type": "Gargouille", "x": 12, "y": 8 },
+    { "type": "Orc", "x": 14, "y": 8 },
+    { "type": "Gobelin", "x": 2, "y": 11 },
+    { "type": "Orc", "x": 2, "y": 12 },
+    { "type": "Orc", "x": 11, "y": 11 },
+    { "type": "GuerrierDeLaTerreur", "x": 14, "y": 11 },
+    { "type": "Orc", "x": 7, "y": 14 },
+    { "type": "Gobelin", "x": 10, "y": 14 },
+    { "type": "Orc", "x": 8, "y": 15 },
+    { "type": "GuerrierDeLaTerreur", "x": 16, "y": 15 },
+    { "type": "Abomination", "x": 10, "y": 16 },
+    { "type": "GuerrierDeLaTerreur", "x": 15, "y": 16 }
+  ],
+
+  "traps": [],
+  "wanderingMonster": "Orc",
+
+  "victory": {
+    "mode": "Tous",
+    "objectives": [
+      { "type": "Tuer", "target": "verag" },
+      { "type": "Escalier" }
+    ]
+  }
+}

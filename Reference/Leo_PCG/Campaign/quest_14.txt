@@ -1,0 +1,56 @@
+{
+  "questNumber": 14,
+  "title": "Return to Barak Tor",
+  "questBookPdfPage": 29,
+  "digitization": "TRANSCRIPTION PARTIELLE - mobilier/escalier relu visuellement; portes/monstres et notes restant à vérifier (0 portes, 2 objets)",
+  "description": "Relevé partiel depuis les cartes du Quest Book. Ne pas confondre avec une quête complète et testée.",
+  "rockRows": [
+    "00000000000000000000000000",
+    "00000000000000111000000000",
+    "00000000000000111000000000",
+    "00000000000000111000000000",
+    "00000000000000111000000000",
+    "01111111000000111000011110",
+    "01111111100000000111111110",
+    "01111111100000000111111110",
+    "01111111100000000111111110",
+    "00000000000000000000000000",
+    "00000000000000000111111110",
+    "00000000000000000111111111",
+    "00000000000000000111111111",
+    "00000000011100111111111111",
+    "00000111111111111111111111",
+    "00000111111111111111111111",
+    "00000111111111111111111111",
+    "00000111111111111111111111",
+    "11111111111111111111111111"
+  ],
+  "doors": [],
+  "objects": [
+    {
+      "group": "stairs",
+      "id": 5,
+      "x": 1,
+      "y": 14,
+      "width": 2,
+      "height": 2,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 14,
+      "x": 1,
+      "y": 11,
+      "width": 3,
+      "height": 2,
+      "angle": 0
+    }
+  ],
+  "specialNotes": [],
+  "wanderingMonster": "Mummy",
+  "summaryBriefFR": "Affronter le Witch Lord à Barak Tor.",
+  "referenceMap": "CampaignMaps/quest_14",
+  "boardPreset": "Plateau.prefab / board_prefab.txt",
+  "transcriptionVerified": false,
+  "source": "Quest Book HeroQuest fourni (PDF), page PDF 29"
+}
