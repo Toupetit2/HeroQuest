@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         // Le generate map empeche la suite d'etre executé donc a fix
-        /*
+        
         // Generate Map
         gameState.map = new Map(
                 ". . . .\n" +
