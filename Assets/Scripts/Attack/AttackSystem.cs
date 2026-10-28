@@ -46,11 +46,6 @@ public class AttackSystem
         return inRange;
     }
 
-    public bool CanAttack(Hero hero, Monster target) 
-    {
-        return true;
-    }
-
     public int ResolveAttack(Hero hero, Monster target) 
     {
 
