@@ -23,9 +23,11 @@ public class GameManager : MonoBehaviour
     public bool hasAction = true;
 
     public Tile selectedTile;
+    public Potion selectedPotion;
 
     public MovementController movementController;
     public AttackController attackController;
+    public PotionController potionController;
 
     [Button]
     public void Test() 
@@ -46,6 +48,7 @@ public class GameManager : MonoBehaviour
 
         movementController = new MovementController(this, gameState.map);
         attackController = new AttackController(this);
+        potionController = new PotionController(this);
 
         // Show Intro UI
         //
@@ -233,6 +236,23 @@ public class GameManager : MonoBehaviour
         {
             Search.DetectTrap(gameState.map, GetCurrentHero());
         }
+    }
+
+    [Button]
+    public void PotionStart() 
+    {
+        potionController.StartPotionAction();
+    }
+
+    public void SetSelectedPotion(Potion potion) 
+    {
+        selectedPotion = potion;
+    }
+
+    [Button]
+    public void PotionConfirm() 
+    {
+        potionController.UsePotionAction(selectedPotion);
     }
 
     

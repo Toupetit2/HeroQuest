@@ -16,10 +16,27 @@ public class PotionController
         potionsState = PotionsStates.ChoosingPotion;
     }
 
-    public void UsePotionAction() 
+    public void UsePotionAction(Potion potion) 
     {
         potionsState = PotionsStates.UsingPotion;
 
-        Hero hero = gameManager.GetCurrentHero();
+        if (potion != null) 
+        {
+            Hero hero = gameManager.GetCurrentHero();
+
+            if (potion.healingDices > 0) 
+            {
+                int totalHeal = Dices.RollRedDice(potion.healingDices);
+
+                hero.SetHealth(hero.GetHealth() + totalHeal);
+            }
+
+            hero.bonusAttackDice += potion.bonusAttackDices;
+
+            if (potion.attackTwice) 
+            {
+                hero.canAttackTwice = true;
+            }
+        }
     }
 }

@@ -10,8 +10,9 @@ public class Hero
     public int currentSpirit;
     public int currentGold;
 
-    public int bonusAttackDice;
-    public int bonusMovementDice;
+    public int bonusAttackDice = 0;
+    public int bonusMovementDice = 0;
+    public bool canAttackTwice = false;
 
     public List<Equipment> inventory;
     public List<Equipment> equippedItems;
@@ -97,5 +98,14 @@ public class Hero
             }
         }
         return false;
+    }
+
+    public int GetHealth() 
+    {
+        return currentHealth;
+    }
+    public void SetHealth(int newHealth) 
+    {
+        currentHealth = newHealth;
     }
 }
