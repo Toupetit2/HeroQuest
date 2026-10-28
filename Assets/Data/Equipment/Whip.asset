@@ -9,13 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3c0f1ce420bf054ebad45043a3c20ae, type: 3}
-  m_Name: EauBenite
-  m_EditorClassIdentifier: Assembly-CSharp::Equipment
-  equipmentName: "Eau B\xE9nite"
-  description: Description 123
+  m_Script: {fileID: 11500000, guid: b86c90d46f306d04691e12fa1437c570, type: 3}
+  m_Name: Whip
+  m_EditorClassIdentifier: Assembly-CSharp::Weapon
+  equipmentName: 
+  description: 
   illustration: {fileID: 0}
-  price: 400
+  price: 0
   effect: {fileID: 0}
   bannedHeros: 
   bannedEquipments: []
+  attackDice: 0
+  canAttackDiagonally: 0
+  canBeThrown: 0
+  lostWhenThrown: 0

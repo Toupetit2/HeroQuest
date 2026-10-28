@@ -9,16 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6662ad035b434440846c696f53b7df5, type: 3}
-  m_Name: EpeeLongue
+  m_Script: {fileID: 11500000, guid: b86c90d46f306d04691e12fa1437c570, type: 3}
+  m_Name: Mace
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
-  equipmentName: Epee Longue
+  equipmentName: Mace
   description: 
-  illustration: {fileID: 0}
-  price: 0
-  weaponType: 0
+  illustration: {fileID: 21300000, guid: daf0b6dc1531ae74593594c20ac56060, type: 3}
+  price: 250
+  effect: {fileID: 0}
+  bannedHeros: 03000000
+  bannedEquipments: []
   attackDice: 2
   canAttackDiagonally: 0
   canBeThrown: 0
   lostWhenThrown: 0
-  bannedHeros: 
