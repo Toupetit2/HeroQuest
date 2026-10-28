@@ -4,6 +4,7 @@ public class MouseInput : MonoBehaviour
 {
     public BoardBuilder board;
     public Camera cam;
+    /*public GameManager gameManager;*/
 
     // resultat du dernier clic : { "x", "y" }
     public string[] clickedTile = new string[2];
@@ -41,6 +42,8 @@ public class MouseInput : MonoBehaviour
 
         clickedTile = new string[] { t.x.ToString(), t.y.ToString() };
         Debug.Log("Tile cliquee : X=" + clickedTile[0] + " Y=" + clickedTile[1] + " (zone " + t.zone + ")");
+
+        /*gameManager.SetSelectedTile(t);*/
     }
 
     bool ClickPressed()

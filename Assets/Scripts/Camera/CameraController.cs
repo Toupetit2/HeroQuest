@@ -12,7 +12,7 @@ public class CameraController : MonoBehaviour
     [Header("Zoom")]
     public float distance = 25f;
     public float minDistance = 5f;
-    public float maxDistance = 60f;
+    public float maxDistanceFactor = 0.6f; // distance max = plus grand cote du plateau x ce facteur
     public float zoomSpeed = 4f;
 
     [Header("Rotation")]
@@ -71,7 +71,7 @@ public class CameraController : MonoBehaviour
     {
         float scroll = Input.GetAxis("Mouse ScrollWheel");
         if (Mathf.Abs(scroll) < 0.0001f) return;
-        distance = Mathf.Clamp(distance - scroll * zoomSpeed * distance, minDistance, maxDistance);
+        distance = Mathf.Clamp(distance - scroll * zoomSpeed * distance, minDistance, MaxDistance());
     }
 
     void HandlePan()
@@ -95,8 +95,16 @@ public class CameraController : MonoBehaviour
         target = ClampToBoard(target);
     }
 
+    // distance max basee sur la taille du plateau
+    float MaxDistance()
+    {
+        float side = Mathf.Max(board.map.width, board.map.height) * board.cellSize;
+        return Mathf.Max(minDistance + 1f, side * maxDistanceFactor);
+    }
+
     void Apply()
     {
+        distance = Mathf.Clamp(distance, minDistance, MaxDistance());
         Quaternion rot = Quaternion.Euler(pitch, yaw, 0f);
         transform.rotation = rot;
         transform.position = target + rot * new Vector3(0f, 0f, -distance);
