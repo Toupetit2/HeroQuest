@@ -92,6 +92,16 @@ public class GameManager : MonoBehaviour
         GetHero(turnOrder[currentPlayerIndex]).spells.Add(type);
     }
 
+    public bool UseAction() 
+    {
+        if (hasAction)
+        {
+            hasAction = false;
+            return true;
+        }
+        return false;
+    }
+
     public void SpellAction() 
     {
         
@@ -104,12 +114,18 @@ public class GameManager : MonoBehaviour
 
     public void SearchSecretDoorAction() 
     {
-        
+        if (UseAction())
+        {
+            Search.DetectSecretDoor(gameState, GetCurrentHero());
+        }
     }
 
     public void DetectTrapAction() 
     {
-    
+        if (UseAction()) 
+        {
+            Search.DetectTrap(gameState.map, GetCurrentHero());
+        }
     }
     
     public void DisableTrapAction() 
