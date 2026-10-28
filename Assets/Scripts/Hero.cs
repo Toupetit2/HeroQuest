@@ -71,4 +71,28 @@ public class Hero
     {
         spells.Add(type);
     }
+
+    public bool CanThrow() 
+    {
+        foreach (Weapon item in equippedItems) 
+        {
+            if (item.canBeThrown) 
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool CanAttackDiagonaly() 
+    {
+        foreach (Weapon item in equippedItems)
+        {
+            if (item.canAttackDiagonally)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }

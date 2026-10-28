@@ -12,4 +12,14 @@ public class Monster
 
         currentHealth = data.health;
     }
+
+    public int GetAttackDice() 
+    {
+        return data.attackDices;
+    }
+
+    public int GetDefenseDice() 
+    {
+        return data.defenseDices;
+    }
 }

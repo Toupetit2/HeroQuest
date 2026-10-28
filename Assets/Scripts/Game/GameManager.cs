@@ -22,7 +22,10 @@ public class GameManager : MonoBehaviour
     public bool hasMoveAction = true;
     public bool hasAction = true;
 
+    public Tile selectedTile;
+
     public MovementController movementController;
+    public AttackController attackController;
 
     [Button]
     public void Test() 
@@ -33,7 +36,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         // Le generate map empeche la suite d'etre executé donc a fix
-        /*
+        
         // Generate Map
         gameState.map = new Map(
                 ". . . .\n" +
@@ -42,7 +45,7 @@ public class GameManager : MonoBehaviour
             );
 
         movementController = new MovementController(this, gameState.map);
-        */
+        attackController = new AttackController(this);
 
         // Show Intro UI
         //
@@ -89,24 +92,12 @@ public class GameManager : MonoBehaviour
         GetHero(turnOrder[currentPlayerIndex]).spells.Add(type);
     }
 
-    public void MoveAction() 
-    {
-        hasMoveAction = false;
-        // Move
-    }
-
-    public void AttackAction() 
-    {
-        hasAction = false;
-        // Attack
-    }
-
     public void SpellAction() 
     {
         
     }
 
-    public void SearchTreasureAction() 
+    public void SearchTreasureAction() // une fois par joueur par pièce
     {
     
     }
@@ -171,22 +162,58 @@ public class GameManager : MonoBehaviour
         //map id
     }
 
+    public void SetSelectedTile(Tile tile)
+    {
+        selectedTile = tile;
+    }
+
+    public Map GetMap() 
+    {
+        return gameState.map;
+    }
+
+
+    // Deplacement
     [Button]
-    public void SeDeplacer()
+    public void MovementRollDices()
     {
         if (movementController.CanRoll())
             movementController.RollDices();
     }
 
-    public void ChoisirDestination(Tile tile)
+    [Button]
+    public void MovementConfirmMove() 
     {
-        movementController.SelectTile(tile);
+        movementController.ConfirmMove(selectedTile);
+    }
+
+    // Attaque
+    [Button]
+    public void AttackStart() 
+    {
+        if (attackController.CanAttack()) 
+        {
+            attackController.StartAttack();
+        }
+    }
+
+    private Monster GetMonsterFromTile(Tile tile) 
+    {
+        foreach (Monster monster in gameState.monsterList) 
+        {
+            if (monster.position == new Vector2Int(tile.x, tile.y)) 
+            {
+                return monster;
+            }
+        }
+        return null;
     }
 
     [Button]
-    public void ConfirmerDeplacement() 
+    public void AttackConfirm() 
     {
-        movementController.ConfirmMove();
+        Monster monster = GetMonsterFromTile(selectedTile);
+        attackController.ConfirmAttack(monster);
     }
 }
 
