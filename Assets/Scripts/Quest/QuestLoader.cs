@@ -34,8 +34,10 @@ public class QuestLoader
         gameState.stairs = new RectInt(s.x, s.y, s.width, s.height);
 
         // portes : elles doivent etre sur un mur
-        foreach (DoorEntry d in quest.doors) AddDoor(d, false);
-        foreach (DoorEntry d in quest.secretDoors) AddDoor(d, true);
+        foreach (DoorEntry d in quest.doors) AddDoor(d, false, false);
+        foreach (DoorEntry d in quest.secretDoors) AddDoor(d, true, false);
+        if (quest.falseDoors != null)
+            foreach (DoorEntry d in quest.falseDoors) AddDoor(d, false, true);
 
         // cases bloquees
         foreach (CellEntry c in quest.blocked)
@@ -85,17 +87,18 @@ public class QuestLoader
         foreach (Tile tile in map.tiles)
             tile.revealed = tile.zone == startZone;
 
-        MarkRock(s.x, s.y);
+        MarkRock(s.x, s.y, quest.rockZones);
 
         Debug.Log("Quete " + quest.number + " chargee : " + gameState.doorList.Count + " portes, "
             + gameState.furnitureList.Count + " meubles, " + gameState.monsterList.Count + " monstres, "
             + gameState.trapList.Count + " pieges");
     }
 
-    void AddDoor(DoorEntry d, bool isSecret)
+    void AddDoor(DoorEntry d, bool isSecret, bool isFalse)
     {
         Side side = ParseEnum<Side>(d.side, "cote de porte");
         Door door = new Door(d.x, d.y, side, isSecret);
+        door.isFalse = isFalse;
         Vector2Int n = Neighbor(d.x, d.y, side);
 
         if (!gameState.map.HasWall(d.x, d.y, n.x, n.y))
@@ -142,15 +145,24 @@ public class QuestLoader
         return null;
     }
 
-    // roche : toute case qu'on ne peut pas atteindre depuis l'escalier
-    // en passant par les portes (secretes comprises) et sans traverser de case bloquee
-    void MarkRock(int startX, int startY)
+    // roche : toute case qu'on ne peut pas atteindre en passant par les portes (secretes comprises),
+    // sans traverser de case bloquee ni une zone de rockZones
+    // on part de la salle de depart ET des deux cotes de chaque porte : une salle qui a une porte
+    // n'est jamais de la roche (quete 10 : on passe d'une salle a l'autre par teleportation)
+    void MarkRock(int startX, int startY, string[] rockZones)
     {
         Map map = gameState.map;
         bool[,] reached = new bool[map.width, map.height];
         Queue<Vector2Int> queue = new Queue<Vector2Int>();
-        queue.Enqueue(new Vector2Int(startX, startY));
-        reached[startX, startY] = true;
+
+        Reach(startX, startY, rockZones, reached, queue);
+        foreach (Door door in gameState.doorList)
+        {
+            if (door.isFalse) continue;
+            Vector2Int n = Neighbor(door.x, door.y, door.side);
+            Reach(door.x, door.y, rockZones, reached, queue);
+            Reach(n.x, n.y, rockZones, reached, queue);
+        }
 
         while (queue.Count > 0)
         {
@@ -158,12 +170,8 @@ public class QuestLoader
             foreach (Side side in Enum.GetValues(typeof(Side)))
             {
                 Vector2Int n = Neighbor(c.x, c.y, side);
-                if (!map.InBounds(n.x, n.y) || reached[n.x, n.y]) continue;
-                if (map.Get(n.x, n.y).blocked) continue;
                 if (map.HasWall(c.x, c.y, n.x, n.y) && !HasDoor(c.x, c.y, n.x, n.y)) continue;
-
-                reached[n.x, n.y] = true;
-                queue.Enqueue(n);
+                Reach(n.x, n.y, rockZones, reached, queue);
             }
         }
 
@@ -171,11 +179,26 @@ public class QuestLoader
             tile.rock = !reached[tile.x, tile.y] && !tile.blocked;
     }
 
+    // marque la case comme atteinte et l'ajoute a la file, si on a le droit d'y aller
+    void Reach(int x, int y, string[] rockZones, bool[,] reached, Queue<Vector2Int> queue)
+    {
+        Map map = gameState.map;
+        if (!map.InBounds(x, y) || reached[x, y]) return;
+
+        Tile tile = map.Get(x, y);
+        if (tile.blocked) return;
+        if (rockZones != null && Array.IndexOf(rockZones, tile.zone) >= 0) return;
+
+        reached[x, y] = true;
+        queue.Enqueue(new Vector2Int(x, y));
+    }
+
+    // une fausse porte ne laisse jamais passer
     bool HasDoor(int x1, int y1, int x2, int y2)
     {
         foreach (Door door in gameState.doorList)
         {
-            if (door.IsBetween(x1, y1, x2, y2)) return true;
+            if (!door.isFalse && door.IsBetween(x1, y1, x2, y2)) return true;
         }
         return false;
     }

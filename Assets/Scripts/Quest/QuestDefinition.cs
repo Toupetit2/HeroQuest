@@ -12,6 +12,8 @@ public class QuestDefinition
     public StartEntry start;
     public DoorEntry[] doors;
     public DoorEntry[] secretDoors;
+    public DoorEntry[] falseDoors;      // optionnel : ne s'ouvrent jamais (quete 12)
+    public string[] rockZones;          // optionnel : zones toujours en roche (quete 10 : "." = tous les couloirs)
     public CellEntry[] blocked;         // une entree par case bloquee
     public FurnitureEntry[] furniture;
     public MonsterEntry[] monsters;
