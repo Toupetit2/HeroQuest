@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EauDeGuerison : CardEffect
 {
-    public override void Execute()
+    public override void Execute(GameManager gameManager)
     {
         return;
 

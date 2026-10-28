@@ -24,10 +24,12 @@ public class GameManager : MonoBehaviour
 
     public Tile selectedTile;
     public Potion selectedPotion;
+    public Equipment selectedEquipment;
 
     public MovementController movementController;
     public AttackController attackController;
     public PotionController potionController;
+    public EquipmentController equipmentController;
 
     [Button]
     public void Test() 
@@ -49,6 +51,7 @@ public class GameManager : MonoBehaviour
         movementController = new MovementController(this, gameState.map);
         attackController = new AttackController(this);
         potionController = new PotionController(this);
+        equipmentController = new EquipmentController(this);
 
         // Show Intro UI
         //
@@ -176,6 +179,19 @@ public class GameManager : MonoBehaviour
         return gameState.map;
     }
 
+    public Monster GetSelectedMonster() 
+    {
+        Vector2Int selectedPos = new Vector2Int(selectedTile.x, selectedTile.y);
+
+        foreach(Monster monster in gameState.monsterList) 
+        {
+            if (monster.position == selectedPos) 
+            {
+                return monster;
+            }
+        }
+        return null;
+    }
 
     // Deplacement
     [Button]
@@ -255,7 +271,20 @@ public class GameManager : MonoBehaviour
         potionController.UsePotionAction(selectedPotion);
     }
 
-    
-    
-}
+    [Button]
+    public void EquipmentStart() 
+    {
+        equipmentController.StartEquipmentUse();
+    }
 
+    public void SetSelectedEquipment(Equipment equipment) 
+    {
+        selectedEquipment = equipment;
+    }
+
+    [Button]
+    public void EquipmentConfirm() 
+    {
+        equipmentController.ConfirmEquipmentUse(selectedEquipment);
+    }
+}

@@ -11,4 +11,5 @@ public class Equipment : ScriptableObject
     public CardEffect effect;
     public List<HeroClass> bannedHeros;
     public List<Equipment> bannedEquipments;
+    public bool singleUse;
 }
