@@ -4,6 +4,9 @@ public class Monster
 {
     public MonsterData data;
     public int currentHealth;
+
+    public bool isSleeping = false;
+    public bool isInTornado = false;
     public Vector2Int position;
 
     public Monster(MonsterData monsterData)

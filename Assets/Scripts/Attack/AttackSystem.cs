@@ -30,7 +30,7 @@ public class AttackSystem
                 inRange.Add(monster);
             }
 
-            if (Pathfinding.IsInRange(gameState.map, hero.position, monster.position, 1))
+            if (Pathfinding.IsInRange(gameManager, hero.position, monster.position, 1))
             {
                 inRange.Add(monster);
             }
@@ -48,13 +48,21 @@ public class AttackSystem
         return inRange;
     }
 
-    public int ResolveAttack(Hero hero, Monster target) 
+    public int ResolveAttack(Hero hero, Monster target, int customAttackDice = -1) 
     {
 
         int totalAttack = 0;
-        int heroAttackDices = hero.GetAttackDice();
-        heroAttackDices += hero.bonusAttackDice;
-        hero.bonusAttackDice = 0;
+        int heroAttackDices = 0;
+        if (customAttackDice == -1) //Si pas de custom attaque
+        {
+            heroAttackDices = hero.GetAttackDice();
+            heroAttackDices += hero.bonusAttackDice;
+            hero.bonusAttackDice = 0;
+        }
+        else 
+        {
+            heroAttackDices = customAttackDice;
+        }
 
         for (int i = 0; i < heroAttackDices; i++)
         {
@@ -66,11 +74,14 @@ public class AttackSystem
 
         int totalDefense = 0;
 
-        for (int i = 0; i < target.GetDefenseDice(); i++)
-        {
-            if (Dices.RollCombatDice() == CombatDiceFace.BlackShield)
+        if (!target.isSleeping) 
+        { 
+            for (int i = 0; i < target.GetDefenseDice(); i++)
             {
-                totalDefense += 1;
+                if (Dices.RollCombatDice() == CombatDiceFace.BlackShield)
+                {
+                    totalDefense += 1;
+                }
             }
         }
 
@@ -136,6 +147,11 @@ public class AttackSystem
         }
 
         target.currentHealth -= totalAttack - totalDefense;
+
+        if ((totalAttack - totalDefense) > 0) 
+        {
+            target.bonusDefenseDice = 0;
+        }
 
         return target.currentHealth;
     }

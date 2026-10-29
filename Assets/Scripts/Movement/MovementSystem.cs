@@ -5,22 +5,25 @@ public class MovementSystem
 {
     private int movementPoints;
     private Map map;
+    private GameManager gameManager;
 
-    public MovementSystem(Map _map)
+    public MovementSystem(GameManager _gameManager)
     {
-        map = _map;
+        gameManager = _gameManager;
+        map = _gameManager.GetMap();
     }
 
     public int RollMovement(Hero hero)
     {
-        movementPoints = Dices.RollRedDice(hero.data.movementDice);
+        movementPoints = Dices.RollRedDice(hero.data.movementDice * hero.movementDiceMultiplier);
+        hero.movementDiceMultiplier = 1;
         Debug.Log($"Total déplacement : {movementPoints}");
         return movementPoints;
     }
 
     public bool CanMoveTo(Hero hero, Tile destination) 
     {
-        return Pathfinding.IsInRange(map, hero.position, new Vector2Int(destination.x, destination.y), movementPoints);
+        return Pathfinding.IsInRange(gameManager, hero.position, new Vector2Int(destination.x, destination.y), movementPoints);
     }
     
 
@@ -74,7 +77,7 @@ public class MovementSystem
                 if (distances.ContainsKey(nextPosition))
                     continue;
 
-                if (!Pathfinding.CanStep(map, currentPosition, direction, nextPosition))
+                if (!Pathfinding.CanStep(gameManager, currentPosition, direction, nextPosition))
                     continue;
 
                 distances[nextPosition] = currentDistance + 1;
@@ -89,7 +92,7 @@ public class MovementSystem
 
     public bool MonsterCanMoveTo(Monster monster, Tile destination)
     {
-        return Pathfinding.IsInRange(map, monster.position, new Vector2Int(destination.x, destination.y), monster.data.movementCases);
+        return Pathfinding.IsInRange(gameManager, monster.position, new Vector2Int(destination.x, destination.y), monster.data.movementCases);
     }
 
     public void MoveMonster(Monster monster, Tile destination) 
