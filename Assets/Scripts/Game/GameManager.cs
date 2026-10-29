@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditor.Search;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -12,7 +11,7 @@ public class GameManager : MonoBehaviour
     [Header("État de la partie")]
     private int currentTurn = 1;
     private bool isGameStarted = false;
-    private GameState gameState;
+    private GameState gameState = new GameState();   // doit exister des Awake : les controleurs le gardent
 
     private List<HeroClass> turnOrder = new();
 
@@ -34,11 +33,17 @@ public class GameManager : MonoBehaviour
     private PotionController potionController;
     private EquipmentController equipmentController;
     private LootController lootController;
-    private BoardBuilder boardBuilder;
+    [Header("Plateau")]
+    [SerializeField] private BoardBuilder boardBuilder;
+    [SerializeField] private QuestView questView;               // optionnel : affiche la quete chargee
+    [SerializeField] private bool loadQuestContent = false;     // faux = seulement la carte ; vrai = portes, meubles, monstres...
     private QuestLoader questLoader;
 
     private void Awake()
     {
+        // le plateau doit exister AVANT les controleurs : MovementSystem garde la Map recue a sa creation
+        BuildBoard();
+
         movementController = new MovementController(this);
         attackController = new AttackController(this);
         potionController = new PotionController(this);
@@ -49,12 +54,8 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
-        // Le generate map empeche la suite d'etre executé donc a fix
-
-        boardBuilder.Generate();
-
-        // Generate Map
-        gameState.map = boardBuilder.map;
+        // la carte est generee dans Awake (BuildBoard)
+        LoadSelectedQuest();
 
 
         
@@ -68,6 +69,45 @@ public class GameManager : MonoBehaviour
         // Spell Choice
         //uiManager.ShowSpellChoice(true);
 
+    }
+
+    // genere le plateau et le donne au GameState
+    private void BuildBoard()
+    {
+        if (boardBuilder == null) boardBuilder = FindFirstObjectByType<BoardBuilder>();
+        if (boardBuilder == null)
+        {
+            Debug.LogError("GameManager : aucun BoardBuilder dans la scene (menu HeroQuest > Installer le menu et le plateau).");
+            return;
+        }
+
+        boardBuilder.Generate();
+        gameState.map = boardBuilder.map;
+    }
+
+    // quete choisie dans le menu (QuestSelection) ; sans menu : la quete questNumber, dans Resources/Quests
+    private void LoadSelectedQuest()
+    {
+        if (QuestSelection.HasSelection) questNumber = QuestSelection.Number;
+        Debug.Log(QuestSelection.HasSelection
+            ? "Quete choisie dans le menu : " + QuestSelection.FileName
+            : "Aucune quete choisie dans le menu : quete " + questNumber);
+
+        if (!loadQuestContent || gameState.map == null) return;
+
+        try
+        {
+            questLoader = new QuestLoader(gameState);
+            string json = QuestSelection.ReadJson();
+            if (json != null) questLoader.Load(json);
+            else questLoader.LoadQuest(questNumber);
+
+            if (questView != null) questView.Show(gameState);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("Chargement de la quete : " + e.Message);
+        }
     }
 
     public void StartGame()

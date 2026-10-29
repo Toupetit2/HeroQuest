@@ -1091,6 +1091,91 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 556920382}
   m_CullTransparentMesh: 1
+--- !u!1 &604054439
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 604054442}
+  - component: {fileID: 604054441}
+  - component: {fileID: 604054440}
+  m_Layer: 0
+  m_Name: Board
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &604054440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 604054439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f584bf5e6943eb4e951add894fef872, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::QuestView
+  board: {fileID: 604054441}
+  doorPrefab: {fileID: 0}
+  secretDoorPrefab: {fileID: 0}
+  blockedPrefab: {fileID: 0}
+  stairsPrefab: {fileID: 0}
+  allyPrefab: {fileID: 0}
+  trapPrefab: {fileID: 0}
+  furniturePrefabs: []
+  monsterPrefabs: []
+  doorHeight: 2
+  doorThickness: 0.3
+  blockedHeight: 2.5
+  stairsHeight: 0.2
+  furnitureHeight: 1
+  monsterHeight: 1.5
+  showAll: 0
+  showHidden: 0
+  trapHeight: 0.1
+--- !u!114 &604054441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 604054439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4dc317f48464b184d8f3633dbeac0cb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BoardBuilder
+  boardFile: {fileID: 4900000, guid: 541c0f57e6f1a7a41a8b27acbee2a51c, type: 3}
+  cellSize: 2
+  wallHeight: 2.5
+  wallThickness: 0.2
+  floorThickness: 0.1
+  floorPrefab: {fileID: 0}
+  wallPrefab: {fileID: 0}
+  roomMaterial: {fileID: 0}
+  corridorMaterial: {fileID: 0}
+  zoneStyles: []
+--- !u!4 &604054442
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 604054439}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &639483209
 GameObject:
   m_ObjectHideFlags: 0
@@ -1183,6 +1268,7 @@ GameObject:
   - component: {fileID: 693811227}
   - component: {fileID: 693811226}
   - component: {fileID: 693811225}
+  - component: {fileID: 693811228}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1264,6 +1350,31 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &693811228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 693811224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc797841c35883e4a88d6aa68e197015, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraController
+  board: {fileID: 604054441}
+  distance: 25
+  minDistance: 5
+  maxDistanceFactor: 0.4
+  zoomSpeed: 4
+  yaw: 0
+  pitch: 55
+  minPitch: 15
+  maxPitch: 89
+  rotateSpeed: 3
+  keyPanSpeed: 0.8
+  dragPanSpeed: 0.004
+  panMargin: -1.5
 --- !u!1 &1021039668
 GameObject:
   m_ObjectHideFlags: 0
@@ -1616,6 +1727,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   uiManager: {fileID: 0}
+  boardBuilder: {fileID: 604054441}
+  questView: {fileID: 604054440}
+  loadQuestContent: 0
 --- !u!1 &1381494547
 GameObject:
   m_ObjectHideFlags: 0
@@ -2471,3 +2585,4 @@ SceneRoots:
   - {fileID: 1034546954}
   - {fileID: 1021039672}
   - {fileID: 329265166}
+  - {fileID: 604054442}
