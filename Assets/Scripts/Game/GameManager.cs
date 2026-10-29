@@ -17,12 +17,14 @@ public class GameManager : MonoBehaviour
     public List<HeroClass> turnOrder = new();
 
     public int currentPlayerIndex = 0;
+    public bool isZargonTurn = false;
 
     [Header("État du tour")]    
     public bool hasMoveAction = true;
     public bool hasAction = true;
 
     public Tile selectedTile;
+    public Monster selectedMonster;
     public Potion selectedPotion;
     public Equipment selectedEquipment;
 
@@ -85,9 +87,20 @@ public class GameManager : MonoBehaviour
         if (currentPlayerIndex >= gameState.heroList.Count)
         {
             currentPlayerIndex = 0;
+            isZargonTurn = true;
+        }
+        if (isZargonTurn) 
+        {
+            currentPlayerIndex = 0;
             currentTurn++;
+            isZargonTurn = false;
         }
         StartTurn();
+    }
+
+    public bool IsZargonTurn()
+    {
+        return isZargonTurn;
     }
 
     public void AddHeroTurn(HeroClass hero) 
@@ -173,6 +186,11 @@ public class GameManager : MonoBehaviour
 
     public void SetSelectedTile(Tile tile)
     {
+        Monster monster = GetMonsterFromTile(tile);
+        if (isZargonTurn && monster != null) // Si Zargon et il y a un monstre sur la case, set le monster plutot que la case
+        {
+            selectedMonster = monster;
+        }
         selectedTile = tile;
     }
 
@@ -288,5 +306,31 @@ public class GameManager : MonoBehaviour
     public void EquipmentConfirm() 
     {
         equipmentController.ConfirmEquipmentUse(selectedEquipment);
+    }
+
+    [Button]
+    public void ZargonMoveMonster() 
+    {
+        movementController.MonsterConfirmMove(selectedMonster, selectedTile);
+        Debug.Log($"Zargon déplace {selectedMonster.data.monsterClass.ToString()} en {selectedTile.x}, {selectedTile.y}");
+    }
+
+    private Hero GetHeroFromTile(Tile tile)
+    {
+        foreach (Hero hero in gameState.heroList)
+        {
+            if (hero.position == new Vector2Int(tile.x, tile.y))
+            {
+                return hero;
+            }
+        }
+        return null;
+    }
+
+    [Button]
+    public void ZargonAttackHero() 
+    {
+        attackController.ZargonConfirmAttack(selectedMonster, GetHeroFromTile(selectedTile));
+        Debug.Log($"Zargon attaque {GetHeroFromTile(selectedTile).data.heroClass.ToString()} avec {selectedMonster.data.monsterClass.ToString()}");
     }
 }

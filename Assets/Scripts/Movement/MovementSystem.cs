@@ -20,8 +20,9 @@ public class MovementSystem
 
     public bool CanMoveTo(Hero hero, Tile destination) 
     {
-        return Pathfinding.IsInRange(map, hero.position, new Vector2Int(destination.x, destination.y), 999);
+        return Pathfinding.IsInRange(map, hero.position, new Vector2Int(destination.x, destination.y), movementPoints);
     }
+    
 
     public void MoveHero(Hero hero, Tile destination) 
     {
@@ -86,6 +87,19 @@ public class MovementSystem
         return new List<Vector2Int>(distances.Keys);
     }
 
+    public bool MonsterCanMoveTo(Monster monster, Tile destination)
+    {
+        return Pathfinding.IsInRange(map, monster.position, new Vector2Int(destination.x, destination.y), monster.data.movementCases);
+    }
 
+    public void MoveMonster(Monster monster, Tile destination) 
+    {
+        if (!MonsterCanMoveTo(monster, destination))
+        {
+            return;
+        }
+
+        monster.position = new Vector2Int(destination.x, destination.y);
+    }
 
 }

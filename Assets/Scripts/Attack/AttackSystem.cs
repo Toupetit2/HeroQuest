@@ -106,4 +106,37 @@ public class AttackSystem
 
         return dx + dy > 1;
     }
+
+    public int MonsterResolveAttack(Monster monster, Hero target) 
+    {
+        int totalAttack = 0;
+
+        for (int i = 0; i < monster.GetAttackDice(); i++)
+        {
+            if (Dices.RollCombatDice() == CombatDiceFace.Skull)
+            {
+                totalAttack += 1;
+            }
+        }
+
+        int totalDefense = target.GetDefenseDice();
+
+        foreach (Armor armor in target.inventory) 
+        {
+            totalDefense += armor.defenseDice;
+        }
+
+
+        for (int i = 0; i < totalDefense; i++)
+        {
+            if (Dices.RollCombatDice() == CombatDiceFace.WhiteShield)
+            {
+                totalDefense += 1;
+            }
+        }
+
+        target.currentHealth -= totalAttack - totalDefense;
+
+        return target.currentHealth;
+    }
 }
