@@ -67,7 +67,48 @@ public class GameManager : MonoBehaviour
         gameState.map = boardBuilder.map;
 
         questLoader = new QuestLoader(gameState);
-        questLoader.LoadQuest(questNumber);
+        if (QuestSelection.HasSelection)
+        {
+            // Campagne ou Mes quetes : le menu fournit le JSON selectionne.
+            // Ne JAMAIS retomber silencieusement sur la quete 1 si le fichier manque.
+            string chosenJson;
+            try
+            {
+                chosenJson = QuestSelection.ReadJson();
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError("HeroQuest : impossible de lire la quete " + QuestSelection.FileName + " : " + e);
+                enabled = false;
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(chosenJson))
+            {
+                Debug.LogError("HeroQuest : quete introuvable ou vide : " + QuestSelection.FileName +
+                    ". Verifie qu'elle a bien ete enregistree dans Mes quetes.");
+                enabled = false;
+                return;
+            }
+
+            try
+            {
+                questLoader.Load(chosenJson);
+                Debug.Log("HeroQuest : chargement de " + QuestSelection.FileName +
+                    (QuestSelection.IsCampaign ? " (campagne)" : " (Mes quetes)"));
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError("HeroQuest : quete invalide " + QuestSelection.FileName + " : " + e);
+                enabled = false;
+                return;
+            }
+        }
+        else
+        {
+            // Lancement direct de la scene de jeu pour les tests : quete officielle.
+            questLoader.LoadQuest(questNumber);
+        }
         questView.Show(gameState);
 
         movementController = new MovementController(this);
