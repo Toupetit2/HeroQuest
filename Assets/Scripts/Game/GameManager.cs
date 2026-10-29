@@ -1,92 +1,85 @@
 using System.Collections.Generic;
+using UnityEditor.Search;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public UIManager uiManager;
+
     [Header("Quête")]
-    public int questNumber = 1;
+    private int questNumber = 1;
 
     [Header("État de la partie")]
-    public int currentTurn = 1;
-    public bool isGameStarted = false;
-    public GameState gameState;
+    private int currentTurn = 1;
+    private bool isGameStarted = false;
+    private GameState gameState = new GameState();
 
-    public List<HeroClass> turnOrder = new List<HeroClass>();
+    private List<HeroClass> turnOrder = new();
 
-    public int currentPlayerIndex = 0;
+    private int currentPlayerIndex = 0;
+    private bool isZargonTurn = false;
 
     [Header("État du tour")]    
-    public bool hasMoveAction = true;
-    public bool hasAction = true;
+    private bool hasMoveAction = true;
+    private bool hasAction = true;
 
-    public void Test() 
-    {
-        return;
-    }
+    private Tile selectedTile;
+    private Monster selectedMonster;
+    private Potion selectedPotion;
+    private Equipment selectedEquipment;
+    private Hero selectedHero;
 
-    // Le GameManager pilote désormais la création du plateau et le choix du mode.
-    // Pas de code UnityEditor : fonctionne en Play et dans une build.
-    private HQGameModeRuntime questRuntime;
+    private MovementController movementController;
+    private AttackController attackController;
+    private PotionController potionController;
+    private EquipmentController equipmentController;
+    private LootController lootController;
+    private SpellsController spellsController;
+    
+    [SerializeField] private BoardBuilder boardBuilder;   // celui de la scene, a glisser dans l'Inspector
+    [SerializeField] private QuestView questView;       // celui de la scene, a glisser dans l'Inspector
+    private QuestLoader questLoader;
+    
+    [Header("Spells")]
+    [SerializeField] private Spell[] allSpells;
 
     private void Awake()
     {
-        if (gameState == null) gameState = new GameState();
-        if (gameState.heroList == null) gameState.heroList = new List<Hero>();
-        if (gameState.monsterList == null) gameState.monsterList = new List<Monster>();
-        if (turnOrder == null) turnOrder = new List<HeroClass>();
-
-        questRuntime = GetComponent<HQGameModeRuntime>();
-        if (questRuntime == null) questRuntime = gameObject.AddComponent<HQGameModeRuntime>();
-        questRuntime.manager = this;
+        movementController = new MovementController(this);
+        attackController = new AttackController(this);
+        potionController = new PotionController(this);
+        equipmentController = new EquipmentController(this);
+        lootController = new LootController(this);
+        spellsController = new SpellsController(this);
     }
 
     private void Start()
     {
-        // On ne crée plus une carte 4x3 temporaire ici.
-        // La carte 26x19 est fournie par HQGameModeRuntime lors du choix de quête.
-    }
+        if (UnityEngine.SceneManagement.SceneManager
+        .GetActiveScene().name == "HQ_Runtime")
+        {
+            return;
+        }
+        // le plateau d'abord : le QuestLoader a besoin de la map
+        boardBuilder.Generate();
+        gameState.map = boardBuilder.map;
 
-    // Méthodes appelables par une interface de jeu, pas par l'éditeur Unity.
-    public bool LancerCampagne(int numeroQuete)
-    {
-        if (questRuntime == null) return false;
-        bool result = questRuntime.ChargerCampagne(numeroQuete);
-        if (result) DebuterNouvelleQuete(numeroQuete);
-        return result;
-    }
+        questLoader = new QuestLoader(gameState);
+        questLoader.LoadQuest(questNumber);
+        questView.Show(gameState);
 
-    public bool LancerProcedural(HQGameModeRuntime.Options generation)
-    {
-        if (questRuntime == null) return false;
-        bool result = questRuntime.GenererProcedural(generation);
-        if (result) DebuterNouvelleQuete(0);
-        return result;
-    }
-
-    public void RevenirAuChoixDuMode()
-    {
-        if (questRuntime != null) questRuntime.EffacerQuete();
-        isGameStarted = false;
-        if (gameState != null) gameState.map = null;
-    }
-
-    private void DebuterNouvelleQuete(int numeroQuete)
-    {
-        questNumber = numeroQuete;
-        currentTurn = 1;
-        currentPlayerIndex = 0;
-        isGameStarted = false; // Attendre la sélection des héros avant StartGame().
-        hasMoveAction = true;
-        hasAction = true;
-        if (gameState == null) gameState = new GameState();
-        gameState.map = new Map(questRuntime.PlateauLogique.text);
-        // La PCG configure le décor. Les systèmes de héros/combat de l'équipe
-        // doivent ensuite utiliser cette carte et connecter les interactions.
+        movementController = new MovementController(this);
+        attackController = new AttackController(this);
+        potionController = new PotionController(this);
+        equipmentController = new EquipmentController(this);
+        lootController = new LootController(this);
     }
 
     public void StartGame()
     {
+        // uiManager.ShowGameUI();
         isGameStarted = true;
+        spellsController.Init(allSpells);
         StartTurn();
     }
 
@@ -103,9 +96,26 @@ public class GameManager : MonoBehaviour
         if (currentPlayerIndex >= gameState.heroList.Count)
         {
             currentPlayerIndex = 0;
+            isZargonTurn = true;
+        }
+        if (isZargonTurn) 
+        {
+            currentPlayerIndex = 0;
             currentTurn++;
+            isZargonTurn = false;
+
+            foreach (Monster monster in gameState.monsterList) 
+            {
+                monster.isSleeping = false;
+                monster.isInTornado = false;
+            }
         }
         StartTurn();
+    }
+
+    public bool IsZargonTurn()
+    {
+        return isZargonTurn;
     }
 
     public void AddHeroTurn(HeroClass hero) 
@@ -118,37 +128,30 @@ public class GameManager : MonoBehaviour
         GetHero(turnOrder[currentPlayerIndex]).spells.Add(type);
     }
 
-    public void MoveAction() 
+    public bool UseAction() 
     {
-        hasMoveAction = false;
-        // Move
+        if (hasAction)
+        {
+            hasAction = false;
+            return true;
+        }
+        return false;
+    }
+    public bool HasAction()
+    {
+        return hasAction;
     }
 
-    public void AttackAction() 
+    public void SpellAction(Spell spell) 
     {
-        hasAction = false;
-        // Attack
+        spellsController.UseSpell(GetCurrentHero(), spell);
     }
 
-    public void SpellAction() 
+    public void SearchTreasureAction() // une fois par joueur par pièce
     {
         
     }
-
-    public void SearchTreasureAction() 
-    {
     
-    }
-
-    public void SearchSecretDoorAction() 
-    {
-        
-    }
-
-    public void DetectTrapAction() 
-    {
-    
-    }
     
     public void DisableTrapAction() 
     {
@@ -167,7 +170,7 @@ public class GameManager : MonoBehaviour
 
     public void GetLootFreeAction() 
     {
-        
+        lootController.PickUpLoot(GetCurrentHero(), GetCurrentHero().position);
     }
 
     private Hero GetHero(HeroClass hero) 
@@ -182,5 +185,236 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
-}
+    public Hero GetCurrentHero() 
+    {
+        foreach (Hero h in gameState.heroList) 
+        {
+            if (h.data.heroClass == turnOrder[currentPlayerIndex]) 
+            {
+                return h;
+            }
+        }
+        return null;
+    }
 
+    [Button]
+    public void ChangeQuest(int questNb) 
+    {
+        
+        questNumber = questNb;
+        questLoader.LoadQuest(questNb);
+        questView.Show(gameState);
+        
+    }
+
+    public void SetSelectedTile(Tile tile)
+    {
+        Monster monster = GetMonsterFromTile(tile);
+        if (isZargonTurn && monster != null) // Si Zargon et il y a un monstre sur la case, set le monster plutot que la case
+        {
+            selectedMonster = monster;
+        }
+        selectedTile = tile;
+        selectedHero = GetHeroFromTile(tile);
+    }
+
+    public Map GetMap() 
+    {
+        return gameState.map;
+    }
+
+    public Monster GetSelectedMonsterFromSelectedTile() 
+    {
+        Vector2Int selectedPos = new Vector2Int(selectedTile.x, selectedTile.y);
+
+        foreach(Monster monster in gameState.monsterList) 
+        {
+            if (monster.position == selectedPos) 
+            {
+                return monster;
+            }
+        }
+        return null;
+    }
+
+    // Deplacement
+    [Button]
+    public void MovementRollDices()
+    {
+        if (movementController.CanRoll())
+            movementController.RollDices();
+    }
+
+    [Button]
+    public void MovementConfirmMove() 
+    {
+        movementController.ConfirmMove(selectedTile);
+    }
+
+    // Attaque
+    [Button]
+    public void AttackStart() 
+    {
+        if (attackController.CanAttack()) 
+        {
+            attackController.StartAttack();
+        }
+    }
+
+    private Monster GetMonsterFromTile(Tile tile) 
+    {
+        foreach (Monster monster in gameState.monsterList) 
+        {
+            if (monster.position == new Vector2Int(tile.x, tile.y)) 
+            {
+                return monster;
+            }
+        }
+        return null;
+    }
+
+    [Button]
+    public void AttackConfirm(int customAttackDice = -1) 
+    {
+        Monster monster = GetMonsterFromTile(selectedTile);
+        attackController.ConfirmAttack(monster, customAttackDice);
+    }
+
+    [Button]
+    public void SearchSecretDoorAction()
+    {
+        if (UseAction())
+        {
+            Search.DetectSecretDoor(gameState, GetCurrentHero());
+        }
+    }
+
+    [Button]
+    public void DetectTrapAction()
+    {
+        if (UseAction())
+        {
+            Search.DetectTrap(gameState.map, GetCurrentHero());
+        }
+    }
+
+    [Button]
+    public void PotionStart() 
+    {
+        potionController.StartPotionAction();
+    }
+
+    public void SetSelectedPotion(Potion potion) 
+    {
+        selectedPotion = potion;
+    }
+
+    [Button]
+    public void PotionConfirm() 
+    {
+        potionController.UsePotionAction(selectedPotion);
+    }
+
+    [Button]
+    public void EquipmentStart() 
+    {
+        equipmentController.StartEquipmentUse();
+    }
+
+    public void SetSelectedEquipment(Equipment equipment) 
+    {
+        selectedEquipment = equipment;
+    }
+
+    [Button]
+    public void EquipmentConfirm() 
+    {
+        equipmentController.ConfirmEquipmentUse(selectedEquipment);
+    }
+
+    [Button]
+    public void ZargonMoveMonster() 
+    {
+        movementController.MonsterConfirmMove(selectedMonster, selectedTile);
+        Debug.Log($"Zargon déplace {selectedMonster.data.monsterClass.ToString()} en {selectedTile.x}, {selectedTile.y}");
+    }
+
+    private Hero GetHeroFromTile(Tile tile)
+    {
+        foreach (Hero hero in gameState.heroList)
+        {
+            if (hero.position == new Vector2Int(tile.x, tile.y))
+            {
+                return hero;
+            }
+        }
+        return null;
+    }
+
+    [Button]
+    public void ZargonAttackHero() 
+    {
+        attackController.ZargonConfirmAttack(selectedMonster, GetHeroFromTile(selectedTile));
+        Debug.Log($"Zargon attaque {GetHeroFromTile(selectedTile).data.heroClass.ToString()} avec {selectedMonster.data.monsterClass.ToString()}");
+    }
+
+    public Tile GetSelectedTile() 
+    {
+        return selectedTile;
+    }
+
+    public Monster GetSelectedMonster() 
+    {
+        return selectedMonster;
+    }
+
+    public Potion GetSelectedPotion() 
+    {
+        return selectedPotion;
+    }
+
+    public Equipment GetSelectedEquipment() 
+    {
+        return selectedEquipment;
+    }
+    
+    public Hero GetSelectedHero() 
+    {
+        return selectedHero;
+    }
+
+    public int GetCurrentTurn() 
+    {
+        return currentTurn;
+    }
+    
+    public bool IsGameStarted() 
+    {
+        return isGameStarted;
+    }
+
+    public GameState GetGameState() 
+    {
+        return gameState;
+    }
+
+    public bool HasMoveAction() 
+    {
+        return hasMoveAction;
+    }
+
+    public void UseMoveAction() 
+    {
+        hasMoveAction = false;
+    }
+
+    public int GetQuestNumber() 
+    {
+        return questNumber;
+    }
+
+    public void DropLoot(Equipment equipment, Vector2Int position) 
+    {
+        lootController.DropLoot(equipment, position);
+    }
+}
