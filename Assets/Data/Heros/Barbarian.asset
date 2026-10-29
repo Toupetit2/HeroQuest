@@ -9,12 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dcdfd6eca01a1034e8cd4950088d3729, type: 3}
+  m_Script: {fileID: 11500000, guid: c6f892e35f361ec449b6f0738a851c62, type: 3}
   m_Name: Barbarian
-  m_EditorClassIdentifier: Assembly-CSharp::Hero
+  m_EditorClassIdentifier: Assembly-CSharp::HeroData
   heroClass: 0
   attackDices: 3
   defenseDices: 2
   health: 8
   spirit: 2
   movementDice: 2
+  baseWeapon: {fileID: 0}
+  baseArmor: {fileID: 0}
+  canUseSpells: 0
+  baseGold: 0

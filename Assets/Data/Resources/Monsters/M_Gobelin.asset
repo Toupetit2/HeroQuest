@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a62f6639a343ba24a88df819bcdd46e7, type: 3}
+  m_Script: {fileID: 11500000, guid: cb5d7b924e70dca43b63ba61158f8067, type: 3}
   m_Name: M_Gobelin
   m_EditorClassIdentifier: Assembly-CSharp::MonsterData
   monsterClass: 0
