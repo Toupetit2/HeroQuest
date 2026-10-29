@@ -23,6 +23,7 @@ public class Hero
     public List<Equipment> inventory;
     public List<Equipment> equippedItems;
     public List<SpellType> spells;
+    public List<Spell> spellList;
 
     public Vector2Int position;
 
