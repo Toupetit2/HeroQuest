@@ -1,0 +1,76 @@
+{
+    "number": 2,
+    "title": "test 2",
+    "stairs": {
+        "x": 14,
+        "y": 7,
+        "width": 2,
+        "height": 2
+    },
+    "start": {
+        "type": "stairs",
+        "room": ""
+    },
+    "doors": [
+        {
+            "x": 10,
+            "y": 8,
+            "side": "West"
+        }
+    ],
+    "secretDoors": [],
+    "falseDoors": [],
+    "rockZones": [],
+    "blocked": [],
+    "furniture": [],
+    "monsters": [
+        {
+            "id": "",
+            "type": "Gobelin",
+            "x": 12,
+            "y": 9,
+            "movement": 0,
+            "attack": 0,
+            "defense": 0,
+            "body": 0,
+            "mind": 0,
+            "item": "",
+            "hidden": false,
+            "statue": false,
+            "wakeOn": "",
+            "wakeRoom": ""
+        }
+    ],
+    "traps": [
+        {
+            "type": "Fosse",
+            "x": 10,
+            "y": 10
+        }
+    ],
+    "wanderingMonster": "Orc",
+    "victory": {
+        "mode": "Tous",
+        "objectives": [
+            {
+                "type": "Escalier",
+                "target": "",
+                "count": 0,
+                "room": ""
+            }
+        ]
+    },
+    "intro": "",
+    "treasures": [],
+    "allies": [],
+    "markers": [],
+    "rules": [],
+    "reward": {
+        "goldShared": 0,
+        "goldEach": 0,
+        "bounties": []
+    },
+    "parchment": "",
+    "zargonNote": "",
+    "notes": []
+}
