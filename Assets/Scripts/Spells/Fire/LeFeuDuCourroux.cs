@@ -5,7 +5,7 @@ public class LeFeuDuCourroux : CardEffect
 {
     public override void Execute(GameManager gameManager)
     {
-        Monster target = gameManager.selectedMonster;
+        Monster target = gameManager.GetSelectedMonsterFromSelectedTile();
 
         if (Dices.RollRedDice() < 5)
             target.SetHealth(target.GetHealth() - 1);

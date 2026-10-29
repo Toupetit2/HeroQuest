@@ -4,7 +4,7 @@ public class EauDeGuerison : CardEffect
 {
     public override void Execute(GameManager gameManager)
     {
-        Hero user = gameManager.selectedHero;
+        Hero user = gameManager.GetSelectedHero();
 
         user.currentHealth += 4;
 

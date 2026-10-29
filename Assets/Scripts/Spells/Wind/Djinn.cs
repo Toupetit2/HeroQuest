@@ -17,15 +17,15 @@ public class Djinn : CardEffect
     }
     public override void Execute(GameManager gameManager) 
     {
-        GameState gameState = gameManager.gameState;
-        Door door = GetDoor(gameState, gameManager.selectedTile);
+        GameState gameState = gameManager.GetGameState();
+        Door door = GetDoor(gameState, gameManager.GetSelectedTile());
         if (door != null) // si case avec une porte
         {
             door.isOpen = true;
         }
         else 
         {
-            gameManager.attackController.ConfirmAttack(gameManager.GetSelectedMonster(), 5);
+            gameManager.AttackConfirm(5);
         }
     }
 }

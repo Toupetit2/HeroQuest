@@ -18,9 +18,9 @@ public class AttackController
         
         if (attackState == AttackStates.None) 
         {
-            if (gameManager.hasAction) 
+            if (gameManager.HasAction()) 
             {
-                gameManager.hasAction = false;
+                gameManager.UseAction();
                 return true;
             }
 
@@ -52,7 +52,7 @@ public class AttackController
                 {
                     attackSystem.ResolveAttack(gameManager.GetCurrentHero(), target, customAttackDice);
                     attackState = AttackStates.None;
-                    gameManager.hasAction = false;
+                    gameManager.UseAction();
                     return;
                 }
             }
