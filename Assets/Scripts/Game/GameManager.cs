@@ -54,61 +54,12 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        if (UnityEngine.SceneManagement.SceneManager
-        .GetActiveScene().name == "HQ_Runtime")
-        {
-            return;
-        }
         // le plateau d'abord : le QuestLoader a besoin de la map
-        if (boardBuilder == null) boardBuilder = FindFirstObjectByType<BoardBuilder>();
-        if (questView == null) questView = FindFirstObjectByType<QuestView>();
-        HeroQuestRuntimeTerrain.Configure(boardBuilder, questView);
         boardBuilder.Generate();
         gameState.map = boardBuilder.map;
 
         questLoader = new QuestLoader(gameState);
-        if (QuestSelection.HasSelection)
-        {
-            // Campagne ou Mes quetes : le menu fournit le JSON selectionne.
-            // Ne JAMAIS retomber silencieusement sur la quete 1 si le fichier manque.
-            string chosenJson;
-            try
-            {
-                chosenJson = QuestSelection.ReadJson();
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogError("HeroQuest : impossible de lire la quete " + QuestSelection.FileName + " : " + e);
-                enabled = false;
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(chosenJson))
-            {
-                Debug.LogError("HeroQuest : quete introuvable ou vide : " + QuestSelection.FileName +
-                    ". Verifie qu'elle a bien ete enregistree dans Mes quetes.");
-                enabled = false;
-                return;
-            }
-
-            try
-            {
-                questLoader.Load(chosenJson);
-                Debug.Log("HeroQuest : chargement de " + QuestSelection.FileName +
-                    (QuestSelection.IsCampaign ? " (campagne)" : " (Mes quetes)"));
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogError("HeroQuest : quete invalide " + QuestSelection.FileName + " : " + e);
-                enabled = false;
-                return;
-            }
-        }
-        else
-        {
-            // Lancement direct de la scene de jeu pour les tests : quete officielle.
-            questLoader.LoadQuest(questNumber);
-        }
+        questLoader.LoadQuest(questNumber);
         questView.Show(gameState);
 
         movementController = new MovementController(this);
@@ -120,7 +71,7 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        // uiManager.ShowGameUI();
+        uiManager.ShowGameUI();
         isGameStarted = true;
         spellsController.Init(allSpells);
         StartTurn();

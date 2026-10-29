@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76f0b0b8fc481354494ef58fbd710219, type: 3}
+  m_Name: S_PeauDeRoc
+  m_EditorClassIdentifier: Assembly-CSharp::Spell
+  spellName: Peau de roc
+  description: "Ce sort peut cibler n\u2019importe quel h\xE9ros, incluant le lanceur.
+    Ce h\xE9ros pourra lancer 1 d\xE9 de combat de plus en d\xE9fense. Le sort prend
+    fin quand le h\xE9ros perd 1 point de vie."
+  illustration: {fileID: 0}
+  spellType: 3
+  effect: {fileID: 11400000, guid: d96a13e16fd3b6a47a3570cb6ae207b1, type: 2}
