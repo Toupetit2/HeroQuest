@@ -5,7 +5,7 @@ public class Courage : CardEffect
 {
     public override void Execute(GameManager gameManager) 
     {
-        Hero user = gameManager.selectedHero;
+        Hero user = gameManager.GetSelectedHero();
 
         user.bonusAttackDice += 2;
     }

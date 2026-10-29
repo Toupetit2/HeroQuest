@@ -5,7 +5,7 @@ public class Sommeil : CardEffect
 {
     public override void Execute(GameManager gameManager)
     {
-        Monster target = gameManager.selectedMonster;
+        Monster target = gameManager.GetSelectedMonsterFromSelectedTile();
 
         bool sixOnDice = false;
 

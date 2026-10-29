@@ -7,56 +7,57 @@ public class GameManager : MonoBehaviour
     public UIManager uiManager;
 
     [Header("Quête")]
-    public int questNumber = 1;
+    private int questNumber = 1;
 
     [Header("État de la partie")]
-    public int currentTurn = 1;
-    public bool isGameStarted = false;
-    public GameState gameState;
+    private int currentTurn = 1;
+    private bool isGameStarted = false;
+    private GameState gameState;
 
-    public List<HeroClass> turnOrder = new();
+    private List<HeroClass> turnOrder = new();
 
-    public int currentPlayerIndex = 0;
-    public bool isZargonTurn = false;
+    private int currentPlayerIndex = 0;
+    private bool isZargonTurn = false;
 
     [Header("État du tour")]    
-    public bool hasMoveAction = true;
-    public bool hasAction = true;
+    private bool hasMoveAction = true;
+    private bool hasAction = true;
 
-    public Tile selectedTile;
-    public Monster selectedMonster;
-    public Potion selectedPotion;
-    public Equipment selectedEquipment;
-    public Hero selectedHero;
+    private Tile selectedTile;
+    private Monster selectedMonster;
+    private Potion selectedPotion;
+    private Equipment selectedEquipment;
+    private Hero selectedHero;
 
-    public MovementController movementController;
-    public AttackController attackController;
-    public PotionController potionController;
-    public EquipmentController equipmentController;
-    public LootController lootController;
+    private MovementController movementController;
+    private AttackController attackController;
+    private PotionController potionController;
+    private EquipmentController equipmentController;
+    private LootController lootController;
+    private BoardBuilder boardBuilder;
+    private QuestLoader questLoader;
 
-    [Button]
-    public void Test() 
+    private void Awake()
     {
-        return;
-    }
-
-    private void Start()
-    {
-        // Le generate map empeche la suite d'etre executé donc a fix
-        
-        // Generate Map
-        gameState.map = new Map(
-                ". . . .\n" +
-                ". . . .\n" +
-                ". . . ."
-            );
-
         movementController = new MovementController(this);
         attackController = new AttackController(this);
         potionController = new PotionController(this);
         equipmentController = new EquipmentController(this);
         lootController = new LootController(this);
+
+        //questLoader = new QuestLoader(gameState);
+    }
+    private void Start()
+    {
+        // Le generate map empeche la suite d'etre executé donc a fix
+
+        boardBuilder.Generate();
+
+        // Generate Map
+        gameState.map = boardBuilder.map;
+
+
+        
 
         // Show Intro UI
         //
@@ -128,6 +129,10 @@ public class GameManager : MonoBehaviour
             return true;
         }
         return false;
+    }
+    public bool HasAction()
+    {
+        return hasAction;
     }
 
     public void SpellAction() 
@@ -207,7 +212,7 @@ public class GameManager : MonoBehaviour
         return gameState.map;
     }
 
-    public Monster GetSelectedMonster() 
+    public Monster GetSelectedMonsterFromSelectedTile() 
     {
         Vector2Int selectedPos = new Vector2Int(selectedTile.x, selectedTile.y);
 
@@ -258,10 +263,10 @@ public class GameManager : MonoBehaviour
     }
 
     [Button]
-    public void AttackConfirm() 
+    public void AttackConfirm(int customAttackDice = -1) 
     {
         Monster monster = GetMonsterFromTile(selectedTile);
-        attackController.ConfirmAttack(monster);
+        attackController.ConfirmAttack(monster, customAttackDice);
     }
 
     [Button]
@@ -340,5 +345,65 @@ public class GameManager : MonoBehaviour
     {
         attackController.ZargonConfirmAttack(selectedMonster, GetHeroFromTile(selectedTile));
         Debug.Log($"Zargon attaque {GetHeroFromTile(selectedTile).data.heroClass.ToString()} avec {selectedMonster.data.monsterClass.ToString()}");
+    }
+
+    public Tile GetSelectedTile() 
+    {
+        return selectedTile;
+    }
+
+    public Monster GetSelectedMonster() 
+    {
+        return selectedMonster;
+    }
+
+    public Potion GetSelectedPotion() 
+    {
+        return selectedPotion;
+    }
+
+    public Equipment GetSelectedEquipment() 
+    {
+        return selectedEquipment;
+    }
+    
+    public Hero GetSelectedHero() 
+    {
+        return selectedHero;
+    }
+
+    public int GetCurrentTurn() 
+    {
+        return currentTurn;
+    }
+    
+    public bool IsGameStarted() 
+    {
+        return isGameStarted;
+    }
+
+    public GameState GetGameState() 
+    {
+        return gameState;
+    }
+
+    public bool HasMoveAction() 
+    {
+        return hasMoveAction;
+    }
+
+    public void UseMoveAction() 
+    {
+        hasMoveAction = false;
+    }
+
+    public int GetQuestNumber() 
+    {
+        return questNumber;
+    }
+
+    public void DropLoot(Equipment equipment, Vector2Int position) 
+    {
+        lootController.DropLoot(equipment, position);
     }
 }
