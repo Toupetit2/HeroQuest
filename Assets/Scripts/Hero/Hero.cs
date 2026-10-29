@@ -13,6 +13,12 @@ public class Hero
     public int bonusAttackDice = 0;
     public int bonusMovementDice = 0;
     public bool canAttackTwice = false;
+    public int movementDiceMultiplier = 1;
+
+    public bool isInvisible = false;
+    public bool isGhosted = false;
+
+    public int bonusDefenseDice = 0;
 
     public List<Equipment> inventory;
     public List<Equipment> equippedItems;

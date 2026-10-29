@@ -3,23 +3,59 @@ using UnityEngine;
 
 public class Pathfinding
 {
-    public static bool CanStep(Map map, Vector2Int from, Vector2Int direction, Vector2Int to)
+    private static bool IsOccupied(GameManager gameManager, Vector2Int position) 
     {
+        foreach (Hero hero in gameManager.gameState.heroList) 
+        {
+            if (hero != gameManager.GetCurrentHero()) 
+            {
+                if (hero.position == position) 
+                {
+                    return true;
+                }
+            }
+        }
+        foreach (Monster monster in gameManager.gameState.monsterList) 
+        {
+            if (monster.position == position) 
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static bool CanStep(GameManager gameManager, Vector2Int from, Vector2Int direction, Vector2Int to)
+    {
+        Map map = gameManager.GetMap();
+        Hero hero = gameManager.GetCurrentHero();
+
         if (!map.InBounds(to.x, to.y))
             return false;
 
         if (map.HasWall(from.x, from.y, direction.x, direction.y))
             return false;
 
-        if (!map.tiles[to.x, to.y].isWalkable())
-            return false;
+        if (!hero.isGhosted) 
+        {
+            if (!map.tiles[to.x, to.y].isWalkable())
+                return false;
+        }
+        
+        if (!hero.isInvisible) 
+        {
+            if (IsOccupied(gameManager, direction))
+                return false;
+        }
 
         return true;
     }
 
-    private static List<Vector2Int> FindPath(Map map, Vector2Int start, Vector2Int destination)
+    private static List<Vector2Int> FindPath(GameManager gameManager, Vector2Int start, Vector2Int destination)
     {
-        Queue<Vector2Int> queue = new();
+        Map map = gameManager.GetMap();
+
+        Queue <Vector2Int> queue = new();
         queue.Enqueue(start);
 
         List<Vector2Int> visited = new();
@@ -63,7 +99,7 @@ public class Pathfinding
                 if (visited.Contains(nextPosition))
                     continue;
 
-                if (!CanStep(map, currentPosition, direction, nextPosition))
+                if (!CanStep(gameManager, currentPosition, direction, nextPosition))
                     continue;
 
                 queue.Enqueue(nextPosition);
@@ -75,9 +111,9 @@ public class Pathfinding
         return new List<Vector2Int>();
     }
 
-    public static bool IsInRange(Map map, Vector2Int pos, Vector2Int target, int maxDistance) 
+    public static bool IsInRange(GameManager gameManager, Vector2Int pos, Vector2Int target, int maxDistance) 
     {
-        List<Vector2Int> path = FindPath(map, pos, target);
+        List<Vector2Int> path = FindPath(gameManager, pos, target);
 
         if (path.Count != 0 && path.Count - 1 < maxDistance)
         {

@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
     public Monster selectedMonster;
     public Potion selectedPotion;
     public Equipment selectedEquipment;
+    public Hero selectedHero;
 
     public MovementController movementController;
     public AttackController attackController;
@@ -51,7 +52,7 @@ public class GameManager : MonoBehaviour
                 ". . . ."
             );
 
-        movementController = new MovementController(this, gameState.map);
+        movementController = new MovementController(this);
         attackController = new AttackController(this);
         potionController = new PotionController(this);
         equipmentController = new EquipmentController(this);
@@ -94,6 +95,12 @@ public class GameManager : MonoBehaviour
             currentPlayerIndex = 0;
             currentTurn++;
             isZargonTurn = false;
+
+            foreach (Monster monster in gameState.monsterList) 
+            {
+                monster.isSleeping = false;
+                monster.isInTornado = false;
+            }
         }
         StartTurn();
     }
@@ -192,6 +199,7 @@ public class GameManager : MonoBehaviour
             selectedMonster = monster;
         }
         selectedTile = tile;
+        selectedHero = GetHeroFromTile(tile);
     }
 
     public Map GetMap() 

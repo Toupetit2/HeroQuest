@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using UnityEngine;
 
 public class MovementController
@@ -7,10 +8,10 @@ public class MovementController
 
     private MovementStates movementState;
 
-    public MovementController(GameManager gameManager, Map map)
+    public MovementController(GameManager gameManager)
     {
         this.gameManager = gameManager;
-        movementSystem = new MovementSystem(map);
+        movementSystem = new MovementSystem(gameManager);
     }
 
     public bool CanRoll()
@@ -38,12 +39,18 @@ public class MovementController
         selectedTile = null;
         movementState = MovementStates.None;
         gameManager.hasMoveAction = false;
+
+        gameManager.GetCurrentHero().isInvisible = false;
     }
 
     
 
     public void MonsterConfirmMove(Monster monster, Tile selectedTile) 
     {
+        if (monster.isSleeping || monster.isInTornado) 
+        {
+            return;
+        }
         movementSystem.MoveMonster(monster, selectedTile);
     }
 }

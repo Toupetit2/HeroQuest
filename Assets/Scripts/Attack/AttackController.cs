@@ -40,7 +40,7 @@ public class AttackController
         attackState = AttackStates.ChoosingTarget;
     }
 
-    public void ConfirmAttack(Monster target) 
+    public void ConfirmAttack(Monster target, int customAttackDice = -1) 
     {
         if (target != null) 
         {
@@ -50,7 +50,7 @@ public class AttackController
             {
                 if (monster == target) 
                 {
-                    attackSystem.ResolveAttack(gameManager.GetCurrentHero(), target);
+                    attackSystem.ResolveAttack(gameManager.GetCurrentHero(), target, customAttackDice);
                     attackState = AttackStates.None;
                     gameManager.hasAction = false;
                     return;
@@ -64,6 +64,10 @@ public class AttackController
 
     public void ZargonConfirmAttack(Monster monster, Hero target) 
     {
+        if (monster.isSleeping || monster.isInTornado)
+        {
+            return;
+        }
         attackSystem.MonsterResolveAttack(monster, target);
     }
 }
