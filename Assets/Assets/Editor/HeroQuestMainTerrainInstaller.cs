@@ -23,7 +23,6 @@ public static class HeroQuestMainTerrainInstaller
         EditorApplication.delayCall += SetPlayStartScene;
     }
 
-    [MenuItem("HeroQuest/Integration main/1 - Demarrer sur le menu de main")]
     public static void SetPlayStartScene()
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode) return;
@@ -59,7 +58,6 @@ public static class HeroQuestMainTerrainInstaller
         if (!same) EditorBuildSettings.scenes = ordered.ToArray();
     }
 
-    [MenuItem("HeroQuest/Integration main/2 - Installer le terrain 3D colore")]
     public static void InstallTerrain()
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode)

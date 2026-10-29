@@ -17,7 +17,6 @@ public static class HeroQuestReferencePaletteInstaller
     private const string PaletteRoot = "Assets/HeroQuestReferencePalette";
     private const string PaletteMaterials = PaletteRoot + "/Materials";
 
-    [MenuItem("HeroQuest/Appliquer la palette coloree du plateau de reference")]
     public static void Install()
     {
         if (!File.Exists(ScenePath))

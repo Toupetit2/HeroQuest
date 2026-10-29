@@ -14,7 +14,6 @@ public static class HeroQuestFantasyAssetsInstaller
     private const string GameScene = "Assets/Scenes/TestGameplayScene.unity";
     private const string BoardText = "Assets/Data/Board/board.txt";
 
-    [MenuItem("HeroQuest/Installer les nouveaux decors 3D")]
     public static void Install()
     {
         if (!File.Exists(GameScene))

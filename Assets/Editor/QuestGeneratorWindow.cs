@@ -11,7 +11,6 @@ public class QuestGeneratorWindow : EditorWindow
     [SerializeField] QuestEditorModel model = new QuestEditorModel();   // serialise : survit a une recompilation
     QuestEditorGUI gui;
 
-    [MenuItem("HeroQuest/Generateur de quetes")]
     static void Open()
     {
         GetWindow<QuestGeneratorWindow>("Generateur de quetes");

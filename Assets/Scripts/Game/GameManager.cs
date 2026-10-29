@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditor.Search;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -61,6 +60,9 @@ public class GameManager : MonoBehaviour
             return;
         }
         // le plateau d'abord : le QuestLoader a besoin de la map
+        if (boardBuilder == null) boardBuilder = FindFirstObjectByType<BoardBuilder>();
+        if (questView == null) questView = FindFirstObjectByType<QuestView>();
+        HeroQuestRuntimeTerrain.Configure(boardBuilder, questView);
         boardBuilder.Generate();
         gameState.map = boardBuilder.map;
 

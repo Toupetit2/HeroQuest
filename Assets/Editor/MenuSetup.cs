@@ -17,7 +17,6 @@ public static class MenuSetup
     const string GameScenePath = "Assets/Scenes/TestGameplayScene.unity";
     const string BoardPath = "Assets/Data/Board/board.txt";
 
-    [MenuItem("HeroQuest/Installer le menu et le plateau")]
     static void Install()
     {
         if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
