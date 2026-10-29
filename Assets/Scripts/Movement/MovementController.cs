@@ -18,7 +18,7 @@ public class MovementController
     {
         if (movementState == MovementStates.None)
         {
-            return gameManager.hasMoveAction;
+            return gameManager.HasMoveAction();
         }
         return false;
     }
@@ -38,7 +38,7 @@ public class MovementController
 
         selectedTile = null;
         movementState = MovementStates.None;
-        gameManager.hasMoveAction = false;
+        gameManager.UseMoveAction();
 
         gameManager.GetCurrentHero().isInvisible = false;
     }

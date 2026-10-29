@@ -5,7 +5,7 @@ public class EauBenite : CardEffect
 {
     public override void Execute(GameManager gameManager) 
     {
-        Monster target = gameManager.GetSelectedMonster();
+        Monster target = gameManager.GetSelectedMonsterFromSelectedTile();
 
         if (target != null) 
         {

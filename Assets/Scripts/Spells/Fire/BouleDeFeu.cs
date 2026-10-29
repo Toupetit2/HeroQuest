@@ -5,7 +5,7 @@ public class BouleDeFeu : CardEffect
 {
     public override void Execute(GameManager gameManager) 
     {
-        Monster target = gameManager.selectedMonster;
+        Monster target = gameManager.GetSelectedMonsterFromSelectedTile();
 
         target.SetHealth(target.GetHealth() - 2);
 

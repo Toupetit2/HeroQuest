@@ -12,7 +12,7 @@ public class AttackSystem
     public AttackSystem(GameManager gameManager)
     {
         this.gameManager = gameManager;
-        this.gameState = gameManager.gameState;
+        this.gameState = gameManager.GetGameState();
 
         diagonals.Add(new Vector2Int(1, 1));
         diagonals.Add(new Vector2Int(-1, 1));
@@ -94,7 +94,7 @@ public class AttackSystem
             {
                 if (weapon.lostWhenThrown)
                 {
-                    gameManager.lootController.DropLoot(weapon, target.position);
+                    gameManager.DropLoot(weapon, target.position);
                 }
             }
         }

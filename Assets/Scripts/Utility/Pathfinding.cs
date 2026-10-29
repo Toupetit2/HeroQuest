@@ -5,7 +5,9 @@ public class Pathfinding
 {
     private static bool IsOccupied(GameManager gameManager, Vector2Int position) 
     {
-        foreach (Hero hero in gameManager.gameState.heroList) 
+        GameState gameState = gameManager.GetGameState();
+
+        foreach (Hero hero in gameState.heroList) 
         {
             if (hero != gameManager.GetCurrentHero()) 
             {
@@ -15,7 +17,7 @@ public class Pathfinding
                 }
             }
         }
-        foreach (Monster monster in gameManager.gameState.monsterList) 
+        foreach (Monster monster in gameState.monsterList) 
         {
             if (monster.position == position) 
             {

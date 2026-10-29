@@ -5,6 +5,6 @@ public class Tornade : CardEffect
 {
     public override void Execute(GameManager gameManager) 
     {
-        gameManager.selectedMonster.isInTornado = true;
+        gameManager.GetSelectedMonsterFromSelectedTile().isInTornado = true;
     }
 }
