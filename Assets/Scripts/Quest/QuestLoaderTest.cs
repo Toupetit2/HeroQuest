@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 // outil de test : genere le plateau, charge une quete et l'affiche
@@ -9,7 +8,6 @@ public class QuestLoaderTest : MonoBehaviour
     public QuestView view;          // optionnel : affiche la quete dans la scene
     public TextAsset boardFile;     // utilise seulement sans BoardBuilder
     public TextAsset questFile;
-    public List<MonsterData> monsterDatas;
 
     [ContextMenu("Tester la quete")]
     public void Test()
@@ -22,7 +20,7 @@ public class QuestLoaderTest : MonoBehaviour
         }
         else gameState.map = new Map(boardFile.text);
 
-        QuestLoader loader = new QuestLoader(gameState, monsterDatas);
+        QuestLoader loader = new QuestLoader(gameState);
         loader.Load(questFile.text);
 
         if (view != null) view.Show(gameState);

@@ -12,10 +12,11 @@ public class QuestLoader
     // monstres nommes dans le JSON (ex : "verag"), pour la victoire
     public Dictionary<string, Monster> monstersById = new Dictionary<string, Monster>();
 
-    public QuestLoader(GameState gameState, List<MonsterData> monsterDatas)
+    public QuestLoader(GameState gameState)
     {
         this.gameState = gameState;
-        this.monsterDatas = monsterDatas;
+        // tous les MonsterData du dossier Resources/Monsters
+        monsterDatas = new List<MonsterData>(Resources.LoadAll<MonsterData>("Monsters"));
     }
 
     public void Load(string json)
@@ -334,5 +335,13 @@ public class QuestLoader
         if (!Enum.TryParse(text, out value) || !Enum.IsDefined(typeof(T), value))
             throw new Exception(what + " inconnu : \"" + text + "\"");
         return value;
+    }
+
+    // charge Resources/Quests/quest_01.json ... quest_14.json
+    public void LoadQuest(int questNumber)
+    {
+        TextAsset file = Resources.Load<TextAsset>("Quests/quest_" + questNumber.ToString("00"));
+        if (file == null) throw new Exception("Quete " + questNumber + " introuvable dans Resources/Quests");
+        Load(file.text);
     }
 }
