@@ -1,0 +1,83 @@
+{
+  "questNumber": 12,
+  "title": "Barak Tor – Barrow of the Witch Lord",
+  "questBookPdfPage": 27,
+  "digitization": "TRANSCRIPTION PARTIELLE - mobilier/escalier relu visuellement; portes/monstres et notes restant à vérifier (0 portes, 5 objets)",
+  "description": "Relevé partiel depuis les cartes du Quest Book. Ne pas confondre avec une quête complète et testée.",
+  "rockRows": [
+    "10000000000000010100100000",
+    "00000000000000111111111110",
+    "00000000000000111111111110",
+    "00000000000000111111111110",
+    "00000000000000111111111110",
+    "01111111000000111111111110",
+    "01111111100000000111111111",
+    "01111111100000000111111110",
+    "01111111100000000111111110",
+    "00000000000000000000000000",
+    "00000000000000000111111110",
+    "00000000000000000111111110",
+    "00000000000000001111111110",
+    "00000000000000111111111110",
+    "00000000000000111111111110",
+    "00000000000000111111111110",
+    "00000000000000111111111110",
+    "00000000000000111111111110",
+    "01111111100000000000000000"
+  ],
+  "doors": [],
+  "objects": [
+    {
+      "group": "stairs",
+      "id": 5,
+      "x": 1,
+      "y": 14,
+      "width": 2,
+      "height": 2,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 14,
+      "x": 1,
+      "y": 11,
+      "width": 3,
+      "height": 2,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 17,
+      "x": 12,
+      "y": 8,
+      "width": 2,
+      "height": 3,
+      "angle": 90
+    },
+    {
+      "group": "furniture",
+      "id": 16,
+      "x": 6,
+      "y": 13,
+      "width": 3,
+      "height": 1,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 16,
+      "x": 6,
+      "y": 17,
+      "width": 3,
+      "height": 1,
+      "angle": 0
+    }
+  ],
+  "specialNotes": [],
+  "wanderingMonster": "Skeleton",
+  "summaryBriefFR": "Découvrir Barak Tor et la cache du Witch Lord.",
+  "referenceMap": "CampaignMaps/quest_12",
+  "boardPreset": "Plateau.prefab / board_prefab.txt",
+  "transcriptionVerified": false,
+  "source": "Quest Book HeroQuest fourni (PDF), page PDF 27"
+}

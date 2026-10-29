@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ca47de6cba5a31041a98fc9f056b5c2d
+timeCreated: 1540588592
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 130407
+  packageName: Fantasy Asset Pack
+  packageVersion: 1.0
+  assetPath: Assets/KatsBits-fantasy-base/Prefabs/Walls_red/Wall.End.prefab
+  uploadId: 276048

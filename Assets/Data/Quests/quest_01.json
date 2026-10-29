@@ -1,0 +1,296 @@
+{
+    "number": 1,
+    "title": "Test",
+    "stairs": {
+        "x": 2,
+        "y": 1,
+        "width": 2,
+        "height": 2
+    },
+    "start": {
+        "type": "stairs",
+        "room": ""
+    },
+    "doors": [
+        {
+            "x": 3,
+            "y": 3,
+            "side": "South"
+        },
+        {
+            "x": 3,
+            "y": 8,
+            "side": "South"
+        },
+        {
+            "x": 8,
+            "y": 8,
+            "side": "East"
+        },
+        {
+            "x": 13,
+            "y": 5,
+            "side": "East"
+        },
+        {
+            "x": 5,
+            "y": 11,
+            "side": "West"
+        },
+        {
+            "x": 6,
+            "y": 11,
+            "side": "East"
+        }
+    ],
+    "secretDoors": [
+        {
+            "x": 3,
+            "y": 10,
+            "side": "North"
+        },
+        {
+            "x": 15,
+            "y": 8,
+            "side": "East"
+        }
+    ],
+    "falseDoors": [],
+    "rockZones": [],
+    "blocked": [
+        {
+            "x": 0,
+            "y": 0
+        },
+        {
+            "x": 12,
+            "y": 0
+        },
+        {
+            "x": 13,
+            "y": 0
+        },
+        {
+            "x": 16,
+            "y": 9
+        },
+        {
+            "x": 13,
+            "y": 13
+        },
+        {
+            "x": 12,
+            "y": 13
+        },
+        {
+            "x": 0,
+            "y": 9
+        }
+    ],
+    "furniture": [
+        {
+            "type": "Trone",
+            "x": 1,
+            "y": 11,
+            "width": 1,
+            "height": 1,
+            "rotation": 0
+        },
+        {
+            "type": "EtabliAlchimiste",
+            "x": 12,
+            "y": 9,
+            "width": 3,
+            "height": 2,
+            "rotation": 0
+        },
+        {
+            "type": "Coffre",
+            "x": 6,
+            "y": 10,
+            "width": 1,
+            "height": 1,
+            "rotation": 0
+        },
+        {
+            "type": "Coffre",
+            "x": 8,
+            "y": 10,
+            "width": 1,
+            "height": 1,
+            "rotation": 0
+        }
+    ],
+    "monsters": [
+        {
+            "id": "",
+            "type": "Gobelin",
+            "x": 3,
+            "y": 6,
+            "movement": 0,
+            "attack": 0,
+            "defense": 0,
+            "body": 0,
+            "mind": 0,
+            "item": "",
+            "hidden": false,
+            "statue": false,
+            "wakeOn": "",
+            "wakeRoom": ""
+        },
+        {
+            "id": "",
+            "type": "Gobelin",
+            "x": 6,
+            "y": 6,
+            "movement": 0,
+            "attack": 0,
+            "defense": 0,
+            "body": 0,
+            "mind": 0,
+            "item": "",
+            "hidden": false,
+            "statue": false,
+            "wakeOn": "",
+            "wakeRoom": ""
+        },
+        {
+            "id": "",
+            "type": "Gobelin",
+            "x": 7,
+            "y": 8,
+            "movement": 0,
+            "attack": 0,
+            "defense": 0,
+            "body": 0,
+            "mind": 0,
+            "item": "",
+            "hidden": false,
+            "statue": false,
+            "wakeOn": "",
+            "wakeRoom": ""
+        },
+        {
+            "id": "",
+            "type": "Gobelin",
+            "x": 12,
+            "y": 7,
+            "movement": 0,
+            "attack": 0,
+            "defense": 0,
+            "body": 0,
+            "mind": 0,
+            "item": "",
+            "hidden": false,
+            "statue": false,
+            "wakeOn": "",
+            "wakeRoom": ""
+        },
+        {
+            "id": "",
+            "type": "Gobelin",
+            "x": 7,
+            "y": 12,
+            "movement": 0,
+            "attack": 0,
+            "defense": 0,
+            "body": 0,
+            "mind": 0,
+            "item": "",
+            "hidden": false,
+            "statue": false,
+            "wakeOn": "",
+            "wakeRoom": ""
+        },
+        {
+            "id": "",
+            "type": "Gobelin",
+            "x": 5,
+            "y": 12,
+            "movement": 0,
+            "attack": 0,
+            "defense": 0,
+            "body": 0,
+            "mind": 0,
+            "item": "",
+            "hidden": false,
+            "statue": false,
+            "wakeOn": "",
+            "wakeRoom": ""
+        },
+        {
+            "id": "",
+            "type": "Gobelin",
+            "x": 2,
+            "y": 12,
+            "movement": 0,
+            "attack": 0,
+            "defense": 0,
+            "body": 0,
+            "mind": 0,
+            "item": "",
+            "hidden": false,
+            "statue": false,
+            "wakeOn": "",
+            "wakeRoom": ""
+        },
+        {
+            "id": "",
+            "type": "Gobelin",
+            "x": 3,
+            "y": 11,
+            "movement": 0,
+            "attack": 0,
+            "defense": 0,
+            "body": 0,
+            "mind": 0,
+            "item": "",
+            "hidden": false,
+            "statue": false,
+            "wakeOn": "",
+            "wakeRoom": ""
+        }
+    ],
+    "traps": [
+        {
+            "type": "Fosse",
+            "x": 8,
+            "y": 8
+        },
+        {
+            "type": "BlocQuiTombe",
+            "x": 7,
+            "y": 11
+        },
+        {
+            "type": "BlocQuiTombe",
+            "x": 5,
+            "y": 11
+        }
+    ],
+    "wanderingMonster": "Orc",
+    "victory": {
+        "mode": "Tous",
+        "objectives": [
+            {
+                "type": "Escalier",
+                "target": "",
+                "count": 0,
+                "room": ""
+            }
+        ]
+    },
+    "intro": "Ce niveau est un test pour savoir si ce monde fonctionne.",
+    "treasures": [],
+    "allies": [],
+    "markers": [],
+    "rules": [],
+    "reward": {
+        "goldShared": 0,
+        "goldEach": 0,
+        "bounties": []
+    },
+    "parchment": "Ce niveau est un test pour savoir si ce monde fonctionne.",
+    "zargonNote": "",
+    "notes": []
+}

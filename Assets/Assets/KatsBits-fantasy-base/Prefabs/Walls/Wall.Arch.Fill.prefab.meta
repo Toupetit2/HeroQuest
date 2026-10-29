@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 38b519d64dc1be74f9395edc3dfe97e1
+timeCreated: 1539792023
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 130407
+  packageName: Fantasy Asset Pack
+  packageVersion: 1.0
+  assetPath: Assets/KatsBits-fantasy-base/Prefabs/Walls/Wall.Arch.Fill.prefab
+  uploadId: 276048
