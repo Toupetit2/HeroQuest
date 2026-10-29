@@ -1,0 +1,90 @@
+{
+  "number": 14,
+  "title": "Retour a Barak Tor",
+  "stairs": { "x": 1, "y": 14, "width": 2, "height": 2 },
+  "start": { "type": "stairs", "room": "" },
+
+  "doors": [
+    { "x": 3, "y": 0, "side": "South" },
+    { "x": 6, "y": 0, "side": "South" },
+    { "x": 18, "y": 0, "side": "South" },
+    { "x": 22, "y": 0, "side": "South" },
+    { "x": 0, "y": 2, "side": "East" },
+    { "x": 11, "y": 2, "side": "East" },
+    { "x": 8, "y": 3, "side": "East" },
+    { "x": 20, "y": 3, "side": "East" },
+    { "x": 12, "y": 6, "side": "South" },
+    { "x": 7, "y": 9, "side": "South" },
+    { "x": 9, "y": 9, "side": "East" },
+    { "x": 4, "y": 11, "side": "East" },
+    { "x": 6, "y": 11, "side": "East" },
+    { "x": 0, "y": 16, "side": "East" }
+  ],
+  "secretDoors": [
+    { "x": 12, "y": 4, "side": "West" }
+  ],
+
+  "blocked": [
+    { "x": 0, "y": 0 },
+    { "x": 7, "y": 0 },
+    { "x": 12, "y": 3 },
+    { "x": 13, "y": 3 },
+    { "x": 11, "y": 6 },
+    { "x": 14, "y": 6 },
+    { "x": 25, "y": 10 },
+    { "x": 12, "y": 13 },
+    { "x": 13, "y": 13 },
+    { "x": 0, "y": 17 }
+  ],
+
+  "furniture": [
+    { "type": "Trone", "x": 24, "y": 3, "width": 1, "height": 1, "rotation": 0 },
+    { "type": "Tombeau", "x": 1, "y": 11, "width": 3, "height": 2, "rotation": 0 }
+  ],
+
+  "monsters": [
+    { "type": "Squelette", "x": 12, "y": 1 },
+    { "type": "Squelette", "x": 13, "y": 1 },
+    { "type": "Squelette", "x": 1, "y": 2 },
+    { "type": "Momie", "x": 3, "y": 2 },
+    { "type": "Squelette", "x": 0, "y": 3 },
+    { "type": "Zombie", "x": 10, "y": 2 },
+    { "type": "Squelette", "x": 10, "y": 3 },
+    { "type": "Zombie", "x": 10, "y": 4 },
+    { "type": "Momie", "x": 11, "y": 8 },
+    { "type": "Zombie", "x": 12, "y": 9 },
+    { "type": "Squelette", "x": 1, "y": 9 },
+    { "type": "Squelette", "x": 5, "y": 11 },
+    { "type": "Squelette", "x": 7, "y": 11 },
+    { "type": "Squelette", "x": 8, "y": 11 },
+    { "type": "Squelette", "x": 0, "y": 15 },
+    { "type": "Squelette", "x": 18, "y": 2 },
+    { "type": "Squelette", "x": 19, "y": 2 },
+    { "type": "Zombie", "x": 19, "y": 3 },
+    { "type": "Momie", "x": 23, "y": 2 },
+    { "type": "Zombie", "x": 22, "y": 3 },
+    { "type": "Momie", "x": 21, "y": 4 },
+    { "id": "seigneursorcier", "type": "SorcierDeLEffroi", "x": 23, "y": 3, "movement": 10, "attack": 5, "defense": 6, "body": 4, "mind": 6, "item": "AnneauDeSort" },
+    { "type": "Squelette", "x": 25, "y": 7 }
+  ],
+
+  "traps": [
+    { "type": "Fosse", "x": 19, "y": 1 },
+    { "type": "Fosse", "x": 22, "y": 1 }
+  ],
+  "wanderingMonster": "Momie",
+
+  "victory": {
+    "mode": "Tous",
+    "objectives": [
+      { "type": "Tuer", "target": "seigneursorcier" },
+      { "type": "Escalier" }
+    ]
+  },
+
+  "intro": "Avec l'Epee de l'Esprit, retournez a Barak Tor et detruisez le seigneur sorcier avant qu'il ne lance son armee de morts-vivants sur les arrieres du roi.",
+
+  "markers": [
+    { "label": "X", "x": 23, "y": 3 }
+  ]
+}

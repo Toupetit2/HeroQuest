@@ -1,0 +1,100 @@
+{
+  "number": 4,
+  "title": "L'or du prince Magnus",
+  "stairs": { "x": 19, "y": 14, "width": 2, "height": 2 },
+  "start": { "type": "stairs", "room": "" },
+
+  "doors": [
+    { "x": 8, "y": 2, "side": "East" },
+    { "x": 5, "y": 3, "side": "South" },
+    { "x": 9, "y": 5, "side": "South" },
+    { "x": 8, "y": 7, "side": "East" },
+    { "x": 5, "y": 8, "side": "South" },
+    { "x": 2, "y": 9, "side": "South" },
+    { "x": 7, "y": 9, "side": "South" },
+    { "x": 3, "y": 13, "side": "South" },
+    { "x": 1, "y": 17, "side": "South" },
+    { "x": 24, "y": 7, "side": "East" },
+    { "x": 21, "y": 8, "side": "South" },
+    { "x": 15, "y": 9, "side": "East" },
+    { "x": 20, "y": 17, "side": "East" },
+    { "x": 23, "y": 17, "side": "South" }
+  ],
+  "secretDoors": [
+    { "x": 11, "y": 2, "side": "East" }
+  ],
+
+  "blocked": [
+    { "x": 11, "y": 0 },
+    { "x": 12, "y": 3 },
+    { "x": 13, "y": 3 },
+    { "x": 11, "y": 6 },
+    { "x": 14, "y": 6 },
+    { "x": 1, "y": 9 },
+    { "x": 9, "y": 9 },
+    { "x": 25, "y": 9 },
+    { "x": 16, "y": 10 },
+    { "x": 12, "y": 17 },
+    { "x": 13, "y": 17 },
+    { "x": 0, "y": 18 },
+    { "x": 24, "y": 18 }
+  ],
+
+  "furniture": [
+    { "type": "Placard", "x": 9, "y": 1, "width": 3, "height": 1, "rotation": 0 },
+    { "type": "Chevalet", "x": 6, "y": 4, "width": 3, "height": 2, "rotation": 0 },
+    { "type": "Cheminee", "x": 22, "y": 5, "width": 3, "height": 1, "rotation": 0 },
+    { "type": "Coffre", "x": 10, "y": 8, "width": 1, "height": 1, "rotation": 90 },
+    { "type": "Coffre", "x": 10, "y": 9, "width": 1, "height": 1, "rotation": 90 },
+    { "type": "Coffre", "x": 10, "y": 10, "width": 1, "height": 1, "rotation": 90 },
+    { "type": "Table", "x": 1, "y": 14, "width": 2, "height": 3, "rotation": 90 }
+  ],
+
+  "monsters": [
+    { "type": "Orc", "x": 7, "y": 2 },
+    { "type": "Gobelin", "x": 5, "y": 5 },
+    { "type": "Gobelin", "x": 8, "y": 7 },
+    { "type": "Gobelin", "x": 13, "y": 7 },
+    { "type": "Orc", "x": 12, "y": 8 },
+    { "id": "gulthor", "type": "GuerrierDeLaTerreur", "x": 11, "y": 9 },
+    { "type": "Abomination", "x": 12, "y": 9 },
+    { "type": "Orc", "x": 12, "y": 10 },
+    { "type": "Gobelin", "x": 13, "y": 11 },
+    { "type": "Orc", "x": 22, "y": 7 },
+    { "type": "Orc", "x": 21, "y": 8 },
+    { "type": "Orc", "x": 23, "y": 8 },
+    { "type": "Orc", "x": 16, "y": 9 },
+    { "type": "Orc", "x": 2, "y": 10 },
+    { "type": "Orc", "x": 3, "y": 10 },
+    { "type": "Orc", "x": 3, "y": 16 },
+    { "type": "Orc", "x": 4, "y": 16 },
+    { "type": "Orc", "x": 2, "y": 18 },
+    { "type": "Gobelin", "x": 22, "y": 15 },
+    { "type": "Gobelin", "x": 23, "y": 16 }
+  ],
+
+  "traps": [
+    { "type": "Lance", "x": 25, "y": 1 },
+    { "type": "Lance", "x": 9, "y": 6 },
+    { "type": "Lance", "x": 15, "y": 6 },
+    { "type": "Fosse", "x": 9, "y": 7 },
+    { "type": "Fosse", "x": 16, "y": 7 },
+    { "type": "Fosse", "x": 6, "y": 9 },
+    { "type": "Lance", "x": 4, "y": 17 }
+  ],
+  "wanderingMonster": "Abomination",
+
+  "victory": {
+    "mode": "Tous",
+    "objectives": [
+      { "type": "Rapporter", "target": "CoffreRoyal", "count": 3, "room": "S11" },
+      { "type": "Escalier" }
+    ]
+  },
+
+  "intro": "Une bande d'orcs menee par Gulthor, un guerrier de l'effroi, a vole trois coffres d'or destines au roi. Rapportez les trois coffres a l'escalier, sans toucher a l'or qu'ils contiennent.",
+
+  "rules": ["CoffresLourds"],
+
+  "reward": { "goldShared": 240 }
+}

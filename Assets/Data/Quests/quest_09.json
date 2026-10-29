@@ -1,0 +1,86 @@
+{
+  "number": 9,
+  "title": "Course contre la montre",
+  "stairs": { "x": 7, "y": 4, "width": 2, "height": 2 },
+  "start": { "type": "room", "room": "S21" },
+
+  "doors": [
+    { "x": 2, "y": 0, "side": "South" },
+    { "x": 3, "y": 3, "side": "South" },
+    { "x": 4, "y": 5, "side": "East" },
+    { "x": 4, "y": 8, "side": "South" },
+    { "x": 4, "y": 11, "side": "East" },
+    { "x": 2, "y": 13, "side": "South" },
+    { "x": 19, "y": 13, "side": "South" },
+    { "x": 11, "y": 14, "side": "East" },
+    { "x": 4, "y": 15, "side": "East" },
+    { "x": 8, "y": 15, "side": "East" },
+    { "x": 17, "y": 16, "side": "East" },
+    { "x": 20, "y": 16, "side": "East" }
+  ],
+  "secretDoors": [
+    { "x": 7, "y": 11, "side": "West" },
+    { "x": 19, "y": 17, "side": "South" }
+  ],
+
+  "blocked": [
+    { "x": 5, "y": 0 },
+    { "x": 5, "y": 9 },
+    { "x": 12, "y": 13 },
+    { "x": 13, "y": 13 },
+    { "x": 21, "y": 18 }
+  ],
+
+  "furniture": [
+    { "type": "Coffre", "x": 6, "y": 10, "width": 1, "height": 1, "rotation": 90 },
+    { "type": "Coffre", "x": 8, "y": 11, "width": 1, "height": 1, "rotation": 90 },
+    { "type": "Coffre", "x": 6, "y": 12, "width": 1, "height": 1, "rotation": 90 },
+    { "type": "Cheminee", "x": 1, "y": 15, "width": 1, "height": 3, "rotation": 90 },
+    { "type": "Table", "x": 5, "y": 16, "width": 3, "height": 2, "rotation": 0 }
+  ],
+
+  "monsters": [
+    { "type": "Orc", "x": 1, "y": 0 },
+    { "type": "Gobelin", "x": 2, "y": 4 },
+    { "type": "Gobelin", "x": 4, "y": 4 },
+    { "type": "Gobelin", "x": 3, "y": 5 },
+    { "type": "Gobelin", "x": 2, "y": 6 },
+    { "type": "Orc", "x": 4, "y": 9 },
+    { "type": "Orc", "x": 5, "y": 10 },
+    { "type": "Orc", "x": 5, "y": 12 },
+    { "type": "GuerrierDeLaTerreur", "x": 7, "y": 12 },
+    { "type": "Abomination", "x": 7, "y": 14 },
+    { "type": "Abomination", "x": 7, "y": 15 },
+    { "type": "GuerrierDeLaTerreur", "x": 9, "y": 15 },
+    { "type": "Gobelin", "x": 10, "y": 14 },
+    { "type": "Gobelin", "x": 10, "y": 15 },
+    { "type": "Orc", "x": 18, "y": 12 },
+    { "type": "Orc", "x": 19, "y": 12 },
+    { "type": "Orc", "x": 20, "y": 12 },
+    { "type": "Orc", "x": 13, "y": 14 },
+    { "type": "Gobelin", "x": 17, "y": 15 },
+    { "type": "Orc", "x": 16, "y": 16 },
+    { "type": "Gobelin", "x": 17, "y": 17 },
+    { "type": "Gobelin", "x": 21, "y": 15 },
+    { "type": "Orc", "x": 22, "y": 16 },
+    { "type": "Gobelin", "x": 21, "y": 17 }
+  ],
+
+  "traps": [],
+  "wanderingMonster": "Abomination",
+
+  "victory": {
+    "mode": "Tous",
+    "objectives": [
+      { "type": "Escalier" }
+    ]
+  },
+
+  "intro": "Un guide vous a menes au fond d'un labyrinthe puis a souffle sa torche et s'est enfui. C'etait un piege : retrouvez l'escalier pour sortir.",
+
+  "treasures": [
+    { "x": 6, "y": 10, "gold": 100 },
+    { "x": 6, "y": 12, "gold": 100 },
+    { "x": 8, "y": 11, "item": "ElixirDeVie", "trapped": true, "trapDamage": 3 }
+  ]
+}

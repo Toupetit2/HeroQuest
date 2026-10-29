@@ -1,0 +1,114 @@
+{
+  "number": 8,
+  "title": "Le mage du feu",
+  "stairs": { "x": 21, "y": 7, "width": 2, "height": 2 },
+  "start": { "type": "stairs", "room": "" },
+
+  "doors": [
+    { "x": 2, "y": 0, "side": "South" },
+    { "x": 3, "y": 3, "side": "South" },
+    { "x": 0, "y": 6, "side": "East" },
+    { "x": 24, "y": 6, "side": "East" },
+    { "x": 2, "y": 8, "side": "South" },
+    { "x": 4, "y": 9, "side": "South" },
+    { "x": 15, "y": 9, "side": "East" },
+    { "x": 19, "y": 9, "side": "South" },
+    { "x": 24, "y": 11, "side": "East" },
+    { "x": 3, "y": 13, "side": "South" },
+    { "x": 19, "y": 13, "side": "South" },
+    { "x": 2, "y": 17, "side": "South" },
+    { "x": 5, "y": 17, "side": "South" },
+    { "x": 7, "y": 17, "side": "South" },
+    { "x": 15, "y": 17, "side": "South" },
+    { "x": 19, "y": 17, "side": "South" }
+  ],
+  "secretDoors": [
+    { "x": 7, "y": 10, "side": "North" },
+    { "x": 9, "y": 12, "side": "West" }
+  ],
+
+  "blocked": [
+    { "x": 0, "y": 1 },
+    { "x": 12, "y": 1 },
+    { "x": 13, "y": 1 },
+    { "x": 11, "y": 6 },
+    { "x": 15, "y": 6 },
+    { "x": 16, "y": 6 },
+    { "x": 25, "y": 8 },
+    { "x": 1, "y": 9 },
+    { "x": 8, "y": 9 },
+    { "x": 6, "y": 18 },
+    { "x": 9, "y": 18 }
+  ],
+
+  "furniture": [
+    { "type": "Bibliotheque", "x": 13, "y": 7, "width": 3, "height": 1, "rotation": 0 },
+    { "type": "TableSorcier", "x": 10, "y": 8, "width": 2, "height": 3, "rotation": 90 },
+    { "type": "Bibliotheque", "x": 13, "y": 11, "width": 3, "height": 1, "rotation": 180 },
+    { "type": "Coffre", "x": 21, "y": 11, "width": 1, "height": 1, "rotation": 90 },
+    { "type": "Table", "x": 14, "y": 14, "width": 3, "height": 2, "rotation": 0 }
+  ],
+
+  "monsters": [
+    { "type": "Zombie", "x": 0, "y": 0 },
+    { "type": "Zombie", "x": 24, "y": 0 },
+    { "type": "Squelette", "x": 1, "y": 2 },
+    { "type": "Squelette", "x": 2, "y": 2 },
+    { "type": "Squelette", "x": 3, "y": 2 },
+    { "type": "Squelette", "x": 4, "y": 2 },
+    { "id": "balur", "type": "SorcierDeLEffroi", "x": 2, "y": 3, "movement": 8, "attack": 2, "defense": 5, "body": 3, "mind": 7 },
+    { "type": "Zombie", "x": 3, "y": 6 },
+    { "type": "Momie", "x": 12, "y": 8 },
+    { "type": "Momie", "x": 12, "y": 10 },
+    { "type": "Zombie", "x": 15, "y": 8 },
+    { "type": "Zombie", "x": 15, "y": 10 },
+    { "type": "Squelette", "x": 4, "y": 10 },
+    { "type": "Squelette", "x": 3, "y": 13 },
+    { "type": "Squelette", "x": 3, "y": 14 },
+    { "type": "Squelette", "x": 2, "y": 17 },
+    { "type": "Squelette", "x": 6, "y": 16 },
+    { "type": "Squelette", "x": 5, "y": 18 },
+    { "type": "Squelette", "x": 16, "y": 12 },
+    { "type": "Orc", "x": 22, "y": 11 },
+    { "type": "Orc", "x": 23, "y": 12 },
+    { "type": "Orc", "x": 15, "y": 13 },
+    { "type": "Orc", "x": 16, "y": 16 },
+    { "type": "Orc", "x": 19, "y": 15 },
+    { "type": "Orc", "x": 20, "y": 16 }
+  ],
+
+  "traps": [
+    { "type": "Fosse", "x": 1, "y": 0 },
+    { "type": "Lance", "x": 0, "y": 5 },
+    { "type": "Fosse", "x": 9, "y": 6 },
+    { "type": "Lance", "x": 16, "y": 8 },
+    { "type": "Lance", "x": 25, "y": 9 },
+    { "type": "Lance", "x": 25, "y": 10 },
+    { "type": "Lance", "x": 0, "y": 12 },
+    { "type": "Fosse", "x": 6, "y": 17 },
+    { "type": "Lance", "x": 1, "y": 18 },
+    { "type": "Fosse", "x": 7, "y": 18 }
+  ],
+  "wanderingMonster": "Abomination",
+
+  "victory": {
+    "mode": "Tous",
+    "objectives": [
+      { "type": "Tuer", "target": "balur" },
+      { "type": "Escalier" }
+    ]
+  },
+
+  "intro": "Les orcs des montagnes Noires attaquent avec l'aide de la magie du feu. Balur, le mage du feu, en serait la cause. Descendez dans son repaire et detruisez-le : la magie du feu ne peut rien contre lui.",
+
+  "treasures": [
+    { "x": 21, "y": 11, "gold": 150, "item": "BaguetteDeMagie" }
+  ],
+
+  "markers": [
+    { "label": "X", "x": 2, "y": 3 },
+    { "label": "XX", "x": 12, "y": 9 }
+  ],
+
+  "reward": { "goldEach": 100 }
+}

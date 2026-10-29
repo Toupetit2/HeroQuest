@@ -1,0 +1,89 @@
+{
+  "number": 6,
+  "title": "L'heritage du seigneur orc",
+  "stairs": { "x": 5, "y": 13, "width": 2, "height": 2 },
+  "start": { "type": "room", "room": "S13" },
+
+  "doors": [
+    { "x": 0, "y": 2, "side": "East" },
+    { "x": 9, "y": 8, "side": "East" },
+    { "x": 18, "y": 8, "side": "South" },
+    { "x": 5, "y": 9, "side": "South" },
+    { "x": 15, "y": 9, "side": "East" },
+    { "x": 8, "y": 16, "side": "East" },
+    { "x": 0, "y": 17, "side": "East" },
+    { "x": 6, "y": 17, "side": "South" },
+    { "x": 10, "y": 17, "side": "South" },
+    { "x": 19, "y": 17, "side": "South" }
+  ],
+  "secretDoors": [],
+
+  "blocked": [
+    { "x": 12, "y": 1 },
+    { "x": 13, "y": 1 },
+    { "x": 9, "y": 7 },
+    { "x": 16, "y": 8 },
+    { "x": 16, "y": 10 },
+    { "x": 2, "y": 18 }
+  ],
+
+  "furniture": [
+    { "type": "Placard", "x": 1, "y": 1, "width": 3, "height": 1, "rotation": 0 },
+    { "type": "RatelierArmes", "x": 4, "y": 1, "width": 1, "height": 3, "rotation": 90 },
+    { "type": "Chevalet", "x": 19, "y": 5, "width": 2, "height": 3, "rotation": 90 },
+    { "type": "Table", "x": 12, "y": 8, "width": 2, "height": 3, "rotation": 90 },
+    { "type": "Table", "x": 18, "y": 14, "width": 3, "height": 2, "rotation": 0 },
+    { "type": "Cheminee", "x": 4, "y": 15, "width": 1, "height": 3, "rotation": 90 }
+  ],
+
+  "monsters": [
+    { "type": "Gobelin", "x": 3, "y": 2 },
+    { "type": "Orc", "x": 25, "y": 1 },
+    { "type": "Orc", "x": 17, "y": 5 },
+    { "type": "Abomination", "x": 18, "y": 6 },
+    { "type": "Gobelin", "x": 20, "y": 8 },
+    { "type": "Orc", "x": 11, "y": 8 },
+    { "type": "Abomination", "x": 11, "y": 9 },
+    { "type": "Orc", "x": 11, "y": 10 },
+    { "type": "Orc", "x": 14, "y": 8 },
+    { "type": "Orc", "x": 14, "y": 9 },
+    { "type": "Orc", "x": 14, "y": 10 },
+    { "type": "Gobelin", "x": 17, "y": 9 },
+    { "type": "Gobelin", "x": 24, "y": 9 },
+    { "type": "Abomination", "x": 12, "y": 12 },
+    { "id": "grak", "type": "Orc", "x": 6, "y": 15, "movement": 8, "attack": 4, "defense": 4, "body": 3, "mind": 3, "item": "CapeDuSorcier" },
+    { "type": "Gobelin", "x": 8, "y": 15 },
+    { "type": "Gobelin", "x": 5, "y": 16 },
+    { "type": "Orc", "x": 7, "y": 16 },
+    { "type": "Orc", "x": 7, "y": 17 },
+    { "type": "Orc", "x": 3, "y": 16 },
+    { "type": "Gobelin", "x": 10, "y": 16 },
+    { "type": "Gobelin", "x": 9, "y": 17 },
+    { "type": "Gobelin", "x": 11, "y": 17 },
+    { "type": "Gobelin", "x": 5, "y": 18 },
+    { "type": "Gobelin", "x": 19, "y": 18 },
+    { "type": "Gobelin", "x": 24, "y": 18 }
+  ],
+
+  "traps": [
+    { "type": "Fosse", "x": 16, "y": 12 },
+    { "type": "Fosse", "x": 0, "y": 18 },
+    { "type": "Fosse", "x": 8, "y": 18 }
+  ],
+  "wanderingMonster": "Abomination",
+
+  "victory": {
+    "mode": "Tous",
+    "objectives": [
+      { "type": "Escalier" }
+    ]
+  },
+
+  "intro": "Grak, le fils d'Ulag, vous a captures pour venger son pere. Vous avez reussi a ouvrir votre cellule : retrouvez votre equipement et fuyez par l'escalier.",
+
+  "treasures": [
+    { "x": 1, "y": 3, "item": "EquipementDesHeros" }
+  ],
+
+  "rules": ["SansEquipement"]
+}

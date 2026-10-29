@@ -1,0 +1,78 @@
+{
+  "number": 3,
+  "title": "Le repaire du seigneur orc",
+  "stairs": { "x": 9, "y": 1, "width": 2, "height": 2 },
+  "start": { "type": "stairs", "room": "" },
+
+  "doors": [
+    { "x": 0, "y": 2, "side": "East" },
+    { "x": 8, "y": 4, "side": "East" },
+    { "x": 4, "y": 8, "side": "East" },
+    { "x": 2, "y": 8, "side": "South" },
+    { "x": 5, "y": 9, "side": "South" },
+    { "x": 4, "y": 12, "side": "East" },
+    { "x": 8, "y": 12, "side": "South" },
+    { "x": 2, "y": 13, "side": "South" },
+    { "x": 4, "y": 16, "side": "East" }
+  ],
+  "secretDoors": [],
+
+  "blocked": [
+    { "x": 0, "y": 1 },
+    { "x": 7, "y": 9 },
+    { "x": 0, "y": 10 }
+  ],
+
+  "furniture": [
+    { "type": "RatelierArmes", "x": 4, "y": 1, "width": 1, "height": 3, "rotation": 90 },
+    { "type": "Cheminee", "x": 1, "y": 4, "width": 3, "height": 1, "rotation": 0 },
+    { "type": "Table", "x": 6, "y": 5, "width": 2, "height": 3, "rotation": 90 },
+    { "type": "Placard", "x": 1, "y": 10, "width": 1, "height": 3, "rotation": 90 },
+    { "type": "Coffre", "x": 8, "y": 10, "width": 1, "height": 1, "rotation": 90 },
+    { "type": "Table", "x": 7, "y": 15, "width": 2, "height": 3, "rotation": 90 }
+  ],
+
+  "monsters": [
+    { "type": "Abomination", "x": 3, "y": 1 },
+    { "type": "Orc", "x": 2, "y": 2 },
+    { "type": "Gobelin", "x": 7, "y": 4 },
+    { "type": "Gobelin", "x": 8, "y": 5 },
+    { "type": "Gobelin", "x": 5, "y": 6 },
+    { "type": "Gobelin", "x": 7, "y": 8 },
+    { "type": "Abomination", "x": 4, "y": 8 },
+    { "type": "Orc", "x": 6, "y": 10 },
+    { "type": "Orc", "x": 5, "y": 11 },
+    { "type": "Gobelin", "x": 2, "y": 12 },
+    { "type": "Gobelin", "x": 3, "y": 13 },
+    { "type": "Orc", "x": 1, "y": 15 },
+    { "type": "Orc", "x": 4, "y": 15 },
+    { "type": "Abomination", "x": 2, "y": 16 },
+    { "type": "Orc", "x": 3, "y": 16 },
+    { "id": "ulag", "type": "Orc", "x": 6, "y": 14, "movement": 10, "attack": 4, "defense": 5, "body": 2, "mind": 3 },
+    { "type": "Gobelin", "x": 5, "y": 15 },
+    { "type": "GuerrierDeLaTerreur", "x": 6, "y": 15 },
+    { "type": "Gobelin", "x": 5, "y": 17 }
+  ],
+
+  "traps": [
+    { "type": "Fosse", "x": 8, "y": 11 }
+  ],
+  "wanderingMonster": "Orc",
+
+  "victory": {
+    "mode": "Tous",
+    "objectives": [
+      { "type": "Tuer", "target": "ulag" },
+      { "type": "Escalier" }
+    ]
+  },
+
+  "intro": "Le prince Magnus veut la fin d'Ulag, le seigneur orc qui a fait enfermer Sir Ragnar. Trouvez-le dans son repaire, detruisez-le, puis revenez a l'escalier.",
+
+  "treasures": [
+    { "x": 3, "y": 3, "item": "Baton" },
+    { "x": 2, "y": 10, "gold": 24, "item": "PotionDeSoin4" }
+  ],
+
+  "reward": { "goldShared": 180 }
+}
