@@ -1,0 +1,85 @@
+{
+  "number": 7,
+  "title": "Le mage disparu",
+  "stairs": { "x": 7, "y": 4, "width": 2, "height": 2 },
+  "start": { "type": "stairs", "room": "" },
+
+  "doors": [
+    { "x": 4, "y": 6, "side": "East" },
+    { "x": 3, "y": 8, "side": "South" },
+    { "x": 5, "y": 9, "side": "South" },
+    { "x": 18, "y": 9, "side": "South" },
+    { "x": 4, "y": 12, "side": "East" },
+    { "x": 2, "y": 13, "side": "South" },
+    { "x": 19, "y": 13, "side": "South" },
+    { "x": 17, "y": 15, "side": "East" },
+    { "x": 20, "y": 15, "side": "East" },
+    { "x": 2, "y": 17, "side": "South" },
+    { "x": 7, "y": 17, "side": "South" }
+  ],
+  "secretDoors": [],
+
+  "blocked": [
+    { "x": 12, "y": 5 },
+    { "x": 13, "y": 5 },
+    { "x": 1, "y": 9 },
+    { "x": 20, "y": 9 },
+    { "x": 12, "y": 13 },
+    { "x": 13, "y": 13 },
+    { "x": 1, "y": 18 },
+    { "x": 9, "y": 18 }
+  ],
+
+  "furniture": [
+    { "type": "Cheminee", "x": 1, "y": 5, "width": 1, "height": 3, "rotation": 90 },
+    { "type": "Table", "x": 19, "y": 10, "width": 2, "height": 3, "rotation": 90 },
+    { "type": "Coffre", "x": 7, "y": 13, "width": 1, "height": 1, "rotation": 0 },
+    { "type": "EtabliAlchimiste", "x": 14, "y": 13, "width": 2, "height": 3, "rotation": 90 },
+    { "type": "RatelierArmes", "x": 24, "y": 14, "width": 1, "height": 3, "rotation": 90 },
+    { "type": "Coffre", "x": 14, "y": 17, "width": 1, "height": 1, "rotation": 0 }
+  ],
+
+  "monsters": [
+    { "type": "Squelette", "x": 3, "y": 6 },
+    { "type": "Squelette", "x": 4, "y": 7 },
+    { "type": "GuerrierDeLaTerreur", "x": 9, "y": 6, "defense": 5 },
+    { "type": "GuerrierDeLaTerreur", "x": 16, "y": 6, "defense": 5 },
+    { "type": "GuerrierDeLaTerreur", "x": 9, "y": 12, "defense": 5 },
+    { "type": "GuerrierDeLaTerreur", "x": 16, "y": 12, "defense": 5 },
+    { "type": "Squelette", "x": 1, "y": 11 },
+    { "type": "Squelette", "x": 2, "y": 12 },
+    { "type": "Squelette", "x": 3, "y": 13 },
+    { "type": "Squelette", "x": 1, "y": 16 },
+    { "type": "Squelette", "x": 2, "y": 17 },
+    { "type": "Squelette", "x": 18, "y": 13 },
+    { "id": "wardoz", "type": "Zombie", "x": 16, "y": 14 },
+    { "type": "Squelette", "x": 22, "y": 14 },
+    { "type": "Momie", "x": 22, "y": 15 },
+    { "type": "Squelette", "x": 22, "y": 16 },
+    { "type": "Gargouille", "x": 19, "y": 17 }
+  ],
+
+  "traps": [
+    { "type": "Fosse", "x": 7, "y": 14 },
+    { "type": "Fosse", "x": 7, "y": 17 }
+  ],
+  "wanderingMonster": "Momie",
+
+  "victory": {
+    "mode": "Tous",
+    "objectives": [
+      { "type": "TrouverObjet", "target": "PapiersDeWardoz", "room": "S19" },
+      { "type": "Escalier" }
+    ]
+  },
+
+  "intro": "Wardoz, le mage personnel du roi, a disparu. Le roi craint qu'il ait ete tue ou corrompu par la magie de l'effroi. Decouvrez ce qui lui est arrive, puis revenez a l'escalier.",
+
+  "treasures": [
+    { "x": 7, "y": 13, "item": "FioleViolette", "trapped": true, "trapDamage": 2 },
+    { "x": 24, "y": 17, "item": "ArmureDeBorin" },
+    { "x": 14, "y": 17, "gold": 144, "item": "PapiersDeWardoz", "requiredKills": ["wardoz"] }
+  ],
+
+  "reward": { "goldEach": 100 }
+}

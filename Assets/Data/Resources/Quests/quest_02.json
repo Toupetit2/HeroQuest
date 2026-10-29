@@ -1,0 +1,93 @@
+{
+  "number": 2,
+  "title": "Le sauvetage de Sir Ragnar",
+  "stairs": { "x": 10, "y": 7, "width": 2, "height": 2 },
+  "start": { "type": "stairs", "room": "" },
+
+  "doors": [
+    { "x": 2, "y": 9, "side": "South" },
+    { "x": 6, "y": 11, "side": "East" },
+    { "x": 10, "y": 11, "side": "South" },
+    { "x": 8, "y": 15, "side": "East" },
+    { "x": 11, "y": 17, "side": "South" },
+    { "x": 16, "y": 3, "side": "East" },
+    { "x": 19, "y": 4, "side": "South" },
+    { "x": 15, "y": 5, "side": "South" },
+    { "x": 20, "y": 6, "side": "East" },
+    { "x": 23, "y": 8, "side": "South" }
+  ],
+  "secretDoors": [
+    { "x": 8, "y": 13, "side": "North" }
+  ],
+
+  "blocked": [
+    { "x": 1, "y": 9 },
+    { "x": 9, "y": 18 },
+    { "x": 12, "y": 5 },
+    { "x": 13, "y": 5 },
+    { "x": 24, "y": 9 }
+  ],
+
+  "furniture": [
+    { "type": "Table", "x": 18, "y": 1, "width": 3, "height": 2, "rotation": 0 },
+    { "type": "Placard", "x": 17, "y": 6, "width": 1, "height": 3, "rotation": 90 },
+    { "type": "Coffre", "x": 19, "y": 8, "width": 1, "height": 1, "rotation": 0 },
+    { "type": "Chevalet", "x": 14, "y": 9, "width": 2, "height": 3, "rotation": 90 },
+    { "type": "Coffre", "x": 2, "y": 13, "width": 1, "height": 1, "rotation": 0 },
+    { "type": "Table", "x": 5, "y": 15, "width": 2, "height": 3, "rotation": 90 }
+  ],
+
+  "monsters": [
+    { "type": "Gobelin", "x": 3, "y": 9 },
+    { "type": "Gobelin", "x": 2, "y": 12 },
+    { "type": "Abomination", "x": 8, "y": 11 },
+    { "type": "Orc", "x": 7, "y": 12 },
+    { "type": "Orc", "x": 8, "y": 14 },
+    { "type": "Orc", "x": 7, "y": 15 },
+    { "type": "Orc", "x": 9, "y": 15 },
+    { "type": "Gobelin", "x": 10, "y": 18 },
+    { "type": "Orc", "x": 15, "y": 3 },
+    { "type": "Orc", "x": 19, "y": 3 },
+    { "type": "Orc", "x": 16, "y": 4 },
+    { "type": "Gobelin", "x": 18, "y": 4 },
+    { "type": "Gobelin", "x": 14, "y": 6 },
+    { "type": "Gobelin", "x": 16, "y": 6 },
+    { "type": "Orc", "x": 23, "y": 6 },
+    { "type": "Gobelin", "x": 18, "y": 7 },
+    { "type": "Orc", "x": 19, "y": 7 },
+    { "type": "Gobelin", "x": 20, "y": 7 },
+    { "type": "Orc", "x": 24, "y": 7 },
+    { "type": "Gobelin", "x": 23, "y": 9 },
+    { "type": "Gobelin", "x": 16, "y": 12 }
+  ],
+
+  "traps": [],
+  "wanderingMonster": "Orc",
+
+  "victory": {
+    "mode": "Tous",
+    "objectives": [
+      { "type": "Escorter", "target": "ragnar" },
+      { "type": "Escalier" }
+    ]
+  },
+
+  "intro": "Sir Ragnar, un chevalier du roi, est retenu prisonnier par le seigneur orc Ulag. Retrouvez-le et ramenez-le vivant jusqu'a l'escalier.",
+
+  "treasures": [
+    { "x": 2, "y": 13, "trapped": true, "trapDamage": 1 },
+    { "x": 19, "y": 8, "gold": 60, "item": "PotionDeSoin4" }
+  ],
+
+  "allies": [
+    { "id": "ragnar", "x": 5, "y": 11, "attack": 0, "defense": 2, "body": 2 }
+  ],
+
+  "markers": [
+    { "label": "X", "x": 5, "y": 11 }
+  ],
+
+  "rules": ["SauvetageRagnar"],
+
+  "reward": { "goldShared": 240 }
+}

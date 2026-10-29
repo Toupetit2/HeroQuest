@@ -1,0 +1,103 @@
+{
+  "number": 12,
+  "title": "Barak Tor, le tertre du seigneur sorcier",
+  "stairs": { "x": 1, "y": 14, "width": 2, "height": 2 },
+  "start": { "type": "stairs", "room": "" },
+
+  "doors": [
+    { "x": 3, "y": 0, "side": "South" },
+    { "x": 7, "y": 0, "side": "South" },
+    { "x": 11, "y": 2, "side": "East" },
+    { "x": 8, "y": 3, "side": "East" },
+    { "x": 12, "y": 6, "side": "South" },
+    { "x": 6, "y": 9, "side": "South" },
+    { "x": 9, "y": 9, "side": "East" },
+    { "x": 4, "y": 11, "side": "East" },
+    { "x": 6, "y": 12, "side": "East" },
+    { "x": 4, "y": 13, "side": "East" },
+    { "x": 0, "y": 17, "side": "East" },
+    { "x": 10, "y": 17, "side": "South" }
+  ],
+  "secretDoors": [
+    { "x": 12, "y": 4, "side": "West" },
+    { "x": 15, "y": 6, "side": "South" },
+    { "x": 5, "y": 16, "side": "West" },
+    { "x": 9, "y": 16, "side": "West" }
+  ],
+  "falseDoors": [
+    { "x": 18, "y": 0, "side": "South" },
+    { "x": 22, "y": 0, "side": "South" },
+    { "x": 24, "y": 7, "side": "East" }
+  ],
+
+  "blocked": [
+    { "x": 9, "y": 0 },
+    { "x": 12, "y": 3 },
+    { "x": 13, "y": 3 },
+    { "x": 10, "y": 6 },
+    { "x": 14, "y": 6 },
+    { "x": 25, "y": 8 },
+    { "x": 1, "y": 9 },
+    { "x": 16, "y": 10 },
+    { "x": 12, "y": 13 },
+    { "x": 13, "y": 13 },
+    { "x": 0, "y": 18 },
+    { "x": 9, "y": 18 }
+  ],
+
+  "furniture": [
+    { "type": "Table", "x": 12, "y": 8, "width": 2, "height": 3, "rotation": 90 },
+    { "type": "Tombeau", "x": 1, "y": 11, "width": 3, "height": 2, "rotation": 0 },
+    { "type": "Bibliotheque", "x": 6, "y": 13, "width": 3, "height": 1, "rotation": 0 },
+    { "type": "Bibliotheque", "x": 6, "y": 17, "width": 3, "height": 1, "rotation": 180 }
+  ],
+
+  "monsters": [
+    { "type": "Momie", "x": 3, "y": 2 },
+    { "type": "Zombie", "x": 5, "y": 2 },
+    { "type": "Zombie", "x": 7, "y": 2 },
+    { "type": "Squelette", "x": 8, "y": 2 },
+    { "type": "Squelette", "x": 7, "y": 3 },
+    { "type": "Zombie", "x": 11, "y": 9, "item": "EtoileDeLOuest" },
+    { "id": "seigneursorcier", "type": "SorcierDeLEffroi", "x": 1, "y": 10, "movement": 1, "attack": 2, "hidden": true, "wakeOn": "EntrerSalle", "wakeRoom": "S12" },
+    { "type": "Zombie", "x": 3, "y": 10 },
+    { "type": "Zombie", "x": 3, "y": 13 },
+    { "type": "Squelette", "x": 8, "y": 10 },
+    { "type": "Squelette", "x": 8, "y": 11 },
+    { "type": "Squelette", "x": 5, "y": 12 },
+    { "type": "Momie", "x": 7, "y": 15 },
+    { "type": "Gargouille", "x": 12, "y": 15 }
+  ],
+
+  "traps": [
+    { "type": "BlocQuiTombe", "x": 0, "y": 0 },
+    { "type": "Lance", "x": 15, "y": 0 },
+    { "type": "Lance", "x": 17, "y": 0 },
+    { "type": "Lance", "x": 20, "y": 0 },
+    { "type": "Fosse", "x": 25, "y": 6 },
+    { "type": "Fosse", "x": 16, "y": 12 }
+  ],
+  "wanderingMonster": "Squelette",
+
+  "victory": {
+    "mode": "Tous",
+    "objectives": [
+      { "type": "TrouverObjet", "target": "EtoileDeLOuest", "room": "S11" },
+      { "type": "Escalier" }
+    ]
+  },
+
+  "intro": "Pour unir le royaume avant la guerre contre les orcs, le roi veut l'Etoile de l'Ouest. Elle repose a Barak Tor, le tombeau du seigneur sorcier, vaincu jadis par l'Epee de l'Esprit. Rapportez l'Etoile a l'escalier.",
+
+  "treasures": [
+    { "x": 5, "y": 17, "item": "BatonDuSorcier" }
+  ],
+
+  "markers": [
+    { "label": "X", "x": 1, "y": 10 }
+  ],
+
+  "rules": ["EboulementDerriere"],
+
+  "reward": { "goldShared": 200 }
+}

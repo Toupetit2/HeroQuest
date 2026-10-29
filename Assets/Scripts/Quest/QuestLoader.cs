@@ -12,10 +12,11 @@ public class QuestLoader
     // monstres nommes dans le JSON (ex : "verag"), pour la victoire
     public Dictionary<string, Monster> monstersById = new Dictionary<string, Monster>();
 
-    public QuestLoader(GameState gameState, List<MonsterData> monsterDatas)
+    public QuestLoader(GameState gameState)
     {
         this.gameState = gameState;
-        this.monsterDatas = monsterDatas;
+        // tous les MonsterData du dossier Resources/Monsters
+        monsterDatas = new List<MonsterData>(Resources.LoadAll<MonsterData>("Monsters"));
     }
 
     public void Load(string json)
@@ -27,6 +28,12 @@ public class QuestLoader
         gameState.doorList = new List<Door>();
         gameState.furnitureList = new List<Furniture>();
         gameState.trapList = new List<Trap>();
+        gameState.treasureList = new List<Treasure>();
+        gameState.allyList = new List<Ally>();
+        gameState.markerList = new List<Marker>();
+        gameState.rules = new List<QuestRule>();
+        gameState.reward = new Reward();
+        gameState.intro = quest.intro;
         monstersById.Clear();
 
         // escalier
@@ -34,8 +41,10 @@ public class QuestLoader
         gameState.stairs = new RectInt(s.x, s.y, s.width, s.height);
 
         // portes : elles doivent etre sur un mur
-        foreach (DoorEntry d in quest.doors) AddDoor(d, false);
-        foreach (DoorEntry d in quest.secretDoors) AddDoor(d, true);
+        foreach (DoorEntry d in quest.doors) AddDoor(d, false, false);
+        foreach (DoorEntry d in quest.secretDoors) AddDoor(d, true, false);
+        if (quest.falseDoors != null)
+            foreach (DoorEntry d in quest.falseDoors) AddDoor(d, false, true);
 
         // cases bloquees
         foreach (CellEntry c in quest.blocked)
@@ -65,7 +74,55 @@ public class QuestLoader
         // monstres
         foreach (MonsterEntry m in quest.monsters) AddMonster(m);
 
-        gameState.wanderingMonster = ParseEnum<MonsterClass>(quest.wanderingMonster, "monstre errant");
+        // monstre errant : vide = aucun
+        gameState.hasWanderingMonster = !string.IsNullOrEmpty(quest.wanderingMonster);
+        if (gameState.hasWanderingMonster)
+            gameState.wanderingMonster = ParseEnum<MonsterClass>(quest.wanderingMonster, "monstre errant");
+
+        // tresors speciaux (apres les monstres, pour verifier les ids)
+        if (quest.treasures != null)
+            foreach (TreasureEntry t in quest.treasures) AddTreasure(t);
+
+        // allies a escorter
+        if (quest.allies != null)
+        {
+            foreach (AllyEntry a in quest.allies)
+            {
+                GetTile(a.x, a.y, "allie " + a.id);
+                Ally ally = new Ally();
+                ally.id = a.id;
+                ally.position = new Vector2Int(a.x, a.y);
+                ally.attack = a.attack;
+                ally.defense = a.defense;
+                ally.body = a.body;
+                ally.currentHealth = a.body;
+                gameState.allyList.Add(ally);
+            }
+        }
+
+        // reperes
+        if (quest.markers != null)
+        {
+            foreach (MarkerEntry m in quest.markers)
+            {
+                GetTile(m.x, m.y, "repere " + m.label);
+                gameState.markerList.Add(new Marker(m.label, m.x, m.y));
+            }
+        }
+
+        // regles speciales
+        if (quest.rules != null)
+            foreach (string r in quest.rules) gameState.rules.Add(ParseEnum<QuestRule>(r, "regle"));
+
+        // recompense
+        if (quest.reward != null)
+        {
+            gameState.reward.goldShared = quest.reward.goldShared;
+            gameState.reward.goldEach = quest.reward.goldEach;
+            if (quest.reward.bounties != null)
+                foreach (BountyEntry b in quest.reward.bounties)
+                    gameState.reward.bounties[ParseEnum<MonsterClass>(b.monster, "prime")] = b.gold;
+        }
 
         // victoire
         Victory victory = new Victory();
@@ -85,17 +142,18 @@ public class QuestLoader
         foreach (Tile tile in map.tiles)
             tile.revealed = tile.zone == startZone;
 
-        MarkRock(s.x, s.y);
+        MarkRock(s.x, s.y, quest.rockZones);
 
         Debug.Log("Quete " + quest.number + " chargee : " + gameState.doorList.Count + " portes, "
             + gameState.furnitureList.Count + " meubles, " + gameState.monsterList.Count + " monstres, "
-            + gameState.trapList.Count + " pieges");
+            + gameState.trapList.Count + " pieges, " + gameState.treasureList.Count + " tresors");
     }
 
-    void AddDoor(DoorEntry d, bool isSecret)
+    void AddDoor(DoorEntry d, bool isSecret, bool isFalse)
     {
         Side side = ParseEnum<Side>(d.side, "cote de porte");
         Door door = new Door(d.x, d.y, side, isSecret);
+        door.isFalse = isFalse;
         Vector2Int n = Neighbor(d.x, d.y, side);
 
         if (!gameState.map.HasWall(d.x, d.y, n.x, n.y))
@@ -128,9 +186,63 @@ public class QuestLoader
         GetTile(m.x, m.y, "monstre " + m.type);
         Monster monster = new Monster(data);
         monster.position = new Vector2Int(m.x, m.y);
+        monster.id = m.id;
+        monster.item = m.item;
+        monster.isHidden = m.hidden;
+        monster.isStatue = m.statue;
+
+        // reveil : vide = aucun ; sinon il faut une salle qui existe
+        if (!string.IsNullOrEmpty(m.wakeOn))
+            monster.wakeOn = ParseEnum<MonsterTrigger>(m.wakeOn, "reveil");
+        if (monster.wakeOn != MonsterTrigger.Aucun)
+        {
+            if (!ZoneExists(m.wakeRoom))
+                throw new Exception("Monstre (" + m.x + ", " + m.y + ") : salle de reveil inconnue \"" + m.wakeRoom + "\"");
+            monster.wakeRoom = m.wakeRoom;
+        }
+
         gameState.monsterList.Add(monster);
 
         if (!string.IsNullOrEmpty(m.id)) monstersById[m.id] = monster;
+    }
+
+    void AddTreasure(TreasureEntry t)
+    {
+        // les regles : on ne trouve des tresors que dans les salles
+        Tile tile = GetTile(t.x, t.y, "tresor");
+        if (tile.zone == ".")
+            throw new Exception("Tresor (" + t.x + ", " + t.y + ") : la case est dans un couloir");
+
+        Treasure treasure = new Treasure();
+        treasure.x = t.x;
+        treasure.y = t.y;
+        treasure.room = tile.zone;
+        treasure.gold = t.gold;
+        treasure.item = t.item;
+        treasure.isTrapped = t.trapped;
+        treasure.trapDamage = t.trapDamage;
+
+        if (t.requiredKills != null)
+        {
+            foreach (string id in t.requiredKills)
+            {
+                if (!monstersById.ContainsKey(id))
+                    throw new Exception("Tresor (" + t.x + ", " + t.y + ") : monstre inconnu \"" + id + "\"");
+                treasure.requiredKills.Add(id);
+            }
+        }
+
+        gameState.treasureList.Add(treasure);
+    }
+
+    bool ZoneExists(string zone)
+    {
+        if (string.IsNullOrEmpty(zone)) return false;
+        foreach (Tile tile in gameState.map.tiles)
+        {
+            if (tile.zone == zone) return true;
+        }
+        return false;
     }
 
     MonsterData FindData(MonsterClass monsterClass)
@@ -142,15 +254,24 @@ public class QuestLoader
         return null;
     }
 
-    // roche : toute case qu'on ne peut pas atteindre depuis l'escalier
-    // en passant par les portes (secretes comprises) et sans traverser de case bloquee
-    void MarkRock(int startX, int startY)
+    // roche : toute case qu'on ne peut pas atteindre en passant par les portes (secretes comprises),
+    // sans traverser de case bloquee ni une zone de rockZones
+    // on part de la salle de depart ET des deux cotes de chaque porte : une salle qui a une porte
+    // n'est jamais de la roche (quete 10 : on passe d'une salle a l'autre par teleportation)
+    void MarkRock(int startX, int startY, string[] rockZones)
     {
         Map map = gameState.map;
         bool[,] reached = new bool[map.width, map.height];
         Queue<Vector2Int> queue = new Queue<Vector2Int>();
-        queue.Enqueue(new Vector2Int(startX, startY));
-        reached[startX, startY] = true;
+
+        Reach(startX, startY, rockZones, reached, queue);
+        foreach (Door door in gameState.doorList)
+        {
+            if (door.isFalse) continue;
+            Vector2Int n = Neighbor(door.x, door.y, door.side);
+            Reach(door.x, door.y, rockZones, reached, queue);
+            Reach(n.x, n.y, rockZones, reached, queue);
+        }
 
         while (queue.Count > 0)
         {
@@ -158,12 +279,8 @@ public class QuestLoader
             foreach (Side side in Enum.GetValues(typeof(Side)))
             {
                 Vector2Int n = Neighbor(c.x, c.y, side);
-                if (!map.InBounds(n.x, n.y) || reached[n.x, n.y]) continue;
-                if (map.Get(n.x, n.y).blocked) continue;
                 if (map.HasWall(c.x, c.y, n.x, n.y) && !HasDoor(c.x, c.y, n.x, n.y)) continue;
-
-                reached[n.x, n.y] = true;
-                queue.Enqueue(n);
+                Reach(n.x, n.y, rockZones, reached, queue);
             }
         }
 
@@ -171,11 +288,26 @@ public class QuestLoader
             tile.rock = !reached[tile.x, tile.y] && !tile.blocked;
     }
 
+    // marque la case comme atteinte et l'ajoute a la file, si on a le droit d'y aller
+    void Reach(int x, int y, string[] rockZones, bool[,] reached, Queue<Vector2Int> queue)
+    {
+        Map map = gameState.map;
+        if (!map.InBounds(x, y) || reached[x, y]) return;
+
+        Tile tile = map.Get(x, y);
+        if (tile.blocked) return;
+        if (rockZones != null && Array.IndexOf(rockZones, tile.zone) >= 0) return;
+
+        reached[x, y] = true;
+        queue.Enqueue(new Vector2Int(x, y));
+    }
+
+    // une fausse porte ne laisse jamais passer
     bool HasDoor(int x1, int y1, int x2, int y2)
     {
         foreach (Door door in gameState.doorList)
         {
-            if (door.IsBetween(x1, y1, x2, y2)) return true;
+            if (!door.isFalse && door.IsBetween(x1, y1, x2, y2)) return true;
         }
         return false;
     }
@@ -203,5 +335,13 @@ public class QuestLoader
         if (!Enum.TryParse(text, out value) || !Enum.IsDefined(typeof(T), value))
             throw new Exception(what + " inconnu : \"" + text + "\"");
         return value;
+    }
+
+    // charge Resources/Quests/quest_01.json ... quest_14.json
+    public void LoadQuest(int questNumber)
+    {
+        TextAsset file = Resources.Load<TextAsset>("Quests/quest_" + questNumber.ToString("00"));
+        if (file == null) throw new Exception("Quete " + questNumber + " introuvable dans Resources/Quests");
+        Load(file.text);
     }
 }

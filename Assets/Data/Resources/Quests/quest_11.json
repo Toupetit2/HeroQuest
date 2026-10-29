@@ -1,0 +1,111 @@
+{
+  "number": 11,
+  "title": "Le bastion de l'effroi",
+  "stairs": { "x": 7, "y": 10, "width": 2, "height": 2 },
+  "start": { "type": "stairs", "room": "" },
+
+  "doors": [
+    { "x": 8, "y": 4, "side": "East" },
+    { "x": 0, "y": 5, "side": "East" },
+    { "x": 9, "y": 5, "side": "South" },
+    { "x": 11, "y": 6, "side": "South" },
+    { "x": 4, "y": 7, "side": "East" },
+    { "x": 9, "y": 8, "side": "East" },
+    { "x": 2, "y": 9, "side": "South" },
+    { "x": 18, "y": 9, "side": "South" },
+    { "x": 13, "y": 11, "side": "South" },
+    { "x": 7, "y": 12, "side": "South" },
+    { "x": 24, "y": 15, "side": "East" },
+    { "x": 4, "y": 16, "side": "East" },
+    { "x": 8, "y": 16, "side": "East" },
+    { "x": 2, "y": 17, "side": "South" },
+    { "x": 19, "y": 17, "side": "South" },
+    { "x": 22, "y": 17, "side": "South" }
+  ],
+  "secretDoors": [
+    { "x": 5, "y": 11, "side": "West" }
+  ],
+
+  "blocked": [
+    { "x": 0, "y": 3 },
+    { "x": 12, "y": 5 },
+    { "x": 12, "y": 6 },
+    { "x": 9, "y": 7 },
+    { "x": 16, "y": 8 },
+    { "x": 25, "y": 8 },
+    { "x": 1, "y": 9 },
+    { "x": 12, "y": 16 },
+    { "x": 13, "y": 16 }
+  ],
+
+  "furniture": [
+    { "type": "Chevalet", "x": 9, "y": 1, "width": 3, "height": 2, "rotation": 0 },
+    { "type": "Placard", "x": 4, "y": 4, "width": 1, "height": 3, "rotation": 90 },
+    { "type": "Table", "x": 5, "y": 4, "width": 3, "height": 2, "rotation": 0 },
+    { "type": "Table", "x": 12, "y": 8, "width": 2, "height": 3, "rotation": 90 },
+    { "type": "Trone", "x": 15, "y": 9, "width": 1, "height": 1, "rotation": 0 },
+    { "type": "Coffre", "x": 5, "y": 10, "width": 1, "height": 1, "rotation": 90 },
+    { "type": "Placard", "x": 20, "y": 10, "width": 1, "height": 3, "rotation": 90 },
+    { "type": "EtabliAlchimiste", "x": 1, "y": 12, "width": 3, "height": 2, "rotation": 0 },
+    { "type": "Cheminee", "x": 9, "y": 13, "width": 3, "height": 1, "rotation": 0 },
+    { "type": "RatelierArmes", "x": 18, "y": 14, "width": 1, "height": 3, "rotation": 90 }
+  ],
+
+  "monsters": [
+    { "type": "Orc", "x": 10, "y": 3 },
+    { "type": "Abomination", "x": 7, "y": 6 },
+    { "type": "Abomination", "x": 3, "y": 7 },
+    { "type": "Gobelin", "x": 13, "y": 7 },
+    { "type": "Orc", "x": 14, "y": 8 },
+    { "type": "GuerrierDeLaTerreur", "x": 14, "y": 9, "item": "FleauDesOrcs" },
+    { "type": "Orc", "x": 14, "y": 10 },
+    { "type": "Gobelin", "x": 14, "y": 11 },
+    { "type": "GuerrierDeLaTerreur", "x": 2, "y": 11 },
+    { "type": "Gargouille", "x": 5, "y": 12, "statue": true, "wakeOn": "PiegeDeclenche", "wakeRoom": "S13" },
+    { "type": "GuerrierDeLaTerreur", "x": 18, "y": 11 },
+    { "type": "Gobelin", "x": 6, "y": 15 },
+    { "type": "Gobelin", "x": 7, "y": 15 },
+    { "type": "Gobelin", "x": 10, "y": 15 },
+    { "type": "Gobelin", "x": 10, "y": 16 },
+    { "type": "Orc", "x": 11, "y": 16 },
+    { "type": "Gobelin", "x": 10, "y": 17 },
+    { "type": "Gobelin", "x": 12, "y": 17 },
+    { "type": "Gobelin", "x": 13, "y": 17 },
+    { "type": "GuerrierDeLaTerreur", "x": 19, "y": 15 },
+    { "type": "Orc", "x": 20, "y": 16 },
+    { "type": "Orc", "x": 22, "y": 15 },
+    { "type": "Orc", "x": 23, "y": 16 }
+  ],
+
+  "traps": [
+    { "type": "Fosse", "x": 9, "y": 12 },
+    { "type": "Fosse", "x": 12, "y": 13 },
+    { "type": "Fosse", "x": 13, "y": 13 },
+    { "type": "Fosse", "x": 25, "y": 18 }
+  ],
+  "wanderingMonster": "Abomination",
+
+  "victory": {
+    "mode": "Tous",
+    "objectives": [
+      { "type": "TuerTous" },
+      { "type": "Escalier" }
+    ]
+  },
+
+  "intro": "Des orcs et des gobelins allies a Zargon ravagent l'est du royaume, menes par quelques guerriers de l'effroi. Entrez dans leur forteresse et tuez tous les monstres : chaque monstre tue rapporte une prime.",
+
+  "treasures": [
+    { "x": 19, "y": 14, "item": "Bouclier" },
+    { "x": 5, "y": 10, "trapped": true, "trapDamage": 0 }
+  ],
+
+  "reward": {
+    "bounties": [
+      { "monster": "Gobelin", "gold": 10 },
+      { "monster": "Orc", "gold": 20 },
+      { "monster": "Abomination", "gold": 30 },
+      { "monster": "GuerrierDeLaTerreur", "gold": 50 }
+    ]
+  }
+}

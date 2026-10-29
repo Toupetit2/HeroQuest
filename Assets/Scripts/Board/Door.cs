@@ -7,6 +7,7 @@ public class Door
     public bool isOpen;
     public bool isSecret;
     public bool isFound;    // porte secrete trouvee par une recherche
+    public bool isFalse;    // fausse porte : on la voit, mais elle ne s'ouvre jamais (quete 12)
 
     public Door(int x, int y, Side side, bool isSecret)
     {
