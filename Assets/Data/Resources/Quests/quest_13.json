@@ -1,0 +1,92 @@
+{
+  "number": 13,
+  "title": "La quete de l'Epee de l'Esprit",
+  "stairs": { "x": 14, "y": 7, "width": 2, "height": 2 },
+  "start": { "type": "stairs", "room": "" },
+
+  "doors": [
+    { "x": 12, "y": 6, "side": "South" },
+    { "x": 19, "y": 8, "side": "South" },
+    { "x": 2, "y": 9, "side": "South" },
+    { "x": 7, "y": 9, "side": "South" },
+    { "x": 9, "y": 9, "side": "East" },
+    { "x": 15, "y": 9, "side": "East" },
+    { "x": 4, "y": 11, "side": "East" },
+    { "x": 12, "y": 11, "side": "South" },
+    { "x": 2, "y": 13, "side": "South" },
+    { "x": 4, "y": 17, "side": "East" },
+    { "x": 3, "y": 17, "side": "South" },
+    { "x": 19, "y": 17, "side": "South" },
+    { "x": 22, "y": 17, "side": "South" }
+  ],
+  "secretDoors": [],
+
+  "blocked": [
+    { "x": 12, "y": 5 },
+    { "x": 13, "y": 5 },
+    { "x": 0, "y": 7 },
+    { "x": 6, "y": 9 },
+    { "x": 20, "y": 9 },
+    { "x": 0, "y": 11 },
+    { "x": 1, "y": 18 },
+    { "x": 24, "y": 18 }
+  ],
+
+  "furniture": [
+    { "type": "Coffre", "x": 6, "y": 11, "width": 1, "height": 1, "rotation": 0 },
+    { "type": "Table", "x": 6, "y": 13, "width": 3, "height": 2, "rotation": 0 },
+    { "type": "Table", "x": 3, "y": 14, "width": 2, "height": 3, "rotation": 90 }
+  ],
+
+  "monsters": [
+    { "type": "Orc", "x": 2, "y": 11 },
+    { "type": "GuerrierDeLaTerreur", "x": 3, "y": 11 },
+    { "type": "Abomination", "x": 3, "y": 12 },
+    { "type": "Orc", "x": 1, "y": 15 },
+    { "type": "Orc", "x": 2, "y": 15 },
+    { "type": "Abomination", "x": 2, "y": 17 },
+    { "type": "Gobelin", "x": 6, "y": 15 },
+    { "type": "Gobelin", "x": 6, "y": 16 },
+    { "type": "Orc", "x": 7, "y": 16 },
+    { "type": "Gobelin", "x": 7, "y": 17 },
+    { "type": "Orc", "x": 16, "y": 12 },
+    { "type": "Orc", "x": 12, "y": 13 },
+    { "type": "Orc", "x": 13, "y": 13 },
+    { "type": "Abomination", "x": 12, "y": 18 },
+    { "type": "Squelette", "x": 21, "y": 15 },
+    { "type": "GuerrierDeLaTerreur", "x": 22, "y": 15 },
+    { "type": "Squelette", "x": 24, "y": 15 },
+    { "type": "Squelette", "x": 22, "y": 16 },
+    { "type": "Squelette", "x": 23, "y": 16 },
+    { "type": "Momie", "x": 20, "y": 17 }
+  ],
+
+  "traps": [
+    { "type": "Lance", "x": 11, "y": 6 },
+    { "type": "Lance", "x": 14, "y": 6 },
+    { "type": "BlocQuiTombe", "x": 0, "y": 9 },
+    { "type": "BlocQuiTombe", "x": 19, "y": 9 },
+    { "type": "BlocQuiTombe", "x": 9, "y": 11 },
+    { "type": "BlocQuiTombe", "x": 12, "y": 14 },
+    { "type": "BlocQuiTombe", "x": 13, "y": 16 },
+    { "type": "BlocQuiTombe", "x": 19, "y": 17 }
+  ],
+  "wanderingMonster": "GuerrierDeLaTerreur",
+
+  "victory": {
+    "mode": "Tous",
+    "objectives": [
+      { "type": "TrouverObjet", "target": "EpeeDeLEsprit", "room": "S22" },
+      { "type": "Escalier" }
+    ]
+  },
+
+  "intro": "Le seigneur sorcier s'est reveille et seule l'Epee de l'Esprit peut le blesser. Forgee par les nains et trempee dans une fontaine elfique, elle repose dans un temple en ruine. Trouvez-la et rapportez-la a l'escalier.",
+
+  "treasures": [
+    { "x": 6, "y": 11, "gold": 200 },
+    { "x": 23, "y": 15, "item": "EpeeDeLEsprit" }
+  ],
+
+  "rules": ["BlocsSansBlocage"]
+}

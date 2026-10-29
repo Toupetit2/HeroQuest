@@ -76,6 +76,15 @@
   "traps": [],
   "wanderingMonster": "Orc",
 
+  "intro": "Votre premiere epreuve : descendez dans les catacombes du tombeau de Fellmarg et detruisez Verag, la gargouille qui s'y cache. Restez unis, seuls vous n'y survivrez pas.",
+
+  "treasures": [
+    { "x": 11, "y": 15 },
+    { "x": 17, "y": 16 },
+    { "x": 10, "y": 5, "gold": 84 },
+    { "x": 11, "y": 7, "gold": 120 }
+  ],
+
   "victory": {
     "mode": "Tous",
     "objectives": [

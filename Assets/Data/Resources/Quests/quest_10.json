@@ -1,0 +1,83 @@
+{
+  "number": 10,
+  "title": "Le chateau du mystere",
+  "stairs": { "x": 1, "y": 16, "width": 2, "height": 2 },
+  "start": { "type": "stairs", "room": "" },
+
+  "doors": [
+    { "x": 8, "y": 2, "side": "East" },
+    { "x": 16, "y": 2, "side": "East" },
+    { "x": 22, "y": 4, "side": "South" },
+    { "x": 4, "y": 6, "side": "East" },
+    { "x": 15, "y": 9, "side": "East" },
+    { "x": 6, "y": 11, "side": "East" },
+    { "x": 22, "y": 13, "side": "South" },
+    { "x": 4, "y": 13, "side": "South" },
+    { "x": 8, "y": 15, "side": "East" },
+    { "x": 17, "y": 16, "side": "East" }
+  ],
+  "secretDoors": [],
+
+  "blocked": [],
+
+  "rockZones": [".", "S2", "S5", "S8", "S10", "S12", "S14", "S17", "S21", "S22"],
+
+  "furniture": [],
+
+  "monsters": [
+    { "type": "Squelette", "x": 10, "y": 1 },
+    { "type": "Zombie", "x": 10, "y": 3 },
+    { "type": "Zombie", "x": 9, "y": 4 },
+    { "type": "Orc", "x": 3, "y": 5 },
+    { "type": "Orc", "x": 2, "y": 6 },
+    { "type": "GuerrierDeLaTerreur", "x": 5, "y": 10 },
+    { "type": "Gobelin", "x": 13, "y": 8 },
+    { "type": "Gobelin", "x": 12, "y": 9 },
+    { "type": "Gobelin", "x": 11, "y": 10 },
+    { "type": "Gobelin", "x": 13, "y": 11 },
+    { "type": "Momie", "x": 10, "y": 16 },
+    { "type": "Orc", "x": 22, "y": 1 },
+    { "type": "Orc", "x": 21, "y": 2 },
+    { "type": "Orc", "x": 24, "y": 3 },
+    { "id": "guerrier1", "type": "GuerrierDeLaTerreur", "x": 22, "y": 11 },
+    { "id": "guerrier2", "type": "GuerrierDeLaTerreur", "x": 24, "y": 12 },
+    { "type": "Momie", "x": 16, "y": 13 },
+    { "type": "Squelette", "x": 15, "y": 15 },
+    { "type": "Squelette", "x": 14, "y": 16 },
+    { "type": "Squelette", "x": 16, "y": 17 }
+  ],
+
+  "traps": [],
+  "wanderingMonster": "",
+
+  "victory": {
+    "mode": "AuMoinsUn",
+    "objectives": [
+      { "type": "TuerTous" },
+      { "type": "Escalier" }
+    ]
+  },
+
+  "intro": "Le mage Ollar a bati un chateau magique au-dessus d'une mine d'or. Ses portes enchantees deplacent ceux qui les franchissent. Trouvez l'entree de la mine, puis tuez tous les monstres ou retrouvez l'escalier.",
+
+  "treasures": [
+    { "x": 23, "y": 11, "item": "AnneauDuRetour", "requiredKills": ["guerrier1", "guerrier2"] }
+  ],
+
+  "markers": [
+    { "label": "2", "x": 4, "y": 14 },
+    { "label": "12", "x": 4, "y": 14 },
+    { "label": "3", "x": 9, "y": 2 },
+    { "label": "4", "x": 4, "y": 6 },
+    { "label": "5", "x": 6, "y": 11 },
+    { "label": "6", "x": 9, "y": 15 },
+    { "label": "7", "x": 15, "y": 9 },
+    { "label": "8", "x": 16, "y": 2 },
+    { "label": "9", "x": 17, "y": 16 },
+    { "label": "10", "x": 22, "y": 13 },
+    { "label": "11", "x": 22, "y": 4 },
+    { "label": "Mine", "x": 14, "y": 4 }
+  ],
+
+  "rules": ["Teleportation", "OrDeLaMine"]
+}

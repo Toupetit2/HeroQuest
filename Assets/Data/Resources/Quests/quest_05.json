@@ -1,0 +1,97 @@
+{
+  "number": 5,
+  "title": "Le labyrinthe de Melar",
+  "stairs": { "x": 3, "y": 1, "width": 2, "height": 2 },
+  "start": { "type": "stairs", "room": "" },
+
+  "doors": [
+    { "x": 6, "y": 0, "side": "South" },
+    { "x": 0, "y": 2, "side": "East" },
+    { "x": 6, "y": 3, "side": "South" },
+    { "x": 15, "y": 6, "side": "South" },
+    { "x": 0, "y": 7, "side": "East" },
+    { "x": 5, "y": 8, "side": "South" },
+    { "x": 2, "y": 9, "side": "South" },
+    { "x": 7, "y": 9, "side": "South" },
+    { "x": 10, "y": 12, "side": "South" },
+    { "x": 3, "y": 13, "side": "South" },
+    { "x": 5, "y": 17, "side": "South" },
+    { "x": 7, "y": 17, "side": "South" },
+    { "x": 9, "y": 17, "side": "South" }
+  ],
+  "secretDoors": [
+    { "x": 8, "y": 10, "side": "East" }
+  ],
+
+  "blocked": [
+    { "x": 12, "y": 1 },
+    { "x": 13, "y": 1 },
+    { "x": 14, "y": 6 },
+    { "x": 0, "y": 8 },
+    { "x": 9, "y": 8 },
+    { "x": 8, "y": 9 },
+    { "x": 25, "y": 10 },
+    { "x": 12, "y": 13 },
+    { "x": 13, "y": 13 },
+    { "x": 11, "y": 18 }
+  ],
+
+  "furniture": [
+    { "type": "EtabliAlchimiste", "x": 7, "y": 6, "width": 2, "height": 3, "rotation": 90 },
+    { "type": "Trone", "x": 4, "y": 7, "width": 1, "height": 1, "rotation": 0 },
+    { "type": "Table", "x": 12, "y": 8, "width": 3, "height": 2, "rotation": 0 },
+    { "type": "Bibliotheque", "x": 10, "y": 11, "width": 3, "height": 1, "rotation": 0 },
+    { "type": "Bibliotheque", "x": 13, "y": 11, "width": 3, "height": 1, "rotation": 0 },
+    { "type": "Chevalet", "x": 6, "y": 13, "width": 3, "height": 2, "rotation": 0 },
+    { "type": "Placard", "x": 11, "y": 14, "width": 1, "height": 3, "rotation": 90 },
+    { "type": "Coffre", "x": 1, "y": 17, "width": 1, "height": 1, "rotation": 90 }
+  ],
+
+  "monsters": [
+    { "type": "Momie", "x": 23, "y": 0 },
+    { "type": "Orc", "x": 5, "y": 4 },
+    { "type": "Orc", "x": 7, "y": 4 },
+    { "type": "Orc", "x": 6, "y": 5 },
+    { "type": "Zombie", "x": 11, "y": 7 },
+    { "type": "Squelette", "x": 14, "y": 7 },
+    { "type": "Squelette", "x": 15, "y": 8 },
+    { "type": "Zombie", "x": 15, "y": 9 },
+    { "type": "Momie", "x": 11, "y": 10 },
+    { "type": "Momie", "x": 20, "y": 9 },
+    { "type": "Squelette", "x": 9, "y": 12 },
+    { "type": "Zombie", "x": 7, "y": 12 },
+    { "type": "Gargouille", "x": 4, "y": 12, "statue": true, "wakeOn": "OuvrirPorte", "wakeRoom": "S20" },
+    { "type": "Squelette", "x": 4, "y": 15 },
+    { "type": "Squelette", "x": 1, "y": 16 },
+    { "type": "Squelette", "x": 2, "y": 17 },
+    { "type": "Zombie", "x": 8, "y": 18 }
+  ],
+
+  "traps": [
+    { "type": "BlocQuiTombe", "x": 9, "y": 0 },
+    { "type": "Fosse", "x": 6, "y": 2 },
+    { "type": "Fosse", "x": 9, "y": 11 },
+    { "type": "Fosse", "x": 3, "y": 14 },
+    { "type": "Lance", "x": 3, "y": 15 },
+    { "type": "Lance", "x": 0, "y": 16 },
+    { "type": "Fosse", "x": 7, "y": 17 }
+  ],
+  "wanderingMonster": "Zombie",
+
+  "victory": {
+    "mode": "Tous",
+    "objectives": [
+      { "type": "TrouverObjet", "target": "TalismanDuSavoir", "room": "S11" },
+      { "type": "Escalier" }
+    ]
+  },
+
+  "intro": "Le mage Melar a cache un talisman qui aiguise l'esprit de celui qui le porte, au coeur de son labyrinthe souterrain. Trouvez-le avant les serviteurs de Zargon, en prenant garde aux pieges.",
+
+  "treasures": [
+    { "x": 8, "y": 5, "item": "PotionDeSoin2" },
+    { "x": 1, "y": 17, "gold": 144, "trapped": true, "trapDamage": 2 },
+    { "x": 10, "y": 9, "item": "TalismanDuSavoir" },
+    { "x": 3, "y": 7, "item": "CleDeMelar" }
+  ]
+}
