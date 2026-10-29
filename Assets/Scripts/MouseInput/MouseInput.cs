@@ -43,7 +43,7 @@ public class MouseInput : MonoBehaviour
         clickedTile = new string[] { t.x.ToString(), t.y.ToString() };
         Debug.Log("Tile cliquee : X=" + clickedTile[0] + " Y=" + clickedTile[1] + " (zone " + t.zone + ")");
 
-        /*gameManager.SetSelectedTile(t);*/
+        gameManager.SetSelectedTile(t);
         
     }
 

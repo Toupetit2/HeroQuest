@@ -10,7 +10,7 @@ public class AttackController
     public AttackController(GameManager gameManager)
     {
         this.gameManager = gameManager;
-        attackSystem = new AttackSystem(gameManager.gameState);
+        attackSystem = new AttackSystem(gameManager);
     }
 
     public bool CanAttack() 
@@ -60,5 +60,10 @@ public class AttackController
             return;
         }
         Debug.Log("No valid target selected (AttackController.ConfirmAttack())");
+    }
+
+    public void ZargonConfirmAttack(Monster monster, Hero target) 
+    {
+        attackSystem.MonsterResolveAttack(monster, target);
     }
 }

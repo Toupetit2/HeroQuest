@@ -39,4 +39,11 @@ public class MovementController
         movementState = MovementStates.None;
         gameManager.hasMoveAction = false;
     }
+
+    
+
+    public void MonsterConfirmMove(Monster monster, Tile selectedTile) 
+    {
+        movementSystem.MoveMonster(monster, selectedTile);
+    }
 }
