@@ -1,0 +1,101 @@
+{
+  "questNumber": 5,
+  "title": "Melar’s Maze",
+  "questBookPdfPage": 20,
+  "digitization": "TRANSCRIPTION PARTIELLE - mobilier/escalier relu visuellement; portes/monstres et notes restant à vérifier (0 portes, 7 objets)",
+  "description": "Relevé partiel depuis les cartes du Quest Book. Ne pas confondre avec une quête complète et testée.",
+  "rockRows": [
+    "00000000010000000000000000",
+    "00000000111100111111111110",
+    "00000000111111111111111110",
+    "00000000111111111111111110",
+    "00000000111111111111111110",
+    "00000000111111111111111110",
+    "00000000011111000111111110",
+    "00000000010000000111111110",
+    "00000000000000000111111110",
+    "00000000000000000000000000",
+    "00000000000000000111111110",
+    "00000000010000000111111111",
+    "00000000000000000111111111",
+    "00000000000000111111111111",
+    "00000000000011111111111111",
+    "00000000000011111111111111",
+    "10000000000011111111111111",
+    "00000000000011111111111111",
+    "00000000000011111111111111"
+  ],
+  "doors": [],
+  "objects": [
+    {
+      "group": "stairs",
+      "id": 5,
+      "x": 3,
+      "y": 1,
+      "width": 2,
+      "height": 2,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 20,
+      "x": 7,
+      "y": 6,
+      "width": 2,
+      "height": 3,
+      "angle": 90
+    },
+    {
+      "group": "furniture",
+      "id": 17,
+      "x": 12,
+      "y": 8,
+      "width": 3,
+      "height": 2,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 16,
+      "x": 10,
+      "y": 11,
+      "width": 3,
+      "height": 1,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 16,
+      "x": 13,
+      "y": 11,
+      "width": 3,
+      "height": 1,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 23,
+      "x": 11,
+      "y": 14,
+      "width": 1,
+      "height": 3,
+      "angle": 90
+    },
+    {
+      "group": "furniture",
+      "id": 24,
+      "x": 6,
+      "y": 13,
+      "width": 3,
+      "height": 2,
+      "angle": 0
+    }
+  ],
+  "specialNotes": [],
+  "wanderingMonster": "Zombie",
+  "summaryBriefFR": "Retrouver le Talisman de Lore dans le labyrinthe de Melar.",
+  "referenceMap": "CampaignMaps/quest_05",
+  "boardPreset": "Plateau.prefab / board_prefab.txt",
+  "transcriptionVerified": false,
+  "source": "Quest Book HeroQuest fourni (PDF), page PDF 20"
+}

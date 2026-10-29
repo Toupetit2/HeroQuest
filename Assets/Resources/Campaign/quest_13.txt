@@ -1,0 +1,74 @@
+{
+  "questNumber": 13,
+  "title": "Quest for the Spirit Blade",
+  "questBookPdfPage": 28,
+  "digitization": "TRANSCRIPTION PARTIELLE - mobilier/escalier relu visuellement; portes/monstres et notes restant à vérifier (0 portes, 4 objets)",
+  "description": "Relevé partiel depuis les cartes du Quest Book. Ne pas confondre avec une quête complète et testée.",
+  "rockRows": [
+    "11111111111111111111111111",
+    "11111111111111111111111111",
+    "11111111111111111111111111",
+    "11111111111111111111111111",
+    "11111111111111111111111111",
+    "11111111111100111111111111",
+    "11111111100100100000011111",
+    "01111111100000000000011111",
+    "01111111100000000000011111",
+    "10000000000000000001011111",
+    "00000000000000000111111111",
+    "00000000010000000111111111",
+    "10000000000000000111111111",
+    "10000000011100111111111111",
+    "10000000011110111111111111",
+    "10000000011100111000000001",
+    "10000000011101111000000001",
+    "10000000011100111000000001",
+    "10000000000000000000000001"
+  ],
+  "doors": [],
+  "objects": [
+    {
+      "group": "stairs",
+      "id": 5,
+      "x": 14,
+      "y": 7,
+      "width": 2,
+      "height": 2,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 17,
+      "x": 6,
+      "y": 13,
+      "width": 3,
+      "height": 2,
+      "angle": 0
+    },
+    {
+      "group": "furniture",
+      "id": 17,
+      "x": 3,
+      "y": 14,
+      "width": 2,
+      "height": 3,
+      "angle": 90
+    },
+    {
+      "group": "furniture",
+      "id": 13,
+      "x": 6,
+      "y": 11,
+      "width": 1,
+      "height": 1,
+      "angle": 0
+    }
+  ],
+  "specialNotes": [],
+  "wanderingMonster": "Dread Warrior",
+  "summaryBriefFR": "Retrouver la Spirit Blade.",
+  "referenceMap": "CampaignMaps/quest_13",
+  "boardPreset": "Plateau.prefab / board_prefab.txt",
+  "transcriptionVerified": false,
+  "source": "Quest Book HeroQuest fourni (PDF), page PDF 28"
+}
