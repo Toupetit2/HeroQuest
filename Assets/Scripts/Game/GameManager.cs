@@ -39,25 +39,24 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        movementController = new MovementController(this);
-        attackController = new AttackController(this);
-        potionController = new PotionController(this);
-        equipmentController = new EquipmentController(this);
-        lootController = new LootController(this);
-
-        //questLoader = new QuestLoader(gameState);
+        questLoader = new QuestLoader(gameState);
+        boardBuilder = new BoardBuilder();
     }
     private void Start()
     {
         // Le generate map empeche la suite d'etre executé donc a fix
 
         boardBuilder.Generate();
+        questLoader.LoadQuest(questNumber);
 
         // Generate Map
         gameState.map = boardBuilder.map;
 
-
-        
+        movementController = new MovementController(this);
+        attackController = new AttackController(this);
+        potionController = new PotionController(this);
+        equipmentController = new EquipmentController(this);
+        lootController = new LootController(this);
 
         // Show Intro UI
         //
@@ -190,10 +189,11 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
+    [Button]
     public void ChangeQuest(int questNb) 
     {
         questNumber = questNb;
-        //map id
+        questLoader.LoadQuest(questNb);
     }
 
     public void SetSelectedTile(Tile tile)
