@@ -202,7 +202,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1034546953}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: ChooseWizard
         m_Mode: 1
@@ -414,7 +414,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1034546953}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: ChooseBarbarian
         m_Mode: 1
@@ -626,7 +626,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1034546953}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: ChooseAir
         m_Mode: 1
@@ -908,7 +908,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1034546953}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: ChooseFire
         m_Mode: 1
@@ -1041,7 +1041,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1034546953}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: ChooseDwarf
         m_Mode: 1
@@ -1455,7 +1455,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1034546954}
-  - component: {fileID: 1034546953}
+  - component: {fileID: 1034546955}
   m_Layer: 0
   m_Name: UIManager
   m_TagString: Untagged
@@ -1463,20 +1463,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1034546953
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1034546952}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6baca7a15800b6b45b7bba80f787ed6f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UIManager
-  heroChoice: {fileID: 1026575219}
-  spellChoice: {fileID: 1200558705}
 --- !u!4 &1034546954
 Transform:
   m_ObjectHideFlags: 0
@@ -1492,6 +1478,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1034546955
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1034546952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 489e16ecd83f59a43a36c5161bad989b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIManager
+  heroChoice: {fileID: 1026575219}
+  spellChoice: {fileID: 1200558705}
 --- !u!1 &1200558705
 GameObject:
   m_ObjectHideFlags: 0
@@ -1612,17 +1612,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 1369938022}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c935c9aa565a73b4c883214642232267, type: 3}
+  m_Script: {fileID: 11500000, guid: e5794102ffdac1840a4add9838f062cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  uiManager: {fileID: 1034546953}
+  uiManager: {fileID: 1034546955}
   questNumber: 1
   currentTurn: 1
   isGameStarted: 0
   turnOrder: 
   currentPlayerIndex: 0
+  isZargonTurn: 0
   hasMoveAction: 1
   hasAction: 1
+  selectedPotion: {fileID: 0}
+  selectedEquipment: {fileID: 0}
 --- !u!1 &1381494547
 GameObject:
   m_ObjectHideFlags: 0
@@ -1706,7 +1709,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1034546953}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: ChooseWater
         m_Mode: 1
@@ -1839,7 +1842,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1034546953}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: ChooseEarth
         m_Mode: 1
@@ -1972,7 +1975,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1034546953}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: ChooseElf
         m_Mode: 1

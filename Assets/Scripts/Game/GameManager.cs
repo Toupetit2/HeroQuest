@@ -17,12 +17,23 @@ public class GameManager : MonoBehaviour
     public List<HeroClass> turnOrder = new();
 
     public int currentPlayerIndex = 0;
+    public bool isZargonTurn = false;
 
     [Header("État du tour")]    
     public bool hasMoveAction = true;
     public bool hasAction = true;
 
+    public Tile selectedTile;
+    public Monster selectedMonster;
+    public Potion selectedPotion;
+    public Equipment selectedEquipment;
+    public Hero selectedHero;
+
     public MovementController movementController;
+    public AttackController attackController;
+    public PotionController potionController;
+    public EquipmentController equipmentController;
+    public LootController lootController;
 
     [Button]
     public void Test() 
@@ -33,7 +44,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         // Le generate map empeche la suite d'etre executé donc a fix
-        /*
+        
         // Generate Map
         gameState.map = new Map(
                 ". . . .\n" +
@@ -41,8 +52,11 @@ public class GameManager : MonoBehaviour
                 ". . . ."
             );
 
-        movementController = new MovementController(this, gameState.map);
-        */
+        movementController = new MovementController(this);
+        attackController = new AttackController(this);
+        potionController = new PotionController(this);
+        equipmentController = new EquipmentController(this);
+        lootController = new LootController(this);
 
         // Show Intro UI
         //
@@ -74,9 +88,26 @@ public class GameManager : MonoBehaviour
         if (currentPlayerIndex >= gameState.heroList.Count)
         {
             currentPlayerIndex = 0;
+            isZargonTurn = true;
+        }
+        if (isZargonTurn) 
+        {
+            currentPlayerIndex = 0;
             currentTurn++;
+            isZargonTurn = false;
+
+            foreach (Monster monster in gameState.monsterList) 
+            {
+                monster.isSleeping = false;
+                monster.isInTornado = false;
+            }
         }
         StartTurn();
+    }
+
+    public bool IsZargonTurn()
+    {
+        return isZargonTurn;
     }
 
     public void AddHeroTurn(HeroClass hero) 
@@ -89,16 +120,14 @@ public class GameManager : MonoBehaviour
         GetHero(turnOrder[currentPlayerIndex]).spells.Add(type);
     }
 
-    public void MoveAction() 
+    public bool UseAction() 
     {
-        hasMoveAction = false;
-        // Move
-    }
-
-    public void AttackAction() 
-    {
-        hasAction = false;
-        // Attack
+        if (hasAction)
+        {
+            hasAction = false;
+            return true;
+        }
+        return false;
     }
 
     public void SpellAction() 
@@ -106,20 +135,11 @@ public class GameManager : MonoBehaviour
         
     }
 
-    public void SearchTreasureAction() 
-    {
-    
-    }
-
-    public void SearchSecretDoorAction() 
+    public void SearchTreasureAction() // une fois par joueur par pièce
     {
         
     }
-
-    public void DetectTrapAction() 
-    {
     
-    }
     
     public void DisableTrapAction() 
     {
@@ -138,7 +158,7 @@ public class GameManager : MonoBehaviour
 
     public void GetLootFreeAction() 
     {
-        
+        lootController.PickUpLoot(GetCurrentHero(), GetCurrentHero().position);
     }
 
     private Hero GetHero(HeroClass hero) 
@@ -171,22 +191,154 @@ public class GameManager : MonoBehaviour
         //map id
     }
 
+    public void SetSelectedTile(Tile tile)
+    {
+        Monster monster = GetMonsterFromTile(tile);
+        if (isZargonTurn && monster != null) // Si Zargon et il y a un monstre sur la case, set le monster plutot que la case
+        {
+            selectedMonster = monster;
+        }
+        selectedTile = tile;
+        selectedHero = GetHeroFromTile(tile);
+    }
+
+    public Map GetMap() 
+    {
+        return gameState.map;
+    }
+
+    public Monster GetSelectedMonster() 
+    {
+        Vector2Int selectedPos = new Vector2Int(selectedTile.x, selectedTile.y);
+
+        foreach(Monster monster in gameState.monsterList) 
+        {
+            if (monster.position == selectedPos) 
+            {
+                return monster;
+            }
+        }
+        return null;
+    }
+
+    // Deplacement
     [Button]
-    public void SeDeplacer()
+    public void MovementRollDices()
     {
         if (movementController.CanRoll())
             movementController.RollDices();
     }
 
-    public void ChoisirDestination(Tile tile)
+    [Button]
+    public void MovementConfirmMove() 
     {
-        movementController.SelectTile(tile);
+        movementController.ConfirmMove(selectedTile);
+    }
+
+    // Attaque
+    [Button]
+    public void AttackStart() 
+    {
+        if (attackController.CanAttack()) 
+        {
+            attackController.StartAttack();
+        }
+    }
+
+    private Monster GetMonsterFromTile(Tile tile) 
+    {
+        foreach (Monster monster in gameState.monsterList) 
+        {
+            if (monster.position == new Vector2Int(tile.x, tile.y)) 
+            {
+                return monster;
+            }
+        }
+        return null;
     }
 
     [Button]
-    public void ConfirmerDeplacement() 
+    public void AttackConfirm() 
     {
-        movementController.ConfirmMove();
+        Monster monster = GetMonsterFromTile(selectedTile);
+        attackController.ConfirmAttack(monster);
+    }
+
+    [Button]
+    public void SearchSecretDoorAction()
+    {
+        if (UseAction())
+        {
+            Search.DetectSecretDoor(gameState, GetCurrentHero());
+        }
+    }
+
+    [Button]
+    public void DetectTrapAction()
+    {
+        if (UseAction())
+        {
+            Search.DetectTrap(gameState.map, GetCurrentHero());
+        }
+    }
+
+    [Button]
+    public void PotionStart() 
+    {
+        potionController.StartPotionAction();
+    }
+
+    public void SetSelectedPotion(Potion potion) 
+    {
+        selectedPotion = potion;
+    }
+
+    [Button]
+    public void PotionConfirm() 
+    {
+        potionController.UsePotionAction(selectedPotion);
+    }
+
+    [Button]
+    public void EquipmentStart() 
+    {
+        equipmentController.StartEquipmentUse();
+    }
+
+    public void SetSelectedEquipment(Equipment equipment) 
+    {
+        selectedEquipment = equipment;
+    }
+
+    [Button]
+    public void EquipmentConfirm() 
+    {
+        equipmentController.ConfirmEquipmentUse(selectedEquipment);
+    }
+
+    [Button]
+    public void ZargonMoveMonster() 
+    {
+        movementController.MonsterConfirmMove(selectedMonster, selectedTile);
+        Debug.Log($"Zargon déplace {selectedMonster.data.monsterClass.ToString()} en {selectedTile.x}, {selectedTile.y}");
+    }
+
+    private Hero GetHeroFromTile(Tile tile)
+    {
+        foreach (Hero hero in gameState.heroList)
+        {
+            if (hero.position == new Vector2Int(tile.x, tile.y))
+            {
+                return hero;
+            }
+        }
+        return null;
+    }
+
+    [Button]
+    public void ZargonAttackHero() 
+    {
+        attackController.ZargonConfirmAttack(selectedMonster, GetHeroFromTile(selectedTile));
+        Debug.Log($"Zargon attaque {GetHeroFromTile(selectedTile).data.heroClass.ToString()} avec {selectedMonster.data.monsterClass.ToString()}");
     }
 }
-

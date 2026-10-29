@@ -12,7 +12,7 @@ public class CameraController : MonoBehaviour
     [Header("Zoom")]
     public float distance = 25f;
     public float minDistance = 5f;
-    public float maxDistanceFactor = 0.6f; // distance max = plus grand cote du plateau x ce facteur
+    public float maxDistanceFactor = 0.4f; // distance max = plus grand cote du plateau x ce facteur
     public float zoomSpeed = 4f;
 
     [Header("Rotation")]
@@ -23,15 +23,16 @@ public class CameraController : MonoBehaviour
     public float rotateSpeed = 3f;
 
     [Header("Deplacement")]
-    public float keyPanSpeed = 0.8f;   // multiplie par la distance
+    public float keyPanSpeed = 0.8f;    // multiplie par la distance
     public float dragPanSpeed = 0.004f; // multiplie par la distance
+    public float panMargin = -1.5f;        // en cases : marge autorisee au-dela des bords du plateau
 
     Vector3 target;
     bool initialized;
 
     void Start()
     {
-        if (board == null) board = FindObjectOfType<BoardBuilder>();
+        if (board == null) board = FindFirstObjectByType<BoardBuilder>();
         if (board == null) Debug.LogError("CameraController : aucun BoardBuilder trouve dans la scene.");
     }
 
@@ -122,7 +123,7 @@ public class CameraController : MonoBehaviour
     {
         Vector3 a = board.CellToWorld(0, 0);
         Vector3 b = board.CellToWorld(board.map.width - 1, board.map.height - 1);
-        float h = board.cellSize * 0.5f;
+        float h = board.cellSize * (0.5f + panMargin);
         p.x = Mathf.Clamp(p.x, Mathf.Min(a.x, b.x) - h, Mathf.Max(a.x, b.x) + h);
         p.z = Mathf.Clamp(p.z, Mathf.Min(a.z, b.z) - h, Mathf.Max(a.z, b.z) + h);
         p.y = board.transform.position.y;

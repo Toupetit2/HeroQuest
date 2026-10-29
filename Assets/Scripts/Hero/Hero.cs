@@ -10,6 +10,16 @@ public class Hero
     public int currentSpirit;
     public int currentGold;
 
+    public int bonusAttackDice = 0;
+    public int bonusMovementDice = 0;
+    public bool canAttackTwice = false;
+    public int movementDiceMultiplier = 1;
+
+    public bool isInvisible = false;
+    public bool isGhosted = false;
+
+    public int bonusDefenseDice = 0;
+
     public List<Equipment> inventory;
     public List<Equipment> equippedItems;
     public List<SpellType> spells;
@@ -70,5 +80,48 @@ public class Hero
     public void GiveSpellType(SpellType type) 
     {
         spells.Add(type);
+    }
+
+    public bool CanThrow() 
+    {
+        foreach (Weapon item in equippedItems) 
+        {
+            if (item.canBeThrown) 
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool CanAttackDiagonaly() 
+    {
+        foreach (Weapon item in equippedItems)
+        {
+            if (item.canAttackDiagonally)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int GetHealth() 
+    {
+        return currentHealth;
+    }
+    public void SetHealth(int newHealth) 
+    {
+        currentHealth = newHealth;
+    }
+
+    public void AddEquipment(Equipment equipment) 
+    {
+        inventory.Add(equipment);
+    }
+
+    public void RemoveEquipment(Equipment equipment) 
+    {
+        inventory.Remove(equipment);
     }
 }

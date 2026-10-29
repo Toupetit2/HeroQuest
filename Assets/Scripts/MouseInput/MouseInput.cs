@@ -4,7 +4,7 @@ public class MouseInput : MonoBehaviour
 {
     public BoardBuilder board;
     public Camera cam;
-    /*public GameManager gameManager;*/
+    public GameManager gameManager;
 
     // resultat du dernier clic : { "x", "y" }
     public string[] clickedTile = new string[2];
@@ -12,7 +12,7 @@ public class MouseInput : MonoBehaviour
     void Start()
     {
         if (cam == null) cam = Camera.main;
-        if (board == null) board = FindObjectOfType<BoardBuilder>();
+        if (board == null) board = FindFirstObjectByType<BoardBuilder>();
         if (cam == null) Debug.LogError("MouseInput : aucune camera (mets le tag MainCamera ou renseigne le champ cam).");
         if (board == null) Debug.LogError("MouseInput : aucun BoardBuilder trouve dans la scene.");
     }
@@ -43,7 +43,8 @@ public class MouseInput : MonoBehaviour
         clickedTile = new string[] { t.x.ToString(), t.y.ToString() };
         Debug.Log("Tile cliquee : X=" + clickedTile[0] + " Y=" + clickedTile[1] + " (zone " + t.zone + ")");
 
-        /*gameManager.SetSelectedTile(t);*/
+        gameManager.SetSelectedTile(t);
+        
     }
 
     bool ClickPressed()
