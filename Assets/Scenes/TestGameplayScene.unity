@@ -1166,78 +1166,78 @@ MonoBehaviour:
   floorThickness: 0.1
   floorPrefab: {fileID: 1722380205279600, guid: c615ca69c2b911142ad03aee74ae7eee, type: 3}
   wallPrefab: {fileID: 1176773971931546, guid: 1de9ed015155e204a9fdc1ccca946ee3, type: 3}
-  roomMaterial: {fileID: 2100000, guid: b4b217219627a294bb934286915a8149, type: 2}
-  corridorMaterial: {fileID: 2100000, guid: c3a1b8af41c51bc46907028c88b69959, type: 2}
+  roomMaterial: {fileID: 2100000, guid: aea218712cfc62642b252f0305e99f06, type: 2}
+  corridorMaterial: {fileID: 2100000, guid: a6f2d91069e499d43817f9a254e6a1e0, type: 2}
   zoneStyles:
   - zone: .
     floorPrefab: {fileID: 1214460197360174, guid: 52377311db1b7ed4fa69fe75435a987a, type: 3}
-    material: {fileID: 2100000, guid: c3a1b8af41c51bc46907028c88b69959, type: 2}
+    material: {fileID: 2100000, guid: a6f2d91069e499d43817f9a254e6a1e0, type: 2}
   - zone: S1
     floorPrefab: {fileID: 1722380205279600, guid: c615ca69c2b911142ad03aee74ae7eee, type: 3}
-    material: {fileID: 2100000, guid: 5d2fd023ce40bd14280c1bbc1ab8b244, type: 2}
+    material: {fileID: 2100000, guid: 8dfe23149f0132c488202e0b60f822a5, type: 2}
   - zone: S2
     floorPrefab: {fileID: 1722380205279600, guid: c615ca69c2b911142ad03aee74ae7eee, type: 3}
-    material: {fileID: 2100000, guid: 7f34861adbb80dc4bb2eff08de4b1bb0, type: 2}
+    material: {fileID: 2100000, guid: 215e55dcd5ab30e4eb056e43def8b0a1, type: 2}
   - zone: S3
     floorPrefab: {fileID: 1722380205279600, guid: c615ca69c2b911142ad03aee74ae7eee, type: 3}
-    material: {fileID: 2100000, guid: f5affa0b9319bb345a846b28e4eadd95, type: 2}
+    material: {fileID: 2100000, guid: ce23ba71f3999c84d8a7b7170bd7ac81, type: 2}
   - zone: S4
     floorPrefab: {fileID: 1722380205279600, guid: c615ca69c2b911142ad03aee74ae7eee, type: 3}
-    material: {fileID: 2100000, guid: 3ce16031dcc26b04bb93993bdbc7de47, type: 2}
+    material: {fileID: 2100000, guid: 439e6c26d2342af4bacae9f8ab3f471d, type: 2}
   - zone: S5
     floorPrefab: {fileID: 1722380205279600, guid: c615ca69c2b911142ad03aee74ae7eee, type: 3}
-    material: {fileID: 2100000, guid: 0b4bdc00dd9a4bf4eadb7c138986c157, type: 2}
+    material: {fileID: 2100000, guid: 0f2be71546dad0c4cabaeb696c0a6bc9, type: 2}
   - zone: S6
     floorPrefab: {fileID: 1722380205279600, guid: c615ca69c2b911142ad03aee74ae7eee, type: 3}
-    material: {fileID: 2100000, guid: 900ec3c292048c7459e1a73b1bfcb942, type: 2}
+    material: {fileID: 2100000, guid: 675e91171f613da4ea2699b49d37d91e, type: 2}
   - zone: S7
     floorPrefab: {fileID: 1722380205279600, guid: c615ca69c2b911142ad03aee74ae7eee, type: 3}
-    material: {fileID: 2100000, guid: 97ca657e2e274594395605d28cb095c2, type: 2}
+    material: {fileID: 2100000, guid: 469b54554bc2d5a4c862d7beb49cfa73, type: 2}
   - zone: S8
     floorPrefab: {fileID: 1722380205279600, guid: c615ca69c2b911142ad03aee74ae7eee, type: 3}
-    material: {fileID: 2100000, guid: abda5c8da84f3e849b28a2148e0c6e56, type: 2}
+    material: {fileID: 2100000, guid: b33f9a6a5807d5c4c96be7efab715952, type: 2}
   - zone: S9
     floorPrefab: {fileID: 1722380205279600, guid: c615ca69c2b911142ad03aee74ae7eee, type: 3}
-    material: {fileID: 2100000, guid: e12665a24e7cd3a47be8f0f3d6cced33, type: 2}
+    material: {fileID: 2100000, guid: f353c5410934be248b5413aad599ae33, type: 2}
   - zone: S10
     floorPrefab: {fileID: 1722380205279600, guid: c615ca69c2b911142ad03aee74ae7eee, type: 3}
-    material: {fileID: 2100000, guid: 37963d402409c0248ad50d993e7258cb, type: 2}
+    material: {fileID: 2100000, guid: a9afeb916a716d04ea45334d1386e8a5, type: 2}
   - zone: S11
     floorPrefab: {fileID: 1722380205279600, guid: c615ca69c2b911142ad03aee74ae7eee, type: 3}
-    material: {fileID: 2100000, guid: 5d2fd023ce40bd14280c1bbc1ab8b244, type: 2}
+    material: {fileID: 2100000, guid: 8dfe23149f0132c488202e0b60f822a5, type: 2}
   - zone: S12
     floorPrefab: {fileID: 1722380205279600, guid: c615ca69c2b911142ad03aee74ae7eee, type: 3}
-    material: {fileID: 2100000, guid: 7f34861adbb80dc4bb2eff08de4b1bb0, type: 2}
+    material: {fileID: 2100000, guid: 215e55dcd5ab30e4eb056e43def8b0a1, type: 2}
   - zone: S13
     floorPrefab: {fileID: 1722380205279600, guid: c615ca69c2b911142ad03aee74ae7eee, type: 3}
-    material: {fileID: 2100000, guid: f5affa0b9319bb345a846b28e4eadd95, type: 2}
+    material: {fileID: 2100000, guid: ce23ba71f3999c84d8a7b7170bd7ac81, type: 2}
   - zone: S14
     floorPrefab: {fileID: 1722380205279600, guid: c615ca69c2b911142ad03aee74ae7eee, type: 3}
-    material: {fileID: 2100000, guid: 3ce16031dcc26b04bb93993bdbc7de47, type: 2}
+    material: {fileID: 2100000, guid: 439e6c26d2342af4bacae9f8ab3f471d, type: 2}
   - zone: S15
     floorPrefab: {fileID: 1722380205279600, guid: c615ca69c2b911142ad03aee74ae7eee, type: 3}
-    material: {fileID: 2100000, guid: 0b4bdc00dd9a4bf4eadb7c138986c157, type: 2}
+    material: {fileID: 2100000, guid: 0f2be71546dad0c4cabaeb696c0a6bc9, type: 2}
   - zone: S16
     floorPrefab: {fileID: 1722380205279600, guid: c615ca69c2b911142ad03aee74ae7eee, type: 3}
-    material: {fileID: 2100000, guid: 900ec3c292048c7459e1a73b1bfcb942, type: 2}
+    material: {fileID: 2100000, guid: 675e91171f613da4ea2699b49d37d91e, type: 2}
   - zone: S17
     floorPrefab: {fileID: 1722380205279600, guid: c615ca69c2b911142ad03aee74ae7eee, type: 3}
-    material: {fileID: 2100000, guid: 97ca657e2e274594395605d28cb095c2, type: 2}
+    material: {fileID: 2100000, guid: 469b54554bc2d5a4c862d7beb49cfa73, type: 2}
   - zone: S18
     floorPrefab: {fileID: 1722380205279600, guid: c615ca69c2b911142ad03aee74ae7eee, type: 3}
-    material: {fileID: 2100000, guid: abda5c8da84f3e849b28a2148e0c6e56, type: 2}
+    material: {fileID: 2100000, guid: b33f9a6a5807d5c4c96be7efab715952, type: 2}
   - zone: S19
     floorPrefab: {fileID: 1722380205279600, guid: c615ca69c2b911142ad03aee74ae7eee, type: 3}
-    material: {fileID: 2100000, guid: e12665a24e7cd3a47be8f0f3d6cced33, type: 2}
+    material: {fileID: 2100000, guid: f353c5410934be248b5413aad599ae33, type: 2}
   - zone: S20
     floorPrefab: {fileID: 1722380205279600, guid: c615ca69c2b911142ad03aee74ae7eee, type: 3}
-    material: {fileID: 2100000, guid: 37963d402409c0248ad50d993e7258cb, type: 2}
+    material: {fileID: 2100000, guid: a9afeb916a716d04ea45334d1386e8a5, type: 2}
   - zone: S21
     floorPrefab: {fileID: 1722380205279600, guid: c615ca69c2b911142ad03aee74ae7eee, type: 3}
-    material: {fileID: 2100000, guid: 5d2fd023ce40bd14280c1bbc1ab8b244, type: 2}
+    material: {fileID: 2100000, guid: 8dfe23149f0132c488202e0b60f822a5, type: 2}
   - zone: S22
     floorPrefab: {fileID: 1722380205279600, guid: c615ca69c2b911142ad03aee74ae7eee, type: 3}
-    material: {fileID: 2100000, guid: 7f34861adbb80dc4bb2eff08de4b1bb0, type: 2}
+    material: {fileID: 2100000, guid: 215e55dcd5ab30e4eb056e43def8b0a1, type: 2}
 --- !u!4 &604054442
 Transform:
   m_ObjectHideFlags: 0
@@ -1806,7 +1806,7 @@ MonoBehaviour:
   uiManager: {fileID: 0}
   boardBuilder: {fileID: 604054441}
   questView: {fileID: 604054440}
-  loadQuestContent: 1
+  allSpells: []
 --- !u!1 &1381494547
 GameObject:
   m_ObjectHideFlags: 0
