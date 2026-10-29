@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     [Header("État de la partie")]
     private int currentTurn = 1;
     private bool isGameStarted = false;
-    private GameState gameState;
+    private GameState gameState = new GameState();
 
     private List<HeroClass> turnOrder = new();
 
@@ -34,30 +34,26 @@ public class GameManager : MonoBehaviour
     private PotionController potionController;
     private EquipmentController equipmentController;
     private LootController lootController;
-    private BoardBuilder boardBuilder;
+    [SerializeField] private BoardBuilder boardBuilder;   // celui de la scene, a glisser dans l'Inspector
+
+    [SerializeField] private QuestView questView;       // celui de la scene, a glisser dans l'Inspector
     private QuestLoader questLoader;
 
-    private void Awake()
+    private void Start()
     {
+        // le plateau d'abord : le QuestLoader a besoin de la map
+        boardBuilder.Generate();
+        gameState.map = boardBuilder.map;
+
+        questLoader = new QuestLoader(gameState);
+        questLoader.LoadQuest(questNumber);
+        questView.Show(gameState);
+
         movementController = new MovementController(this);
         attackController = new AttackController(this);
         potionController = new PotionController(this);
         equipmentController = new EquipmentController(this);
         lootController = new LootController(this);
-
-        //questLoader = new QuestLoader(gameState);
-    }
-    private void Start()
-    {
-        // Le generate map empeche la suite d'etre executé donc a fix
-
-        boardBuilder.Generate();
-
-        // Generate Map
-        gameState.map = boardBuilder.map;
-
-
-        
 
         // Show Intro UI
         //
@@ -190,10 +186,14 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
+    [Button]
     public void ChangeQuest(int questNb) 
     {
+        
         questNumber = questNb;
-        //map id
+        questLoader.LoadQuest(questNb);
+        questView.Show(gameState);
+        
     }
 
     public void SetSelectedTile(Tile tile)
