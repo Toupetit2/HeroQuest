@@ -70,10 +70,14 @@ public class HQGameModeRuntime : MonoBehaviour
         plateau.name = "Plateau_Runtime";
         plateau.transform.localScale = Vector3.one;
         ReparerMateriauxManquants(plateau);
+        // Habille les cubes du plateau original avec les modeles KatsBits,
+        // sans retirer leurs collisions ni les points d'ancrage des portes.
+        HeroQuestKatsBitsVisuals.ReplaceLegacyPlateau(plateau, PlateauLogique.text);
 
         Generateur = plateau.GetComponent<HeroQuestSimplePCG>();
         if (Generateur == null) Generateur = plateau.AddComponent<HeroQuestSimplePCG>();
         Generateur.boardFile = PlateauLogique;
+        HeroQuestKatsBitsVisuals.ConfigureGenerator(Generateur);
         Generateur.wallsRoot = plateau.transform.Find("Walls");
         Generateur.firstCellLocalCenter = new Vector3(-25f, 0f, -18f);
         Generateur.cellSize = 2f;
