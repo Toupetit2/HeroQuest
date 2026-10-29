@@ -1689,6 +1689,19 @@ MonoBehaviour:
   uiManager: {fileID: 1034546955}
   boardBuilder: {fileID: 1415403475}
   questView: {fileID: 1617933442}
+  allSpells:
+  - {fileID: 11400000, guid: 3e7137742f081684bbdb7651ab1fc387, type: 2}
+  - {fileID: 11400000, guid: d3fa72d44f8ff0747b28f5c46887b955, type: 2}
+  - {fileID: 11400000, guid: 064f3dd57dca9b849801e12bf987975b, type: 2}
+  - {fileID: 11400000, guid: 703f13ec5af2caf48b8ad4a44e262a33, type: 2}
+  - {fileID: 11400000, guid: 26fb7facf07eb8e4299f8b6624e3ca8d, type: 2}
+  - {fileID: 11400000, guid: a74fe9e05899a7a4f868fde497c896f2, type: 2}
+  - {fileID: 11400000, guid: fc368f4269689994ca19c0811cce7a1d, type: 2}
+  - {fileID: 11400000, guid: d40d2c6a2116bd14aa9229155172cee4, type: 2}
+  - {fileID: 11400000, guid: b991d2da9eaa8a748acb175132ba3cea, type: 2}
+  - {fileID: 11400000, guid: d9f01644d1082d74f8b382301bbd3e77, type: 2}
+  - {fileID: 11400000, guid: 0e39979ea98073c4888ca0491c7e9a47, type: 2}
+  - {fileID: 11400000, guid: 31e1421e3f8982746b1ca85152143160, type: 2}
 --- !u!1 &1381494547
 GameObject:
   m_ObjectHideFlags: 0

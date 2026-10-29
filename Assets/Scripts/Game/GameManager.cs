@@ -51,6 +51,7 @@ public class GameManager : MonoBehaviour
         equipmentController = new EquipmentController(this);
         lootController = new LootController(this);
         spellsController = new SpellsController(this);
+    }
 
     private void Start()
     {
