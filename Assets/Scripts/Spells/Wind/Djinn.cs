@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Djinn", menuName = "Scriptable Objects/Djinn")]
+[CreateAssetMenu(fileName = "Djinn", menuName = "Scriptable Objects/SpellsEffects/Djinn")]
 public class Djinn : CardEffect
 {
     private Door GetDoor(GameState gameState, Tile tile) 

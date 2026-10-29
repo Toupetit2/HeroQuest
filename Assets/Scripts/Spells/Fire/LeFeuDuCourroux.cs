@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "LeFeuDuCourroux", menuName = "Scriptable Objects/LeFeuDuCourroux")]
+[CreateAssetMenu(fileName = "LeFeuDuCourroux", menuName = "Scriptable Objects/SpellsEffects/LeFeuDuCourroux")]
 public class LeFeuDuCourroux : CardEffect
 {
     public override void Execute(GameManager gameManager)

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "BouleDeFeu", menuName = "Scriptable Objects/BouleDeFeu")]
+[CreateAssetMenu(fileName = "BouleDeFeu", menuName = "Scriptable Objects/SpellsEffects/BouleDeFeu")]
 public class BouleDeFeu : CardEffect
 {
     public override void Execute(GameManager gameManager) 

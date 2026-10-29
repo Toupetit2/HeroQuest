@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76f0b0b8fc481354494ef58fbd710219, type: 3}
+  m_Name: S_Courage
+  m_EditorClassIdentifier: Assembly-CSharp::Spell
+  spellName: Courage
+  description: "Ce sort peut cibler n'importe quel h\xE9ros, incluant le lanceur.
+    La prochaine fois que le h\xE9ros attaque, il peut lancer 2 d\xE9s de combat
+    en plus. Le sort prend fin s'il n'y a plus de monstres dans le champ de vision
+    du h\xE9ros."
+  illustration: {fileID: 0}
+  spellType: 2
+  effect: {fileID: 11400000, guid: c1d6fbf9bdd99c546ac64092ebb7634e, type: 2}
