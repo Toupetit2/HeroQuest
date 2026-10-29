@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b86c90d46f306d04691e12fa1437c570, type: 3}
+  m_Name: LongDagger
+  m_EditorClassIdentifier: Assembly-CSharp::Weapon
+  equipmentName: Long Dagger
+  description: 
+  illustration: {fileID: 21300000, guid: 94b04655d1ad6ec4a8b3e8370c662791, type: 3}
+  price: 125
+  effect: {fileID: 0}
+  bannedHeros: 
+  bannedEquipments: []
+  attackDice: 1
+  canAttackDiagonally: 1
+  canBeThrown: 0
+  lostWhenThrown: 0
