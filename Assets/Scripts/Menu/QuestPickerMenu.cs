@@ -174,16 +174,12 @@ public class QuestPickerMenu : MonoBehaviour
         for (int i = 0; i < bands; i++)
             Fill(new Rect(0f, area.height * i / bands, area.width, area.height / bands + 1f),
                  Color.Lerp(DarkBrown, bottom, i / (float)(bands - 1)));
-        Fill(new Rect(0f, 0f, area.width, 5f), Gold);
-        Fill(new Rect(0f, area.height - 5f, area.width, 5f), SoftBrown);
     }
 
     void DrawPanel(Rect panel)
     {
         Fill(new Rect(panel.x + 5f, panel.y + 7f, panel.width, panel.height), new Color(0f, 0f, 0f, 0.50f));
         Fill(panel, new Color(0.17f, 0.10f, 0.06f));
-        Fill(new Rect(panel.x, panel.y, panel.width, 5f), Gold);
-        Fill(new Rect(panel.x + 24f, panel.y + 89f, panel.width - 48f, 2f), SoftBrown);
     }
 
     static void Fill(Rect rect, Color color)
@@ -273,7 +269,7 @@ public class QuestPickerMenu : MonoBehaviour
             if (selectedReplay >= 0 && selectedReplay < chapters.Count)
             {
                 CampaignProgress.Chapter chapter = chapters[selectedReplay];
-                GUILayout.Label("Quête " + chapter.number + "  —  " + chapter.title, smallStyle);
+                GUILayout.Label("Quête " + chapter.number + " : " + chapter.title, smallStyle);
             }
             if (Button("Rejouer la quête sélectionnée", selectedReplay >= 0 && selectedReplay < chapters.Count))
                 Defer(() => PlayReplay(chapters));
@@ -287,7 +283,7 @@ public class QuestPickerMenu : MonoBehaviour
                 GUILayout.Space(38f);
                 GUILayout.Label(completed == 0 ? "Le début de l'aventure" : "Prochain chapitre débloqué", infoStyle);
                 GUILayout.Space(13f);
-                GUILayout.Label("Quête " + next.number + "  —  " + next.title, sectionStyle);
+                GUILayout.Label("Quête " + next.number + " : " + next.title, sectionStyle);
                 GUILayout.Space(22f);
                 if (Button(completed == 0 ? "Commencer la campagne" : "Continuer la campagne", true))
                     Defer(PlayCampaign);
@@ -329,7 +325,7 @@ public class QuestPickerMenu : MonoBehaviour
             for (int i = 0; i < quests.Count; i++)
             {
                 QuestInfo quest = quests[i];
-                string label = (quest.number > 0 ? "Quête " + quest.number + "  —  " : "") +
+                string label = (quest.number > 0 ? "Quête " + quest.number + " : " : "") +
                     (string.IsNullOrEmpty(quest.title) ? quest.file : quest.title);
                 if (GUILayout.Button(label, i == selected ? selectedStyle : listStyle, GUILayout.Height(43f)))
                 {

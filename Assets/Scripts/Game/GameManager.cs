@@ -228,7 +228,6 @@ public class GameManager : MonoBehaviour
             VictoryFill(new Rect(0f, 0f, Screen.width, Screen.height), new Color(0.02f, 0.01f, 0.01f, 0.73f));
             VictoryFill(new Rect(dialog.x + 5f, dialog.y + 6f, width, height), new Color(0f, 0f, 0f, 0.55f));
             VictoryFill(dialog, new Color(0.17f, 0.10f, 0.06f));
-            VictoryFill(new Rect(dialog.x, dialog.y, width, 5f), new Color(1.00f, 0.82f, 0.30f));
         }
 
         GUI.Label(new Rect(dialog.x + 18f, dialog.y + 18f, dialog.width - 36f, 46f), "Quête réussie !", victoryTitleStyle);
@@ -242,7 +241,7 @@ public class GameManager : MonoBehaviour
             CampaignProgress.Chapter next;
             if (CampaignProgress.TryGetNext(out next))
             {
-                GUILayout.Label("Prochain chapitre : " + next.number + " — " + next.title, victoryTextStyle);
+                GUILayout.Label("Prochain chapitre " + next.number + " : " + next.title, victoryTextStyle);
                 GUILayout.Space(10f);
                 if (GUILayout.Button("Continuer la campagne", victoryButtonStyle, GUILayout.Height(45f)))
                 {
