@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Sommeil", menuName = "Scriptable Objects/Sommeil")]
+[CreateAssetMenu(fileName = "Sommeil", menuName = "Scriptable Objects/SpellsEffects/Sommeil")]
 public class Sommeil : CardEffect
 {
     public override void Execute(GameManager gameManager)

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Courage", menuName = "Scriptable Objects/Courage")]
+[CreateAssetMenu(fileName = "Courage", menuName = "Scriptable Objects/SpellsEffects/Courage")]
 public class Courage : CardEffect
 {
     public override void Execute(GameManager gameManager) 

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Tornade", menuName = "Scriptable Objects/Tornade")]
+[CreateAssetMenu(fileName = "Tornade", menuName = "Scriptable Objects/SpellsEffects/Tornade")]
 public class Tornade : CardEffect
 {
     public override void Execute(GameManager gameManager) 

@@ -12,8 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76f0b0b8fc481354494ef58fbd710219, type: 3}
   m_Name: S_ATraversLaPierre
   m_EditorClassIdentifier: Assembly-CSharp::Spell
-  spellName: A travers la pierre
-  description: 
+  spellName: "A travers la pi\xE8re"
+  description: "Ce sort peut cibler n'importe quel h\xE9ros, incluant le lanceur.
+    Ce h\xE9ros pourra traverser autant de murs que le nombre de points obtenu avec
+    les d\xE9s pendant son d\xE9placement. Attention! Les zones de couleur fonc\xE9
+    des cartes sont du roc massif. Si le h\xE9ros y termine son d\xE9placement, il
+    sera emprison\xE9 \xE0 jamais"
   illustration: {fileID: 0}
-  spellType: 0
-  effect: {fileID: 11400000, guid: 39c1e4929b18f9d4e8963ff534e207fa, type: 2}
+  spellType: 3
+  effect: {fileID: 11400000, guid: 28098bc7d8835124c8daa100f460c14b, type: 2}
