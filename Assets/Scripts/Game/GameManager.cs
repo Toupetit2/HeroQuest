@@ -68,20 +68,11 @@ public class GameManager : MonoBehaviour
         potionController = new PotionController(this);
         equipmentController = new EquipmentController(this);
         lootController = new LootController(this);
-
-        // Show Intro UI
-        //
-
-        // Hero Choice
-        //uiManager.ShowHeroChoice(true);
-
-        // Spell Choice
-        //uiManager.ShowSpellChoice(true);
-
     }
 
     public void StartGame()
     {
+        uiManager.ShowGameUI();
         isGameStarted = true;
         spellsController.Init(allSpells);
         StartTurn();

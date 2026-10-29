@@ -2,77 +2,100 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
+    public GameManager gameManager;
+    public GameObject intro;
     public GameObject heroChoice;
     public GameObject spellChoice;
+    public GameObject gameUI;
 
     void Awake()
     {
+        intro.SetActive(true);
         heroChoice.SetActive(false);
         spellChoice.SetActive(false);
+        gameUI.SetActive(false);
     }
 
       ///////////////////////////
-     ////   Hero Choice     ////
+     ////       Intro       ////
     ///////////////////////////
-    public void ShowHeroChoice(bool state)
+    
+    public void PassIntro()
     {
-        heroChoice.SetActive(state);
+        intro.SetActive(false);
+        heroChoice.SetActive(true);
     }
+
+      ///////////////////////////
+     ////    Hero Choice    ////
+    ///////////////////////////
 
     public void ChooseBarbarian()
     {
         heroChoice.SetActive(false);
         // Set Hero to Barbarian
+        spellChoice.SetActive(true);
     }
 
     public void ChooseDwarf()
     {
         heroChoice.SetActive(false);
-        // Set Hero to Dwarf
+        // Set Hero to Dwar
+        spellChoice.SetActive(true);
     }
 
     public void ChooseElf()
     {
         heroChoice.SetActive(false);
         // Set Hero to Elf
+        spellChoice.SetActive(true);
     }
 
     public void ChooseWizard()
     {
         heroChoice.SetActive(false);
-        // Set Hero to Wizard
+        // Set Hero to Wizar
+        spellChoice.SetActive(true);
     }
 
       ////////////////////////////
-     ////   Spell Choice     ////
+     ////    Spell Choice    ////
     ////////////////////////////
-    public void ShowSpellChoice(bool state)
-    {
-        spellChoice.SetActive(state);
-    }
 
     public void ChooseWater()
     {
         spellChoice.SetActive(false);
         // Set Hero to Water
+        gameManager.StartGame();
     }
 
     public void ChooseAir()
     {
         spellChoice.SetActive(false);
         // Set Hero to Air
+        gameManager.StartGame();
     }
 
     public void ChooseFire()
     {
         spellChoice.SetActive(false);
         // Set Hero to Fire
+        gameManager.StartGame();
     }
 
     public void ChooseEarth()
     {
         spellChoice.SetActive(false);
         // Set Hero to Earth
+        gameManager.StartGame();
     }
 
+      ////////////////////////////
+     ////      Game UI       ////
+    ////////////////////////////
+    
+    public void ShowGameUI()
+    {
+        gameUI.SetActive(true);
+    }
 }
