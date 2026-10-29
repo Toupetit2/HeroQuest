@@ -13,6 +13,7 @@ public class QuestView : MonoBehaviour
     public GameObject blockedPrefab;
     public GameObject stairsPrefab;
     public GameObject allyPrefab;
+    public GameObject trapPrefab;
     public FurniturePrefab[] furniturePrefabs;
     public MonsterPrefab[] monsterPrefabs;
 
@@ -25,6 +26,10 @@ public class QuestView : MonoBehaviour
 
     // ignore le brouillard pour verifier la quete complete
     public bool showAll;
+    // montre les objets caches (portes secretes, monstres caches, pieges) pour verifier la quete
+    public bool showHidden;
+
+    public float trapHeight = 0.1f;
 
     GameState gameState;
     Transform root;
@@ -34,6 +39,7 @@ public class QuestView : MonoBehaviour
     Dictionary<Monster, GameObject> monsterObjects = new Dictionary<Monster, GameObject>();
     Dictionary<Ally, GameObject> allyObjects = new Dictionary<Ally, GameObject>();
     Dictionary<Door, GameObject> doorObjects = new Dictionary<Door, GameObject>();
+    Dictionary<Trap, GameObject> trapObjects = new Dictionary<Trap, GameObject>();
     Dictionary<Color, Material> colorMaterials = new Dictionary<Color, Material>();
 
     public void Show(GameState gameState)
@@ -77,6 +83,14 @@ public class QuestView : MonoBehaviour
             allyObjects[a] = go;
         }
 
+        foreach (Trap t in gameState.trapList)
+        {
+            RectInt rect = new RectInt(t.x, t.y, 1, 1);
+            GameObject go = Place("Trap_" + t.type, trapPrefab, rect, trapHeight, 0, new Color(1f, 0.5f, 0f));
+            placed.Remove(go); // visibilite selon l'etat du piege : geree dans Refresh
+            trapObjects[t] = go;
+        }
+
         Refresh();
     }
 
@@ -95,8 +109,13 @@ public class QuestView : MonoBehaviour
             Vector2Int p = pair.Key.position;
             RectInt rect = new RectInt(p.x, p.y, 1, 1);
             pair.Value.transform.position = RectCenter(rect);
-            pair.Value.SetActive(showAll || (!pair.Key.isHidden && IsRevealed(rect)));
+            pair.Value.SetActive(showAll || ((showHidden || !pair.Key.isHidden) && IsRevealed(rect)));
         }
+
+        // un piege n'a une tuile sur le plateau que s'il s'est declenche
+        foreach (KeyValuePair<Trap, GameObject> pair in trapObjects)
+            pair.Value.SetActive(showHidden || (pair.Key.state == TrapState.Declenche
+                && (showAll || IsRevealed(new RectInt(pair.Key.x, pair.Key.y, 1, 1)))));
 
         foreach (KeyValuePair<Ally, GameObject> pair in allyObjects)
         {
@@ -110,7 +129,7 @@ public class QuestView : MonoBehaviour
         foreach (KeyValuePair<Door, GameObject> pair in doorObjects)
         {
             Door door = pair.Key;
-            bool visible = (!door.isSecret || door.isFound) && (showAll || IsDoorSeen(door));
+            bool visible = (!door.isSecret || door.isFound || showHidden) && (showAll || IsDoorSeen(door));
             pair.Value.SetActive(visible);
 
             GameObject wall = board.GetWall(door.x, door.y, door.side);
@@ -138,6 +157,7 @@ public class QuestView : MonoBehaviour
         monsterObjects.Clear();
         allyObjects.Clear();
         doorObjects.Clear();
+        trapObjects.Clear();
         gameState = null;
     }
 
