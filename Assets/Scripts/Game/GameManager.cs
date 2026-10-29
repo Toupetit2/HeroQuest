@@ -34,8 +34,13 @@ public class GameManager : MonoBehaviour
     private PotionController potionController;
     private EquipmentController equipmentController;
     private LootController lootController;
+    private SpellsController spellsController;
     private BoardBuilder boardBuilder;
     private QuestLoader questLoader;
+    
+    [Header("Spells")]
+    [SerializeField] private Spell[] allSpells;
+
 
     private void Awake()
     {
@@ -44,6 +49,7 @@ public class GameManager : MonoBehaviour
         potionController = new PotionController(this);
         equipmentController = new EquipmentController(this);
         lootController = new LootController(this);
+        spellsController = new SpellsController(this);
 
         //questLoader = new QuestLoader(gameState);
     }
@@ -73,6 +79,7 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         isGameStarted = true;
+        spellsController.Init(allSpells);
         StartTurn();
     }
 
@@ -135,9 +142,9 @@ public class GameManager : MonoBehaviour
         return hasAction;
     }
 
-    public void SpellAction() 
+    public void SpellAction(Spell spell) 
     {
-        
+        spellsController.UseSpell(GetCurrentHero(), spell);
     }
 
     public void SearchTreasureAction() // une fois par joueur par pièce

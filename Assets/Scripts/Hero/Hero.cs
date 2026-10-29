@@ -20,10 +20,10 @@ public class Hero
 
     public int bonusDefenseDice = 0;
 
-    public List<Equipment> inventory;
-    public List<Equipment> equippedItems;
-    public List<SpellType> spells;
-    public List<Spell> spellList;
+    public List<Equipment> inventory = new List<Equipment>();
+    public List<Equipment> equippedItems = new List<Equipment>();
+    public List<SpellType> spells = new List<SpellType>();
+    public List<Spell> spellList = new List<Spell>();
 
     public Vector2Int position;
 

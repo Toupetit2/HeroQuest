@@ -3,21 +3,32 @@ using UnityEngine;
 
 public class SpellsSystem
 {
-    private GameManager gameManager;
-    private GameState gameState;
 
-    public SpellsSystem(GameManager gameManager)
+    private Dictionary<SpellType, List<Spell>> spellDict = new Dictionary<SpellType, List<Spell>>();
+
+    public void Init(Spell[] allSpells)
     {
-        this.gameManager = gameManager;
-        this.gameState = gameManager.GetGameState();
+        spellDict.Clear();
+
+        foreach (Spell spell in allSpells)
+            AddSpell(spell.spellType, spell);
     }
 
-    public List<Spell> GetSpells(SpellType spellType) 
+    private void AddSpell(SpellType type, Spell spell)
     {
-        List<Spell> spell = new List<Spell>();
-         test;
+        if (!spellDict.TryGetValue(type, out List<Spell> list))
+        {
+            list = new List<Spell>();
+            spellDict.Add(type, list);
+        }
+        list.Add(spell);
+    }
 
+    public List<Spell> GetSpells(SpellType spellType)
+    {
+        if (spellDict.TryGetValue(spellType, out List<Spell> list))
+            return list;
 
-
+        return new List<Spell>();
     }
 }
