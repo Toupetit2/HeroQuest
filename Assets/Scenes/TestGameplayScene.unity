@@ -1122,13 +1122,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuestView
   board: {fileID: 604054441}
-  doorPrefab: {fileID: 0}
-  secretDoorPrefab: {fileID: 0}
-  blockedPrefab: {fileID: 0}
-  stairsPrefab: {fileID: 0}
+  doorPrefab: {fileID: 1801032711835954, guid: 7d7375c00f1b30d448a2e791fe7f6e06, type: 3}
+  secretDoorPrefab: {fileID: 1801032711835954, guid: 7d7375c00f1b30d448a2e791fe7f6e06, type: 3}
+  blockedPrefab: {fileID: 1086400272447948, guid: 8041eee1aca17184d80828009652db2b, type: 3}
+  stairsPrefab: {fileID: 1473387560610600, guid: 72be399ad1a89cb4ca5208f7465edeed, type: 3}
   allyPrefab: {fileID: 0}
   trapPrefab: {fileID: 0}
-  furniturePrefabs: []
+  furniturePrefabs:
+  - type: 2
+    prefab: {fileID: 1869330087950668, guid: b023195ada6586c4783f437e0e4dbbcf, type: 3}
+  - type: 4
+    prefab: {fileID: 1614904882512494, guid: b5d28d79ed163c2498be9a14f021d6e5, type: 3}
+  - type: 5
+    prefab: {fileID: 1314215131022508, guid: 4fda02aa00660e34c849c59ed1c72cea, type: 3}
+  - type: 8
+    prefab: {fileID: 1515258239241364, guid: 76735f3493c056447b4e149ddfa07631, type: 3}
   monsterPrefabs: []
   doorHeight: 2
   doorThickness: 0.3
@@ -1156,11 +1164,29 @@ MonoBehaviour:
   wallHeight: 2.5
   wallThickness: 0.2
   floorThickness: 0.1
-  floorPrefab: {fileID: 0}
-  wallPrefab: {fileID: 0}
+  floorPrefab: {fileID: 1722380205279600, guid: c615ca69c2b911142ad03aee74ae7eee, type: 3}
+  wallPrefab: {fileID: 1775837782660916, guid: 66df3e663d3174243817a776f10dbee0, type: 3}
   roomMaterial: {fileID: 0}
   corridorMaterial: {fileID: 0}
-  zoneStyles: []
+  zoneStyles:
+  - zone: .
+    floorPrefab: {fileID: 1214460197360174, guid: 52377311db1b7ed4fa69fe75435a987a, type: 3}
+    material: {fileID: 0}
+  - zone: S3
+    floorPrefab: {fileID: 1845342325474542, guid: ffe7d4d6b06790740b784f50e0ee952d, type: 3}
+    material: {fileID: 0}
+  - zone: S7
+    floorPrefab: {fileID: 1845342325474542, guid: ffe7d4d6b06790740b784f50e0ee952d, type: 3}
+    material: {fileID: 0}
+  - zone: S12
+    floorPrefab: {fileID: 1845342325474542, guid: ffe7d4d6b06790740b784f50e0ee952d, type: 3}
+    material: {fileID: 0}
+  - zone: S16
+    floorPrefab: {fileID: 1845342325474542, guid: ffe7d4d6b06790740b784f50e0ee952d, type: 3}
+    material: {fileID: 0}
+  - zone: S21
+    floorPrefab: {fileID: 1845342325474542, guid: ffe7d4d6b06790740b784f50e0ee952d, type: 3}
+    material: {fileID: 0}
 --- !u!4 &604054442
 Transform:
   m_ObjectHideFlags: 0
