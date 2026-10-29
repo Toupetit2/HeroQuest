@@ -92,6 +92,7 @@ public static class MenuSetup
             SerializedObject so = new SerializedObject(manager);
             so.FindProperty("boardBuilder").objectReferenceValue = board;
             so.FindProperty("questView").objectReferenceValue = view;
+            so.FindProperty("loadQuestContent").boolValue = true;
             so.ApplyModifiedProperties();
         }
         else Debug.LogWarning("Aucun GameManager dans la scene de jeu.");
@@ -122,7 +123,7 @@ public static class MenuSetup
     }
 
     // les scenes qui manquent sont ajoutees a la fin : l'ordre existant ne change pas
-    // (PlayCampaign charge l'index 1 quand il n'y a pas de selecteur)
+    // (les boutons utilisent maintenant les noms des scenes)
     static void AddToBuildSettings()
     {
         List<EditorBuildSettingsScene> scenes = new List<EditorBuildSettingsScene>(EditorBuildSettings.scenes);

@@ -1729,7 +1729,7 @@ MonoBehaviour:
   uiManager: {fileID: 0}
   boardBuilder: {fileID: 604054441}
   questView: {fileID: 604054440}
-  loadQuestContent: 0
+  loadQuestContent: 1
 --- !u!1 &1381494547
 GameObject:
   m_ObjectHideFlags: 0

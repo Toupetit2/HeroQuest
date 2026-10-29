@@ -34,6 +34,57 @@ public class QuestEditorGUI
 
     GUIStyle centered, hint, bold, foldStyle, tag, tagWhite, zoneTag, errorBox, warningBox, okBox;
 
+    // Theme sombre / parchemin assorti aux menus de campagne.
+    static readonly Color DarkBrown = new Color(0.14f, 0.08f, 0.05f);
+    static readonly Color Ivory = new Color(0.95f, 0.88f, 0.70f);
+    static readonly Color Gold = new Color(1.00f, 0.82f, 0.30f);
+    GUISkin themedSkin;
+    readonly List<Texture2D> themeTextures = new List<Texture2D>();
+
+    Texture2D ThemeTexture(Color color)
+    {
+        Texture2D texture = new Texture2D(1, 1);
+        texture.SetPixel(0, 0, color);
+        texture.Apply();
+        texture.hideFlags = HideFlags.HideAndDontSave;
+        themeTextures.Add(texture);
+        return texture;
+    }
+
+    void SetThemeStyle(GUIStyle style, Color baseColor, Color hoverColor)
+    {
+        style.normal.background = ThemeTexture(baseColor);
+        style.hover.background = ThemeTexture(hoverColor);
+        style.active.background = style.hover.background;
+        style.focused.background = style.normal.background;
+        style.normal.textColor = Ivory;
+        style.hover.textColor = Ivory;
+        style.active.textColor = Ivory;
+        style.focused.textColor = Ivory;
+        style.alignment = TextAnchor.MiddleCenter;
+    }
+
+    void InitTheme()
+    {
+        if (themedSkin != null) return;
+        themedSkin = UnityEngine.Object.Instantiate(GUI.skin);
+        themedSkin.hideFlags = HideFlags.HideAndDontSave;
+        themedSkin.label.normal.textColor = Ivory;
+        themedSkin.label.fontSize = 13;
+        themedSkin.button.fontSize = 13;
+        SetThemeStyle(themedSkin.button, new Color(0.25f, 0.14f, 0.08f), new Color(0.42f, 0.24f, 0.10f));
+        themedSkin.box.fontSize = 12;
+        SetThemeStyle(themedSkin.box, new Color(0.20f, 0.12f, 0.07f), new Color(0.28f, 0.17f, 0.09f));
+        themedSkin.textField.fontSize = 13;
+        SetThemeStyle(themedSkin.textField, new Color(0.18f, 0.11f, 0.07f), new Color(0.27f, 0.16f, 0.09f));
+        themedSkin.textArea.fontSize = 13;
+        SetThemeStyle(themedSkin.textArea, new Color(0.18f, 0.11f, 0.07f), new Color(0.27f, 0.16f, 0.09f));
+        themedSkin.textField.alignment = TextAnchor.MiddleLeft;
+        themedSkin.textArea.alignment = TextAnchor.UpperLeft;
+        themedSkin.toggle.normal.textColor = Ivory;
+        themedSkin.toggle.hover.textColor = Ivory;
+    }
+
     public QuestEditorGUI(QuestEditorModel model)
     {
         this.model = model;
@@ -45,6 +96,11 @@ public class QuestEditorGUI
 
     public void Draw(Rect area)
     {
+        GUISkin previousSkin = GUI.skin;
+        InitTheme();
+        GUI.skin = themedSkin;
+        try
+        {
         InitStyles();
         fieldCounter = 0;
         Event e = Event.current;
@@ -71,7 +127,7 @@ public class QuestEditorGUI
 
         if (notice != null && Time.realtimeSinceStartup >= noticeUntil) notice = null;
 
-        if (e.type == EventType.Repaint) Fill(area, new Color(0.19f, 0.19f, 0.19f));
+        if (e.type == EventType.Repaint) Fill(area, DarkBrown);
 
         bool locked = confirmYes != null;
 
@@ -113,6 +169,8 @@ public class QuestEditorGUI
         GUILayout.EndArea();
 
         if (locked) DrawConfirm(area);
+        }
+        finally { GUI.skin = previousSkin; }
     }
 
     void Defer(Action action)
@@ -169,11 +227,11 @@ public class QuestEditorGUI
         zoneTag.normal.textColor = new Color(0f, 0f, 0f, 0.55f);
 
         errorBox = new GUIStyle(GUI.skin.box) { wordWrap = true, alignment = TextAnchor.UpperLeft };
-        errorBox.normal.textColor = new Color(1f, 0.55f, 0.55f);
+        errorBox.normal.textColor = new Color(1.00f, 0.60f, 0.52f);
         warningBox = new GUIStyle(errorBox);
-        warningBox.normal.textColor = new Color(1f, 0.88f, 0.45f);
+        warningBox.normal.textColor = Gold;
         okBox = new GUIStyle(errorBox);
-        okBox.normal.textColor = new Color(0.6f, 0.95f, 0.6f);
+        okBox.normal.textColor = new Color(0.62f, 0.91f, 0.63f);
     }
 
     static void Fill(Rect r, Color c)
@@ -339,8 +397,8 @@ public class QuestEditorGUI
         if (Event.current.type == EventType.Repaint)
         {
             Fill(area, new Color(0f, 0f, 0f, 0.55f));
-            Fill(new Rect(box.x - 2f, box.y - 2f, box.width + 4f, box.height + 4f), new Color(0.6f, 0.6f, 0.6f));
-            Fill(box, new Color(0.22f, 0.22f, 0.22f));
+            Fill(new Rect(box.x - 2f, box.y - 2f, box.width + 4f, box.height + 4f), Gold);
+            Fill(box, new Color(0.17f, 0.10f, 0.06f));
         }
 
         GUILayout.BeginArea(new Rect(box.x + 10f, box.y + 10f, box.width - 20f, box.height - 20f));
