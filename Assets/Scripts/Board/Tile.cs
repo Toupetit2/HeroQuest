@@ -26,6 +26,6 @@ public class Tile
     // une fosse reste praticable : le saut et les degats sont geres par le gameplay
     public bool isWalkable()
     {
-        return !blocked && furniture == null;
+        return !blocked && !rock && furniture == null;
     }
 }

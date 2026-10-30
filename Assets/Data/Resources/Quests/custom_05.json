@@ -1,0 +1,95 @@
+{
+    "number": 5,
+    "title": "",
+    "stairs": {
+        "x": 1,
+        "y": 14,
+        "width": 2,
+        "height": 2,
+        "rotation": 0
+    },
+    "start": {
+        "type": "stairs",
+        "room": "",
+        "heroes": [
+            {
+                "slot": 1,
+                "x": 2,
+                "y": 15
+            },
+            {
+                "slot": 2,
+                "x": 1,
+                "y": 15
+            },
+            {
+                "slot": 3,
+                "x": 2,
+                "y": 14
+            },
+            {
+                "slot": 4,
+                "x": 1,
+                "y": 14
+            }
+        ]
+    },
+    "doors": [
+        {
+            "x": 3,
+            "y": 17,
+            "side": "South"
+        },
+        {
+            "x": 7,
+            "y": 9,
+            "side": "North"
+        },
+        {
+            "x": 17,
+            "y": 7,
+            "side": "West"
+        }
+    ],
+    "secretDoors": [],
+    "falseDoors": [],
+    "rockZones": [],
+    "blocked": [
+        {
+            "x": 0,
+            "y": 9
+        },
+        {
+            "x": 12,
+            "y": 0
+        }
+    ],
+    "furniture": [],
+    "monsters": [],
+    "traps": [],
+    "wanderingMonster": "Orc",
+    "victory": {
+        "mode": "Tous",
+        "objectives": [
+            {
+                "type": "Escalier",
+                "target": "",
+                "count": 0,
+                "room": ""
+            }
+        ]
+    },
+    "intro": "",
+    "treasures": [],
+    "allies": [],
+    "markers": [],
+    "rules": [],
+    "reward": {
+        "goldShared": 0,
+        "goldEach": 0,
+        "bounties": []
+    },
+    "parchment": "",
+    "zargonNote": "",
+    "notes": []
+}

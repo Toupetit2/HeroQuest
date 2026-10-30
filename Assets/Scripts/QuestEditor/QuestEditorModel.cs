@@ -1001,6 +1001,56 @@ public class QuestEditorModel
         return true;
     }
 
+    // cases ou les heros peuvent aller : meme calcul que le QuestLoader (MarkRock)
+    // on part de l'escalier et des deux cotes de chaque porte (secretes comprises, fausses exclues),
+    // sans traverser une case bloquee ni une zone de roche cochee
+    // tout ce qui n'est pas atteint est de la roche inaccessible
+    public bool[,] ReachableCells()
+    {
+        if (map == null) return new bool[0, 0];
+
+        bool[,] reached = new bool[map.width, map.height];
+        Queue<Vector2Int> queue = new Queue<Vector2Int>();
+
+        HashSet<string> passages = new HashSet<string>();
+        List<DoorEntry> usable = new List<DoorEntry>();
+        if (doors != null) usable.AddRange(doors);
+        if (secretDoors != null) usable.AddRange(secretDoors);
+        foreach (DoorEntry d in usable) passages.Add(EdgeKey(d));
+
+        HashSet<Vector2Int> closed = new HashSet<Vector2Int>();
+        foreach (CellEntry c in blocked) closed.Add(new Vector2Int(c.x, c.y));
+
+        Action<int, int> reach = (x, y) =>
+        {
+            if (!map.InBounds(x, y) || reached[x, y]) return;
+            if (closed.Contains(new Vector2Int(x, y))) return;
+            if (rockZones.Contains(map.Get(x, y).zone)) return;
+            reached[x, y] = true;
+            queue.Enqueue(new Vector2Int(x, y));
+        };
+
+        reach(stairs.x, stairs.y);
+        foreach (DoorEntry d in usable)
+        {
+            Vector2Int n = Neighbor(d.x, d.y, ParseEnum(d.side, Side.North));
+            reach(d.x, d.y);
+            reach(n.x, n.y);
+        }
+
+        while (queue.Count > 0)
+        {
+            Vector2Int c = queue.Dequeue();
+            foreach (Side side in new[] { Side.North, Side.East, Side.South, Side.West })
+            {
+                Vector2Int n = Neighbor(c.x, c.y, side);
+                if (map.HasWall(c.x, c.y, n.x, n.y) && !passages.Contains(EdgeKey(c.x, c.y, side))) continue;
+                reach(n.x, n.y);
+            }
+        }
+        return reached;
+    }
+
     bool IsBlocked(int x, int y)
     {
         foreach (CellEntry c in blocked)
