@@ -12,7 +12,7 @@ public class QuestEditorGUI
 
     // meme ordre que QuestPaintTool
     static readonly string[] ToolNames =
-        { "Sélection", "Porte", "P. secrète", "Fausse p.", "Bloquée", "Meuble", "Monstre", "Piège", "Trésor", "Allié", "Repère", "Escalier", "Héros", "Note", "Gomme" };
+        { "Select", "Door", "Secret door", "False door", "Blocked", "Furniture", "Monster", "Trap", "Treasure", "Ally", "Marker", "Stairway", "Heroes", "Note", "Eraser" };
 
     public QuestEditorModel model;
     public Action RequestRepaint;   // fourni par la fenetre d'editeur (en jeu OnGUI redessine en continu)
@@ -132,7 +132,11 @@ public class QuestEditorGUI
 
         if (notice != null && Time.realtimeSinceStartup >= noticeUntil) notice = null;
 
-        if (e.type == EventType.Repaint) Fill(area, DarkBrown);
+        if (e.type == EventType.Repaint)
+        {
+            Fill(area, DarkBrown);
+            hoveredTip = null;   // recalcule a chaque dessin : plus de souris dessus = plus de bulle
+        }
 
         bool locked = confirmYes != null;
 
@@ -209,21 +213,21 @@ public class QuestEditorGUI
     void AskDiscard(Action then)
     {
         if (!model.IsDirty()) then();
-        else Ask("La quête en cours a été modifiée. Continuer sans l'enregistrer ?", then);
+        else Ask("The current quest has been changed. Continue without saving it?", then);
     }
 
     void Save()
     {
         model.Validate();
         if (model.errors.Count > 0)
-            Ask(model.errors.Count + " problème(s) à corriger : la quête risque de ne pas pouvoir être jouée.\nEnregistrer quand même ?", SaveCheckOverwrite);
+            Ask(model.errors.Count + " problem(s) to fix: the quest may not be playable.\nSave anyway?", SaveCheckOverwrite);
         else SaveCheckOverwrite();
     }
 
     void SaveCheckOverwrite()
     {
         if (model.NeedsOverwriteConfirm())
-            Ask("Une quête perso n°" + model.number + " existe déjà. La remplacer ?", model.Save);
+            Ask("A custom quest no. " + model.number + " already exists. Replace it?", model.Save);
         else model.Save();
     }
 
@@ -231,8 +235,8 @@ public class QuestEditorGUI
     static string FileLabel(string fileName)
     {
         string name = fileName.Replace(".json", "");
-        if (name.StartsWith(QuestStorage.OfficialPrefix)) return "Livret " + name.Substring(QuestStorage.OfficialPrefix.Length);
-        if (name.StartsWith(QuestStorage.CustomPrefix)) return "Perso " + name.Substring(QuestStorage.CustomPrefix.Length);
+        if (name.StartsWith(QuestStorage.OfficialPrefix)) return "Rulebook " + name.Substring(QuestStorage.OfficialPrefix.Length);
+        if (name.StartsWith(QuestStorage.CustomPrefix)) return "Custom " + name.Substring(QuestStorage.CustomPrefix.Length);
         return name;
     }
 
@@ -360,7 +364,8 @@ public class QuestEditorGUI
     // petite bulle "?" : l'explication s'affiche quand on passe la souris dessus (sans cliquer)
     void HelpBubble(string tip)
     {
-        GUILayout.Label(new GUIContent("?", tip), bubbleStyle, GUILayout.Width(18), GUILayout.Height(20));
+        GUILayout.Label("?", bubbleStyle, GUILayout.Width(18), GUILayout.Height(20));
+        TrackTip(tip);
     }
 
     // titre de section suivi de sa bulle d'aide
@@ -383,13 +388,33 @@ public class QuestEditorGUI
         return open;
     }
 
-    // dessine l'info-bulle de la bulle survolee, au-dessus de tout le reste
+    // ---------- info-bulles ----------
+    // on ne se sert pas de GUI.tooltip : dans un jeu compile, il garde parfois l'ancienne valeur
+    // et la bulle restait affichee apres le survol. Chaque element verifie lui-meme si la souris est dessus.
+    string hoveredTip;
+
+    // a appeler juste apres l'element qui porte l'aide : retient l'aide si la souris est sur cet element
+    void TrackTip(string tip)
+    {
+        Event e = Event.current;
+        if (e.type == EventType.Repaint && GUI.enabled && GUILayoutUtility.GetLastRect().Contains(e.mousePosition))
+            hoveredTip = tip;
+    }
+
+    bool TipButton(string label, string tip, params GUILayoutOption[] options)
+    {
+        bool clicked = GUILayout.Button(label, options);
+        TrackTip(tip);
+        return clicked;
+    }
+
+    // dessine l'info-bulle de l'element survole pendant ce dessin, au-dessus de tout le reste
     void DrawTooltip(Rect area)
     {
         Event e = Event.current;
-        if (e.type != EventType.Repaint || string.IsNullOrEmpty(GUI.tooltip)) return;
+        if (e.type != EventType.Repaint || string.IsNullOrEmpty(hoveredTip)) return;
 
-        GUIContent content = new GUIContent(GUI.tooltip);
+        GUIContent content = new GUIContent(hoveredTip);
         float width = Mathf.Min(380f, area.width - 16f);
         float height = tipStyle.CalcHeight(content, width);
 
@@ -443,7 +468,7 @@ public class QuestEditorGUI
             string previous = items[(index - 1 + items.Count) % items.Count];
             Defer(() => set(previous));
         }
-        string shown = index < 0 ? (items.Count == 0 ? "(aucun choix)" : "(choisir)") : (name != null ? name(current) : current);
+        string shown = index < 0 ? (items.Count == 0 ? "(no choice)" : "(choose)") : (name != null ? name(current) : current);
         GUILayout.Label(shown, centered, GUILayout.ExpandWidth(true));
         if (GUILayout.Button(">", GUILayout.Width(20)) && items.Count > 0)
         {
@@ -455,8 +480,8 @@ public class QuestEditorGUI
 
     static string RoomName(string zone)
     {
-        if (zone == ".") return "Couloirs";
-        return zone.StartsWith("S") ? "Salle " + zone.Substring(1) : zone;
+        if (zone == ".") return "Corridors";
+        return zone.StartsWith("S") ? "Room " + zone.Substring(1) : zone;
     }
 
     bool Fold(string key, string title, bool defaultOpen)
@@ -480,7 +505,7 @@ public class QuestEditorGUI
     {
         Label("col.", 26);
         x = IntField(x, 30);
-        Label("lig.", 24);
+        Label("row", 28);
         y = IntField(y, 30);
     }
 
@@ -492,13 +517,13 @@ public class QuestEditorGUI
     {
         GUILayout.BeginHorizontal();
 
-        HelpBubble("COMMENT CRÉER UNE QUÊTE\n\n"
-            + "1. Choisissez un outil (Porte, Meuble, Monstre…) dans la barre au-dessus du plateau, puis cliquez sur une case. Le clic droit efface, quel que soit l'outil.\n"
-            + "2. Réglez la quête dans le panneau de droite : titre, escalier, départ, victoire, parchemin, règles, récompense.\n"
-            + "3. Les listes (Monstres, Trésors, Meubles…) montrent tout ce qui est posé : on peut y corriger chaque élément ou le supprimer avec ×.\n"
-            + "4. Sous le plateau, les problèmes en rouge empêchent de jouer la quête ; les remarques en jaune sont des conseils.\n"
-            + "5. « Enregistrer » range la quête dans Mes quêtes. « Ouvrir » recharge une quête, y compris celles du livret pour s'en inspirer : elles ne sont jamais modifiées, vos changements deviennent une nouvelle quête.\n\n"
-            + "Les cases sont repérées par leur colonne (de gauche à droite, à partir de 0) et leur ligne (de haut en bas, à partir de 0). Passez la souris sur le plateau pour les voir. Les boutons < > font défiler les choix.");
+        HelpBubble("HOW TO CREATE A QUEST\n\n"
+            + "1. Choose a tool (Door, Furniture, Monster…) in the bar above the board, then click a square. Right-click erases, whatever the tool.\n"
+            + "2. Set up the quest in the right panel: title, stairway, start, victory, parchment, rules, reward.\n"
+            + "3. The lists (Monsters, Treasures, Furniture…) show everything placed: you can edit each element there or delete it with ×.\n"
+            + "4. Below the board, problems in red prevent the quest from being played; notes in yellow are advice.\n"
+            + "5. \"Save\" stores the quest in My quests. \"Open\" loads a quest, including the rulebook ones for inspiration: they are never changed, your changes become a new quest.\n\n"
+            + "Squares are identified by their column (left to right, from 0) and their row (top to bottom, from 0). Move the mouse over the board to see them. The < > buttons scroll through the choices.");
 
         if (RequestClose != null)
         {
@@ -521,33 +546,33 @@ public class QuestEditorGUI
                 int next = (index + 1) % model.fileNames.Count;
                 Defer(() => model.selectedFile = next);
             }
-            if (GUILayout.Button("Ouvrir", GUILayout.Width(70)))
+            if (GUILayout.Button("Open", GUILayout.Width(70)))
             {
                 string name = model.fileNames[index];
                 Defer(() => AskDiscard(() => model.LoadQuest(name)));
             }
         }
-        else GUILayout.Label("Aucune quête enregistrée");
+        else GUILayout.Label("No saved quest");
 
         GUILayout.Space(10);
         bool wasEnabled = GUI.enabled;
         GUI.enabled = wasEnabled && model.CanUndo;
-        if (GUILayout.Button(new GUIContent("Annuler", "Revenir en arrière : annule la dernière modification (raccourci Ctrl+Z)."), GUILayout.Width(80)))
+        if (TipButton("Undo", "Go back: undoes the last change (shortcut Ctrl+Z).", GUILayout.Width(80)))
             Defer(UndoLast);
         GUI.enabled = wasEnabled;
 
         GUILayout.Space(10);
-        if (GUILayout.Button("Nouvelle quête"))
+        if (GUILayout.Button("New quest"))
             Defer(() => AskDiscard(() => model.NewQuest(false)));
-        if (GUILayout.Button("Copier cette quête"))
+        if (GUILayout.Button("Copy this quest"))
             Defer(() => model.NewQuest(true));
 
         GUILayout.FlexibleSpace();
         GUILayout.Label(notice ?? " ");
 
-        if (ReloadBoard != null && GUILayout.Button("Recharger le plateau"))
+        if (ReloadBoard != null && GUILayout.Button("Reload board"))
             Defer(ReloadBoard);
-        if (GUILayout.Button("Enregistrer", GUILayout.Width(90)))
+        if (GUILayout.Button("Save", GUILayout.Width(90)))
             Defer(Save);
 
         GUILayout.EndHorizontal();
@@ -567,12 +592,12 @@ public class QuestEditorGUI
         GUILayout.Label(confirmText, hint);
         GUILayout.FlexibleSpace();
         GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Oui"))
+        if (GUILayout.Button("Yes"))
         {
             Action yes = confirmYes;
             Defer(() => { confirmYes = null; yes(); });
         }
-        if (GUILayout.Button("Annuler"))
+        if (GUILayout.Button("Cancel"))
             Defer(() => confirmYes = null);
         GUILayout.EndHorizontal();
         GUILayout.EndArea();
@@ -592,83 +617,83 @@ public class QuestEditorGUI
         switch (model.tool)
         {
             case QuestPaintTool.Selection:
-                GUILayout.Label("Cliquez sur un élément du plateau pour le choisir : ses réglages s'affichent en haut à droite. Près d'un bord de case, c'est la porte qui est choisie.", hint);
+                GUILayout.Label("Click an element on the board to select it: its settings appear at the top right. Near the edge of a square, the door is selected.", hint);
                 break;
 
             case QuestPaintTool.Porte:
-                GUILayout.Label("Cliquez près du bord d'une case pour poser (ou retirer) une porte. Une porte se place toujours sur un mur, entre deux pièces.", hint);
+                GUILayout.Label("Click near the edge of a square to place (or remove) a door. A door always goes on a wall, between two areas.", hint);
                 break;
 
             case QuestPaintTool.PorteSecrete:
-                GUILayout.Label("Cliquez près du bord d'une case pour poser (ou retirer) une porte secrète. Les héros ne la voient qu'après l'avoir trouvée en cherchant les portes secrètes.", hint);
+                GUILayout.Label("Click near the edge of a square to place (or remove) a secret door. Heroes only see it after finding it by searching for secret doors.", hint);
                 break;
 
             case QuestPaintTool.FaussePorte:
-                GUILayout.Label("Cliquez près du bord d'une case pour poser (ou retirer) une fausse porte : les héros la voient, mais elle ne s'ouvre jamais.", hint);
+                GUILayout.Label("Click near the edge of a square to place (or remove) a false door: heroes can see it, but it never opens.", hint);
                 break;
 
             case QuestPaintTool.CaseBloquee:
-                GUILayout.Label("Cliquez sur une case pour la bloquer ou la débloquer. Personne ne peut traverser une case bloquée (éboulis, rocher…).", hint);
+                GUILayout.Label("Click a square to block or unblock it. Nobody can go through a blocked square (rubble, rock…).", hint);
                 break;
 
             case QuestPaintTool.Meuble:
                 GUILayout.BeginHorizontal();
                 EnumCycle(model.furnitureType, v => { model.furnitureType = v; model.ApplyFurnitureDefault(); }, 190, QuestEditorNames.Of);
-                Label("larg.", 34);
+                Label("width", 42);
                 model.furnitureW = Mathf.Max(1, IntField(model.furnitureW, 28));
-                Label("haut.", 34);
+                Label("height", 46);
                 model.furnitureH = Mathf.Max(1, IntField(model.furnitureH, 28));
                 if (GUILayout.Button("<", GUILayout.Width(24))) Defer(() => model.RotateFurnitureTool(-90));
                 GUILayout.Label(model.furnitureRot + "°", GUILayout.Width(36));
                 if (GUILayout.Button(">", GUILayout.Width(24))) Defer(() => model.RotateFurnitureTool(90));
                 GUILayout.EndHorizontal();
-                GUILayout.Label("Cliquez sur la case du coin en haut à gauche du meuble. Les flèches le tournent d'un quart de tour.", hint);
+                GUILayout.Label("Click the top-left corner square of the furniture. The arrows turn it a quarter turn.", hint);
                 break;
 
             case QuestPaintTool.Monstre:
                 GUILayout.BeginHorizontal();
                 EnumCycle(model.monsterType, v => model.monsterType = v, 190, QuestEditorNames.Of);
-                Label("nom", 32);
+                Label("name", 32);
                 model.monsterId = StringField(model.monsterId, 120);
                 GUILayout.EndHorizontal();
-                GUILayout.Label("Le nom est facultatif : donnez-en un aux monstres importants (un chef à vaincre, un monstre qui garde un trésor). Chaque nom ne sert qu'une fois.", hint);
+                GUILayout.Label("The name is optional: give one to important monsters (a leader to defeat, a monster guarding a treasure). Each name can only be used once.", hint);
                 MonsterData baseData = BaseStats(model.monsterType);
                 if (baseData != null)
-                    GUILayout.Label(QuestEditorNames.Of(model.monsterType) + " : déplacement " + baseData.movementCases
-                        + ", attaque " + baseData.attackDices + ", défense " + baseData.defenseDices
-                        + ", corps " + baseData.health + ", esprit " + baseData.spirit
-                        + ". Pour un chef plus fort, changez ses valeurs dans la liste Monstres à droite.", hint);
+                    GUILayout.Label(QuestEditorNames.Of(model.monsterType) + ": movement " + baseData.movementCases
+                        + ", attack " + baseData.attackDices + ", defend " + baseData.defenseDices
+                        + ", body " + baseData.health + ", mind " + baseData.spirit
+                        + ". For a stronger leader, change its values in the Monsters list on the right.", hint);
                 break;
 
             case QuestPaintTool.Piege:
                 GUILayout.BeginHorizontal();
                 EnumCycle(model.trapType, v => model.trapType = v, 190, QuestEditorNames.Of);
                 GUILayout.EndHorizontal();
-                GUILayout.Label("Cliquez sur une case pour y cacher un piège. Il reste invisible jusqu'à ce qu'un héros le trouve ou tombe dedans.", hint);
+                GUILayout.Label("Click a square to hide a trap there. It stays invisible until a hero finds it or falls into it.", hint);
                 break;
 
             case QuestPaintTool.Tresor:
-                GUILayout.Label("Cliquez sur une case d'une salle pour y cacher un trésor spécial (or, objet, coffre piégé…). Il est trouvé par le premier héros qui fouille la salle. Réglez son contenu dans la liste Trésors à droite.", hint);
+                GUILayout.Label("Click a square in a room to hide a special treasure there (gold, item, trapped chest…). The first hero who searches the room finds it. Set its content in the Treasures list on the right.", hint);
                 break;
 
             case QuestPaintTool.Allie:
                 GUILayout.BeginHorizontal();
-                Label("nom", 32);
+                Label("name", 32);
                 model.allyId = StringField(model.allyId, 120);
                 GUILayout.EndHorizontal();
-                GUILayout.Label("Cliquez sur une case pour y placer un allié à secourir ou à escorter (comme un prisonnier). Ses caractéristiques se règlent dans la liste Alliés.", hint);
+                GUILayout.Label("Click a square to place an ally to rescue or escort (like a prisoner). Set its characteristics in the Allies list.", hint);
                 break;
 
             case QuestPaintTool.Repere:
                 GUILayout.BeginHorizontal();
-                Label("étiquette", 64);
+                Label("label", 64);
                 model.markerLabel = StringField(model.markerLabel, 50);
                 GUILayout.EndHorizontal();
-                GUILayout.Label("Cliquez sur une case pour y poser un repère (X, XX, un numéro…) : une case dont parlent les règles de la quête, comme le point d'arrivée d'une téléportation.", hint);
+                GUILayout.Label("Click a square to place a marker (X, XX, a number…): a square mentioned by the quest rules, such as where a teleport lands.", hint);
                 break;
 
             case QuestPaintTool.Escalier:
-                GUILayout.Label("Cliquez sur la case du coin en haut à gauche de l'escalier (sa taille se règle à droite).", hint);
+                GUILayout.Label("Click the top-left corner square of the stairway (its size is set on the right).", hint);
                 break;
 
             case QuestPaintTool.DepartHeros:
@@ -676,22 +701,22 @@ public class QuestEditorGUI
                 int slotIndex = Mathf.Clamp(model.heroSlot, 1, HeroStartLayout.Count) - 1;
                 int pickedSlot = GUILayout.Toolbar(slotIndex, new[] { "H1", "H2", "H3", "H4" }, GUILayout.Width(200));
                 if (pickedSlot != slotIndex) Defer(() => model.heroSlot = pickedSlot + 1);
-                if (GUILayout.Button("Positions par défaut", GUILayout.Width(150))) Defer(() => model.heroStarts = model.DefaultHeroStarts());
+                if (GUILayout.Button("Default positions", GUILayout.Width(150))) Defer(() => model.heroStarts = model.DefaultHeroStarts());
                 GUILayout.EndHorizontal();
-                GUILayout.Label("Choisissez un héros (H1 joue en premier), puis cliquez sur sa case de départ : l'outil passe ensuite au héros suivant. Par défaut, les héros sont sur l'escalier et tournent avec lui (H1 en bas à droite, H2 en bas à gauche, H3 en haut à droite, H4 en haut à gauche).", hint);
+                GUILayout.Label("Choose a hero (H1 plays first), then click its starting square: the tool then moves on to the next hero. By default, heroes stand on the stairway and turn with it (H1 bottom right, H2 bottom left, H3 top right, H4 top left).", hint);
                 break;
 
             case QuestPaintTool.Note:
                 GUILayout.BeginHorizontal();
-                Label("lettre", 40);
+                Label("letter", 40);
                 model.noteLetter = StringField(model.noteLetter, 30);
-                GUILayout.Label("vide = prochaine lettre libre", hint, GUILayout.Width(200));
+                GUILayout.Label("empty = next free letter", hint, GUILayout.Width(200));
                 GUILayout.EndHorizontal();
-                GUILayout.Label("Cliquez sur une case pour y poser une lettre (A, B…). Son texte, réservé à Zargon, s'écrit dans la liste Notes.", hint);
+                GUILayout.Label("Click a square to place a letter (A, B…). Its text, for Zargon only, is written in the Notes list.", hint);
                 break;
 
             case QuestPaintTool.Gomme:
-                GUILayout.Label("Cliquez pour effacer : près d'un bord, la porte ; sinon ce qui est sur la case. Le clic droit efface aussi, avec n'importe quel outil.", hint);
+                GUILayout.Label("Click to erase: near an edge, the door; otherwise what is on the square. Right-click also erases, with any tool.", hint);
                 break;
         }
     }
@@ -734,10 +759,10 @@ public class QuestEditorGUI
         string zone = inside ? model.map.Get(hover.x, hover.y).zone : "";
         GUILayout.BeginHorizontal();
         GUILayout.Label(inside
-            ? "Colonne " + hover.x + ", ligne " + hover.y + "   –   " + (zone == "." ? "couloir" : RoomName(zone).ToLower())
+            ? "Column " + hover.x + ", row " + hover.y + "   –   " + (zone == "." ? "corridor" : RoomName(zone).ToLower())
             : " ");
         GUILayout.FlexibleSpace();
-        GUILayout.Label("Clic gauche : poser     Clic droit : effacer     Ctrl+Z : annuler", hint);
+        GUILayout.Label("Left-click: place     Right-click: erase     Ctrl+Z: undo", hint);
         GUILayout.EndHorizontal();
     }
 
@@ -823,7 +848,7 @@ public class QuestEditorGUI
             GUI.DrawTexture(img, stairsImage, ScaleMode.StretchToFill);
             GUI.matrix = previous;
         }
-        else GUI.Label(sr, "Esc\n" + stairsRot + "°", tag);
+        else GUI.Label(sr, "Stairs\n" + stairsRot + "°", tag);
 
         // cases bloquees
         foreach (CellEntry b in model.blocked)
@@ -949,17 +974,17 @@ public class QuestEditorGUI
 
         if (errors.Count == 0 && warnings.Count == 0)
         {
-            GUILayout.Box("Aucun problème : la quête est jouable.", okBox);
+            GUILayout.Box("No problem: the quest is playable.", okBox);
             return;
         }
 
         if (errors.Count > 0)
             GUILayout.Box(string.Join("\n", errors.GetRange(0, Mathf.Min(errors.Count, 8)).ToArray())
-                + (errors.Count > 8 ? "\n… et " + (errors.Count - 8) + " autre(s)" : ""), errorBox);
+                + (errors.Count > 8 ? "\n… and " + (errors.Count - 8) + " more" : ""), errorBox);
 
         if (warnings.Count > 0)
             GUILayout.Box(string.Join("\n", warnings.GetRange(0, Mathf.Min(warnings.Count, 5)).ToArray())
-                + (warnings.Count > 5 ? "\n… et " + (warnings.Count - 5) + " autre(s)" : ""), warningBox);
+                + (warnings.Count > 5 ? "\n… and " + (warnings.Count - 5) + " more" : ""), warningBox);
     }
 
     // =====================================================================
@@ -968,26 +993,26 @@ public class QuestEditorGUI
 
     void DrawSettings()
     {
-        TitleHelp("Quête", "Le numéro range la quête dans Mes quêtes (Perso 01, Perso 02…). Le titre est le nom affiché aux joueurs.");
+        TitleHelp("Quest", "The number stores the quest in My quests (Custom 01, Custom 02…). The title is the name shown to the players.");
         GUILayout.BeginHorizontal();
-        Label("Numéro", 110);
+        Label("Number", 110);
         model.number = IntField(model.number, 60);
         GUILayout.Label("→ " + FileLabel(model.FileNameFor(model.number)), hint);
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
-        Label("Titre", 110);
+        Label("Title", 110);
         model.title = StringField(model.title, 0);
         GUILayout.EndHorizontal();
 
         GUILayout.Space(8);
-        TitleHelp("Escalier", "L'escalier est l'entrée et la sortie du donjon. Indiquez la case de son coin en haut à gauche (ou posez-le avec l'outil Escalier) et sa taille en cases. Le bouton « tourner » fait pivoter son dessin d'un quart de tour. Si les héros partent de l'escalier, leurs cases de départ le suivent quand on le déplace.");
+        TitleHelp("Stairway", "The stairway is the way in and out of the dungeon. Enter the square of its top-left corner (or place it with the Stairway tool) and its size in squares. The \"rotate\" button turns its picture a quarter turn. If the heroes start on the stairway, their starting squares follow it when it is moved.");
         StairsFields();
 
         GUILayout.BeginHorizontal();
-        Label("Départ", 110);
+        Label("Start", 110);
         int startIndex = model.startType == "room" ? 1 : 0;
-        int pickedStart = GUILayout.Toolbar(startIndex, new[] { "Sur l'escalier", "Dans une salle" }, GUILayout.Width(220));
+        int pickedStart = GUILayout.Toolbar(startIndex, new[] { "On the stairway", "In a room" }, GUILayout.Width(220));
         if (pickedStart != startIndex)
         {
             Defer(() =>
@@ -996,36 +1021,36 @@ public class QuestEditorGUI
                 if (model.startType == "stairs") model.heroStarts = model.DefaultHeroStarts();
             });
         }
-        HelpBubble("Où les héros commencent la partie : sur l'escalier, ou dans une salle (par exemple une cellule de prison). Pour une salle, placez ensuite les 4 héros avec l'outil Départ.");
+        HelpBubble("Where the heroes start the game: on the stairway, or in a room (for example a prison cell). For a room, then place the 4 heroes with the Heroes tool.");
         GUILayout.EndHorizontal();
 
         if (model.startType == "room")
         {
             GUILayout.BeginHorizontal();
-            Label("Salle de départ", 110);
+            Label("Starting room", 110);
             ListCycle(model.Rooms(), model.startRoom, v => model.startRoom = v, 220, RoomName);
             GUILayout.EndHorizontal();
         }
 
         GUILayout.BeginHorizontal();
-        Label("Monstre errant", 110);
+        Label("Wandering monster", 130);
         if (!model.noWanderingMonster)
             EnumCycle(model.wanderingMonster, v => model.wanderingMonster = v, 200, QuestEditorNames.Of);
-        ToggleField(model.noWanderingMonster, "aucun", v => model.noWanderingMonster = v, 70);
-        HelpBubble("Le monstre qui surgit quand un héros pioche la carte « monstre errant » en fouillant une salle. Cochez « aucun » si cette quête n'en a pas.");
+        ToggleField(model.noWanderingMonster, "none", v => model.noWanderingMonster = v, 70);
+        HelpBubble("The monster that appears when a hero draws the \"wandering monster\" card while searching a room. Tick \"none\" if this quest has none.");
         GUILayout.EndHorizontal();
 
         GUILayout.Space(8);
-        TitleHelp("Victoire", "Ce que les héros doivent accomplir pour gagner.\n\n"
-            + "« Tous les objectifs » : il faut tous les remplir. « Un seul objectif suffit » : le premier rempli fait gagner.\n\n"
-            + "Vaincre un monstre : choisissez avec < > l'un des monstres posés sur le plateau.\n"
-            + "Vaincre tous les monstres : tous les monstres de la carte.\n"
-            + "Trouver un objet : l'objet et la salle où il est caché. Le bouton « trésor » reprend l'objet d'un trésor déjà posé.\n"
-            + "Escorter un allié : l'allié doit arriver vivant à l'escalier.\n"
-            + "Rapporter des objets : l'objet et combien en rapporter à l'escalier.\n"
-            + "Revenir à l'escalier : les héros doivent ressortir du donjon.");
+        TitleHelp("Victory", "What the heroes must achieve to win.\n\n"
+            + "\"All objectives\": they must all be completed. \"Any one objective\": the first one completed wins.\n\n"
+            + "Defeat a monster: choose with < > one of the monsters on the board.\n"
+            + "Defeat all monsters: every monster on the map.\n"
+            + "Find an item: the item and the room where it is hidden. The \"treasure\" button picks the item of a treasure already placed.\n"
+            + "Escort an ally: the ally must reach the stairway alive.\n"
+            + "Bring back items: the item and how many to bring back to the stairway.\n"
+            + "Return to the stairway: the heroes must get out of the dungeon.");
         GUILayout.BeginHorizontal();
-        Label("Pour gagner", 110);
+        Label("To win", 110);
         EnumCycle(model.victoryMode, v => model.victoryMode = v, 220, QuestEditorNames.Of);
         GUILayout.EndHorizontal();
 
@@ -1046,14 +1071,14 @@ public class QuestEditorGUI
                 ListCycle(allyIds, o.target, v => o.target = v, 160);
             if (ot == ObjectiveType.TrouverObjet || ot == ObjectiveType.Rapporter)
             {
-                Label("objet", 36);
+                Label("item", 34);
                 o.target = StringField(o.target, 0);
             }
             if (ot == ObjectiveType.TrouverObjet)
                 ListCycle(model.Rooms(), o.room, v => o.room = v, 120, RoomName);
             if (ot == ObjectiveType.Rapporter)
             {
-                Label("nombre", 50);
+                Label("number", 50);
                 o.count = IntField(o.count, 30);
             }
 
@@ -1061,13 +1086,13 @@ public class QuestEditorGUI
             if (GUILayout.Button("×", GUILayout.Width(22))) Defer(() => model.objectives.RemoveAt(idx));
             GUILayout.EndHorizontal();
         }
-        if (GUILayout.Button("+ Objectif", GUILayout.Width(100)))
+        if (GUILayout.Button("+ Objective", GUILayout.Width(100)))
             Defer(() => model.objectives.Add(new ObjectiveEntry { type = ObjectiveType.Tuer.ToString() }));
 
         GUILayout.Space(8);
-        TitleHelp("Parchemin", "Le texte d'introduction lu à voix haute aux joueurs au début de la quête. Écrivez votre propre texte.");
+        TitleHelp("Parchment", "The introduction text read aloud to the players at the start of the quest. Write your own text.");
         model.parchment = GUILayout.TextArea(model.parchment ?? "", GUILayout.MinHeight(70));
-        TitleHelp("Note secrète pour Zargon", "Consignes réservées à Zargon (le maître du jeu) : pièges, surprises, comment jouer les monstres… Les joueurs ne la voient pas.");
+        TitleHelp("Secret note for Zargon", "Instructions for Zargon (the game master) only: traps, surprises, how to play the monsters… The players do not see it.");
         model.zargonNote = GUILayout.TextArea(model.zargonNote ?? "", GUILayout.MinHeight(40));
 
         GUILayout.Space(8);
@@ -1093,8 +1118,8 @@ public class QuestEditorGUI
             Defer(() => o.target = model.EnsureMonsterId(previous));
         }
         string shown;
-        if (list.Count == 0) shown = "(posez d'abord un monstre)";
-        else if (index < 0) shown = string.IsNullOrEmpty(o.target) ? "(choisir un monstre)" : "\"" + o.target + "\" introuvable";
+        if (list.Count == 0) shown = "(place a monster first)";
+        else if (index < 0) shown = string.IsNullOrEmpty(o.target) ? "(choose a monster)" : "\"" + o.target + "\" not found";
         else shown = MonsterLabel(list[index]);
         GUILayout.Label(shown, centered, GUILayout.ExpandWidth(true));
         if (GUILayout.Button(">", GUILayout.Width(20)) && list.Count > 0)
@@ -1108,7 +1133,7 @@ public class QuestEditorGUI
     static string MonsterLabel(MonsterEntry m)
     {
         string name = QuestEditorNames.Of(QuestEditorModel.ParseEnum(m.type, MonsterClass.Gobelin));
-        return name + " \"" + m.id + "\" (col. " + m.x + ", lig. " + m.y + ")";
+        return name + " \"" + m.id + "\" (col. " + m.x + ", row " + m.y + ")";
     }
 
     // choix rapide parmi les objets des tresors poses : remplit l'objet ET la salle
@@ -1118,8 +1143,8 @@ public class QuestEditorGUI
         if (list.Count == 0) return;
         int index = list.FindIndex(tr => tr.item == o.target && model.ZoneAt(tr.x, tr.y) == o.room);
 
-        if (GUILayout.Button(new GUIContent(index < 0 ? "trésor…" : "trésor " + (index + 1) + "/" + list.Count,
-            "Prendre l'objet d'un trésor posé sur le plateau : l'objet et la salle se remplissent tout seuls. Cliquez encore pour passer au trésor suivant."), GUILayout.Width(90)))
+        if (TipButton(index < 0 ? "treasure…" : "treasure " + (index + 1) + "/" + list.Count,
+            "Take the item of a treasure placed on the board: the item and the room fill in by themselves. Click again for the next treasure.", GUILayout.Width(90)))
         {
             TreasureEntry next = list[(index + 1) % list.Count];
             Defer(() => { o.target = next.item; o.room = model.ZoneAt(next.x, next.y); });
@@ -1134,12 +1159,12 @@ public class QuestEditorGUI
 
         GUILayout.BeginHorizontal();
         CellFields(ref s.x, ref s.y);
-        Label("larg.", 34);
+        Label("width", 42);
         s.width = Mathf.Max(1, IntField(s.width, 30));
-        Label("haut.", 34);
+        Label("height", 46);
         s.height = Mathf.Max(1, IntField(s.height, 30));
         int rot = ((s.rotation % 360) + 360) % 360;
-        if (GUILayout.Button("tourner " + rot + "°", GUILayout.Width(90)))
+        if (GUILayout.Button("rotate " + rot + "°", GUILayout.Width(90)))
         {
             // les heros tournent avec l'image de l'escalier
             Defer(() =>
@@ -1156,7 +1181,7 @@ public class QuestEditorGUI
 
     void DrawRules()
     {
-        TitleHelp("Règles spéciales", "Des règles propres à cette quête, en plus des règles normales. Cliquez pour activer ou désactiver.");
+        TitleHelp("Special rules", "Rules specific to this quest, on top of the normal rules. Click to turn them on or off.");
         foreach (QuestRule rule in Enum.GetValues(typeof(QuestRule)))
         {
             string name = rule.ToString();
@@ -1171,38 +1196,38 @@ public class QuestEditorGUI
 
     void DrawReward()
     {
-        TitleHelp("Récompense", "L'or gagné quand la quête est réussie : une somme à partager entre les héros, une somme pour chaque héros, et des primes pour chaque monstre vaincu d'un type donné.");
+        TitleHelp("Reward", "The gold earned when the quest is completed: an amount shared between the heroes, an amount for each hero, and bounties for each defeated monster of a given type.");
         GUILayout.BeginHorizontal();
-        Label("À partager", 110);
+        Label("Shared", 110);
         model.goldShared = Mathf.Max(0, IntField(model.goldShared, 60));
-        Label("pièces d'or", 80);
+        Label("gold coins", 80);
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
-        Label("Pour chaque héros", 110);
+        Label("For each hero", 110);
         model.goldEach = Mathf.Max(0, IntField(model.goldEach, 60));
-        Label("pièces d'or", 80);
+        Label("gold coins", 80);
         GUILayout.EndHorizontal();
 
         for (int i = 0; i < model.bounties.Count; i++)
         {
             BountyEntry b = model.bounties[i];
             GUILayout.BeginHorizontal();
-            Label("Prime", 50);
+            Label("Bounty", 50);
             EnumCycle(QuestEditorModel.ParseEnum(b.monster, MonsterClass.Gobelin), v => b.monster = v.ToString(), 190, QuestEditorNames.Of);
             b.gold = Mathf.Max(0, IntField(b.gold, 50));
-            Label("or", 20);
+            Label("gold", 30);
             int idx = i;
             if (GUILayout.Button("×", GUILayout.Width(22))) Defer(() => model.bounties.RemoveAt(idx));
             GUILayout.EndHorizontal();
         }
-        if (GUILayout.Button("+ Prime", GUILayout.Width(100)))
+        if (GUILayout.Button("+ Bounty", GUILayout.Width(100)))
             Defer(() => model.bounties.Add(new BountyEntry { monster = MonsterClass.Gobelin.ToString(), gold = 10 }));
     }
 
     void DrawRockZones()
     {
-        TitleHelp("Zones de roche", "Les zones qui ne servent pas dans cette quête et restent en roche pleine (assombries sur le plateau). Les zones qu'aucune porte ne relie à l'escalier deviennent de la roche toutes seules : cochez ici seulement les exceptions, par exemple tous les couloirs d'une quête où l'on se déplace par téléportation.");
+        TitleHelp("Solid rock areas", "Areas not used in this quest, which stay solid rock (darkened on the board). Areas that no door connects to the stairway become solid rock by themselves: only tick the exceptions here, for example every corridor of a quest where heroes move by teleporting.");
         List<string> all = model.zones;
         const int perRow = 6;
         for (int i = 0; i < all.Count; i += perRow)
@@ -1225,7 +1250,7 @@ public class QuestEditorGUI
 
     void DrawLists()
     {
-        if (FoldHelp("notes", "Notes A, B, C… (" + model.notes.Count + ")", true, "Une lettre posée sur la carte renvoie à un texte réservé à Zargon. La même lettre peut être posée sur plusieurs cases ; son texte ne s'écrit qu'une fois. Colonne et ligne à -1 : la note n'est pas sur la carte."))
+        if (FoldHelp("notes", "Notes A, B, C… (" + model.notes.Count + ")", true, "A letter placed on the map refers to a text for Zargon only. The same letter can be placed on several squares; its text is written only once. Column and row at -1: the note is not on the map."))
         {
             foreach (NoteEntry note in model.notes) NoteRow(note);
             if (GUILayout.Button("+ Note", GUILayout.Width(100)))
@@ -1233,58 +1258,58 @@ public class QuestEditorGUI
             GUILayout.Space(6);
         }
 
-        if (FoldHelp("monsters", "Monstres (" + model.monsters.Count + ")", false,
-            "Chaque monstre : son type, sa case et un nom facultatif.\n\n"
-            + "Caractéristiques : dépl. = cases de déplacement, att. / déf. = dés d'attaque / de défense, corps = points de corps, esprit = points d'esprit. Les valeurs affichées sont celles du monstre normal ; changez-les pour un chef. Remettre la valeur normale (ou 0) annule le changement.\n\n"
-            + "Caché : le monstre n'est pas sur le plateau au départ. Statue : il ne bouge pas et ne peut pas être blessé avant de se réveiller. Réveil : ce qui le fait apparaître ou s'animer. Objet : ce qu'il laisse en mourant."))
+        if (FoldHelp("monsters", "Monsters (" + model.monsters.Count + ")", false,
+            "Each monster: its type, its square and an optional name.\n\n"
+            + "Characteristics: move = movement squares, att. / def. = attack / defend dice, body = Body points, mind = Mind points. The values shown are those of the normal monster; change them for a leader. Setting back the normal value (or 0) cancels the change.\n\n"
+            + "Hidden: the monster is not on the board at the start. Statue: it does not move and cannot be wounded until it wakes up. Wake-up: what makes it appear or come to life. Item: what it leaves when it dies."))
         {
             foreach (MonsterEntry m in model.monsters) MonsterRow(m);
         }
 
-        if (FoldHelp("allies", "Alliés (" + model.allies.Count + ")", false, "Les personnages à secourir ou à escorter. Chacun a un nom (utilisé par l'objectif « Escorter un allié »), une case, des dés d'attaque et de défense et des points de corps."))
+        if (FoldHelp("allies", "Allies (" + model.allies.Count + ")", false, "The characters to rescue or escort. Each one has a name (used by the \"Escort an ally\" objective), a square, attack and defend dice, and Body points."))
         {
             foreach (AllyEntry a in model.allies) AllyRow(a);
         }
 
-        if (FoldHelp("treasures", "Trésors (" + model.treasures.Count + ")", false,
-            "Les trésors spéciaux de la quête. Le premier héros qui fouille la salle les trouve.\n\n"
-            + "Or : pièces d'or trouvées. Objet : ce qu'on trouve en plus (une potion, un artefact…).\n"
-            + "Piégé : fouiller sans avoir désarmé le piège fait perdre des points de corps.\n"
-            + "À vaincre d'abord : le trésor n'est trouvable qu'après la mort de ces monstres (leurs noms, séparés par des virgules)."))
+        if (FoldHelp("treasures", "Treasures (" + model.treasures.Count + ")", false,
+            "The quest's special treasures. The first hero who searches the room finds them.\n\n"
+            + "Gold: gold coins found. Item: what is found as well (a potion, an artifact…).\n"
+            + "Trapped: searching without disarming the trap first costs Body points.\n"
+            + "Defeat first: the treasure can only be found once these monsters are dead (their names, separated by commas)."))
         {
             foreach (TreasureEntry tr in model.treasures) TreasureRow(tr);
         }
 
-        if (FoldHelp("markers", "Repères (" + model.markers.Count + ")", false, "Les cases marquées dont parlent les règles de la quête : X, XX, numéros de téléportation… Chaque repère a une étiquette et une case."))
+        if (FoldHelp("markers", "Markers (" + model.markers.Count + ")", false, "The marked squares mentioned by the quest rules: X, XX, teleport numbers… Each marker has a label and a square."))
         {
             foreach (MarkerEntry mk in model.markers) MarkerRow(mk);
         }
 
-        if (FoldHelp("furniture", "Meubles (" + model.furniture.Count + ")", false, "Chaque meuble : son type, la case de son coin en haut à gauche, sa largeur et sa hauteur en cases. Le bouton d'angle le tourne d'un quart de tour (la largeur et la hauteur s'échangent)."))
+        if (FoldHelp("furniture", "Furniture (" + model.furniture.Count + ")", false, "Each piece of furniture: its type, the square of its top-left corner, its width and height in squares. The angle button turns it a quarter turn (width and height swap)."))
         {
             foreach (FurnitureEntry f in model.furniture) FurnitureRow(f);
         }
 
-        if (FoldHelp("traps", "Pièges (" + model.traps.Count + ")", false, "Chaque piège : son type et sa case. Fosse : le héros tombe dedans. Bloc qui tombe : le plafond s'effondre et bloque le passage. Lance : une lance jaillit du mur."))
+        if (FoldHelp("traps", "Traps (" + model.traps.Count + ")", false, "Each trap: its type and its square. Pit: the hero falls in. Falling block: the ceiling caves in and blocks the way. Spear: a spear shoots out of the wall."))
         {
             foreach (TrapEntry t in model.traps) TrapRow(t);
         }
 
-        if (FoldHelp("doors", "Portes (" + (model.doors.Count + model.secretDoors.Count + model.falseDoors.Count) + ")", false, "Une porte se place sur un bord de case : la case, puis le côté (haut, bas, gauche, droite). Il doit y avoir un mur à cet endroit."))
+        if (FoldHelp("doors", "Doors (" + (model.doors.Count + model.secretDoors.Count + model.falseDoors.Count) + ")", false, "A door goes on the edge of a square: the square, then the side (top, bottom, left, right). There must be a wall there."))
         {
-            DrawDoorList(model.doors, "Portes");
-            DrawDoorList(model.secretDoors, "Portes secrètes");
-            DrawDoorList(model.falseDoors, "Fausses portes");
+            DrawDoorList(model.doors, "Doors");
+            DrawDoorList(model.secretDoors, "Secret doors");
+            DrawDoorList(model.falseDoors, "False doors");
         }
 
-        if (FoldHelp("heroStarts", "Départ des héros (" + model.heroStarts.Count + "/4)", true, "La case où chaque héros commence la partie. H1 joue en premier, puis H2, H3 et H4. Par défaut, les héros sont sur l'escalier et tournent avec son image ; si la quête commence dans une salle, ils prennent ses premières cases libres. Vous pouvez les déplacer avec l'outil Départ ou ici."))
+        if (FoldHelp("heroStarts", "Heroes' start (" + model.heroStarts.Count + "/4)", true, "The square where each hero starts the game. H1 plays first, then H2, H3 and H4. By default, heroes stand on the stairway and turn with its picture; if the quest starts in a room, they take its first free squares. You can move them with the Heroes tool or here."))
         {
             foreach (HeroStartEntry h in model.SortedHeroStarts()) HeroStartRow(h);
-            if (GUILayout.Button(new GUIContent("Positions par défaut", "Replace les 4 héros sur l'escalier, ou dans la salle de départ si la quête commence dans une salle."), GUILayout.Width(150)))
+            if (TipButton("Default positions", "Puts the 4 heroes back on the stairway, or in the starting room if the quest starts in a room.", GUILayout.Width(150)))
                 Defer(() => model.heroStarts = model.DefaultHeroStarts());
         }
 
-        if (FoldHelp("blocked", "Cases bloquées (" + model.blocked.Count + ")", false, "Les cases que personne ne peut traverser."))
+        if (FoldHelp("blocked", "Blocked squares (" + model.blocked.Count + ")", false, "The squares nobody can go through."))
         {
             foreach (CellEntry c in model.blocked) BlockedRow(c);
         }
@@ -1304,13 +1329,13 @@ public class QuestEditorGUI
 
     bool RemoveButton()
     {
-        return GUILayout.Button(new GUIContent("×", "Supprimer"), GUILayout.Width(22));
+        return TipButton("×", "Delete", GUILayout.Width(22));
     }
 
     void NoteRow(NoteEntry note)
     {
         GUILayout.BeginHorizontal();
-        Label("lettre", 40);
+        Label("letter", 40);
         note.letter = StringField(note.letter, 30);
         CellFields(ref note.x, ref note.y);
         if (RemoveButton()) Defer(() => model.notes.Remove(note));
@@ -1324,7 +1349,7 @@ public class QuestEditorGUI
         GUILayout.BeginHorizontal();
         EnumCycle(mc, v => m.type = v.ToString(), 190, QuestEditorNames.Of);
         CellFields(ref m.x, ref m.y);
-        Label("nom", 30);
+        Label("name", 30);
         m.id = StringField(m.id, 0);
         if (RemoveButton()) Defer(() => model.monsters.Remove(m));
         GUILayout.EndHorizontal();
@@ -1333,22 +1358,22 @@ public class QuestEditorGUI
         GUILayout.Space(16);
         MonsterData baseStats = BaseStats(mc);
         bool custom = m.movement > 0 || m.attack > 0 || m.defense > 0 || m.body > 0 || m.mind > 0;
-        GUILayout.Label(custom ? "modifié" : "normal", hint, GUILayout.Width(52));
-        Label("dépl.", 34);
+        GUILayout.Label(custom ? "changed" : "normal", hint, GUILayout.Width(52));
+        Label("move", 34);
         m.movement = StatField(m.movement, baseStats != null ? baseStats.movementCases : 0, 26);
         Label("att.", 26);
         m.attack = StatField(m.attack, baseStats != null ? baseStats.attackDices : 0, 26);
-        Label("déf.", 28);
+        Label("def.", 28);
         m.defense = StatField(m.defense, baseStats != null ? baseStats.defenseDices : 0, 26);
-        Label("corps", 36);
+        Label("body", 36);
         m.body = StatField(m.body, baseStats != null ? baseStats.health : 0, 26);
-        Label("esprit", 40);
+        Label("mind", 40);
         m.mind = StatField(m.mind, baseStats != null ? baseStats.spirit : 0, 26);
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
         GUILayout.Space(16);
-        ToggleField(m.hidden, "caché", v => m.hidden = v, 64);
+        ToggleField(m.hidden, "hidden", v => m.hidden = v, 64);
         ToggleField(m.statue, "statue", v => m.statue = v, 64);
         MonsterTrigger wake = QuestEditorModel.ParseEnum(m.wakeOn, MonsterTrigger.Aucun);
         EnumCycle(wake, v => { m.wakeOn = v == MonsterTrigger.Aucun ? "" : v.ToString(); }, 250, QuestEditorNames.Of);
@@ -1358,7 +1383,7 @@ public class QuestEditorGUI
 
         GUILayout.BeginHorizontal();
         GUILayout.Space(16);
-        Label("objet laissé à sa mort", 140);
+        Label("item left on death", 140);
         m.item = StringField(m.item, 0);
         GUILayout.EndHorizontal();
         GUILayout.Space(4);
@@ -1367,14 +1392,14 @@ public class QuestEditorGUI
     void AllyRow(AllyEntry a)
     {
         GUILayout.BeginHorizontal();
-        Label("nom", 30);
+        Label("name", 30);
         a.id = StringField(a.id, 90);
         CellFields(ref a.x, ref a.y);
         Label("att.", 26);
         a.attack = Mathf.Max(0, IntField(a.attack, 26));
-        Label("déf.", 28);
+        Label("def.", 28);
         a.defense = Mathf.Max(0, IntField(a.defense, 26));
-        Label("corps", 36);
+        Label("body", 36);
         a.body = Mathf.Max(0, IntField(a.body, 26));
         if (RemoveButton()) Defer(() => model.allies.Remove(a));
         GUILayout.EndHorizontal();
@@ -1384,22 +1409,22 @@ public class QuestEditorGUI
     {
         GUILayout.BeginHorizontal();
         CellFields(ref tr.x, ref tr.y);
-        Label("or", 20);
+        Label("gold", 30);
         tr.gold = Mathf.Max(0, IntField(tr.gold, 44));
-        Label("objet", 36);
+        Label("item", 34);
         tr.item = StringField(tr.item, 0);
         if (RemoveButton()) Defer(() => model.treasures.Remove(tr));
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
         GUILayout.Space(16);
-        ToggleField(tr.trapped, "piégé", v => tr.trapped = v, 64);
+        ToggleField(tr.trapped, "trapped", v => tr.trapped = v, 64);
         if (tr.trapped)
         {
-            Label("perte de corps", 96);
+            Label("body lost", 96);
             tr.trapDamage = Mathf.Max(0, IntField(tr.trapDamage, 30));
         }
-        Label("à vaincre d'abord", 110);
+        Label("defeat first", 110);
         string kills = tr.requiredKills != null ? string.Join(", ", tr.requiredKills) : "";
         string editedKills = StringField(kills, 0);
         if (editedKills != kills) tr.requiredKills = SplitNames(editedKills);
@@ -1410,7 +1435,7 @@ public class QuestEditorGUI
     void MarkerRow(MarkerEntry mk)
     {
         GUILayout.BeginHorizontal();
-        Label("étiquette", 64);
+        Label("label", 64);
         mk.label = StringField(mk.label, 50);
         CellFields(ref mk.x, ref mk.y);
         if (RemoveButton()) Defer(() => model.markers.Remove(mk));
@@ -1422,9 +1447,9 @@ public class QuestEditorGUI
         GUILayout.BeginHorizontal();
         EnumCycle(QuestEditorModel.ParseEnum(f.type, FurnitureType.Table), v => f.type = v.ToString(), 190, QuestEditorNames.Of);
         CellFields(ref f.x, ref f.y);
-        Label("larg.", 34);
+        Label("width", 42);
         f.width = Mathf.Max(1, IntField(f.width, 28));
-        Label("haut.", 34);
+        Label("height", 46);
         f.height = Mathf.Max(1, IntField(f.height, 28));
 
         int rotIndex = Mathf.Max(0, Array.IndexOf(QuestEditorModel.RotationValues, ((f.rotation % 360) + 360) % 360));
@@ -1544,16 +1569,16 @@ public class QuestEditorGUI
         GUILayout.BeginVertical(GUI.skin.box);
         if (selected == null)
         {
-            GUILayout.Label("Cliquez sur un élément du plateau (monstre, porte, trésor, meuble…) pour le modifier ici.", hint);
+            GUILayout.Label("Click an element on the board (monster, door, treasure, furniture…) to edit it here.", hint);
             GUILayout.EndVertical();
             GUILayout.Space(8);
             return;
         }
 
         GUILayout.BeginHorizontal();
-        GUILayout.Label("Sélection : " + SelectionName(selected), bold);
+        GUILayout.Label("Selection: " + SelectionName(selected), bold);
         GUILayout.FlexibleSpace();
-        if (GUILayout.Button("Fermer", GUILayout.Width(70))) Defer(() => selected = null);
+        if (GUILayout.Button("Close", GUILayout.Width(70))) Defer(() => selected = null);
         GUILayout.EndHorizontal();
 
         object item = selected;
@@ -1580,23 +1605,23 @@ public class QuestEditorGUI
 
     string SelectionName(object item)
     {
-        if (item == model.stairs) return "l'escalier";
+        if (item == model.stairs) return "the stairway";
         if (item is DoorEntry)
         {
             DoorEntry d = (DoorEntry)item;
-            if (model.secretDoors.Contains(d)) return "porte secrète";
-            if (model.falseDoors.Contains(d)) return "fausse porte";
-            return "porte";
+            if (model.secretDoors.Contains(d)) return "secret door";
+            if (model.falseDoors.Contains(d)) return "false door";
+            return "door";
         }
         if (item is MonsterEntry) return QuestEditorNames.Of(QuestEditorModel.ParseEnum(((MonsterEntry)item).type, MonsterClass.Gobelin));
-        if (item is AllyEntry) return "allié";
-        if (item is TreasureEntry) return "trésor";
-        if (item is TrapEntry) return "piège";
-        if (item is MarkerEntry) return "repère";
+        if (item is AllyEntry) return "ally";
+        if (item is TreasureEntry) return "treasure";
+        if (item is TrapEntry) return "trap";
+        if (item is MarkerEntry) return "marker";
         if (item is NoteEntry) return "note " + ((NoteEntry)item).letter;
         if (item is FurnitureEntry) return QuestEditorNames.Of(QuestEditorModel.ParseEnum(((FurnitureEntry)item).type, FurnitureType.Table));
-        if (item is HeroStartEntry) return "départ du héros H" + ((HeroStartEntry)item).slot;
-        if (item is CellEntry) return "case bloquée";
+        if (item is HeroStartEntry) return "start of hero H" + ((HeroStartEntry)item).slot;
+        if (item is CellEntry) return "blocked square";
         return "";
     }
 

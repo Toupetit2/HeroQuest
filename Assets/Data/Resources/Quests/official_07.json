@@ -1,6 +1,6 @@
 {
   "number": 7,
-  "title": "Le mage disparu",
+  "title": "The Lost Wizard",
   "stairs": { "x": 7, "y": 4, "width": 2, "height": 2 },
   "start": { "type": "stairs", "room": "", "heroes": [ { "slot": 1, "x": 8, "y": 5 }, { "slot": 2, "x": 7, "y": 5 }, { "slot": 3, "x": 8, "y": 4 }, { "slot": 4, "x": 7, "y": 4 } ] },
 
@@ -73,9 +73,9 @@
     ]
   },
 
-  "intro": "Wardoz, le mage personnel du roi, a disparu. Le roi craint qu'il ait ete tue ou corrompu par la magie de l'effroi. Decouvrez ce qui lui est arrive, puis revenez a l'escalier.",
-  "parchment": "Wardoz, le mage personnel du roi, a disparu. Le roi craint qu'il ait ete tue ou corrompu par la magie de l'effroi. Decouvrez ce qui lui est arrive, puis revenez a l'escalier.",
-  "zargonNote": "A : les guerriers de l'effroi sont en pierre et lancent 1 de de defense en plus. B : l'armure de Borin dans la salle d'armes. C : coffre piege (2 points de corps) contenant une fiole violette ; celui qui la boit devient une statue pendant 5 tours, sans pouvoir bouger ni etre blesse. D : le zombie en robe est Wardoz ; une fois detruit, la salle donne 144 pieces d'or et ses papiers. Recompense : 100 pieces d'or par heros au retour a l'escalier.",
+  "intro": "Wardoz, the King's own wizard, has disappeared. The King fears he was killed or corrupted by Dread magic. Find out what happened to him, then return to the stairway.",
+  "parchment": "Wardoz, the King's own wizard, has disappeared. The King fears he was killed or corrupted by Dread magic. Find out what happened to him, then return to the stairway.",
+  "zargonNote": "A: the Dread warriors are made of stone and roll 1 extra defend die. B: Borin's Armor in the weapons room. C: trapped chest (2 Body points) holding a purple flask; whoever drinks it turns into a statue for 5 turns, unable to move or be wounded. D: the zombie in robes is Wardoz; once destroyed, the room gives 144 gold coins and his papers. Reward: 100 gold coins per hero back at the stairway.",
 
   "treasures": [
     { "x": 7, "y": 13, "item": "FioleViolette", "trapped": true, "trapDamage": 2 },

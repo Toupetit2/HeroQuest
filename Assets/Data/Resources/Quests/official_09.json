@@ -1,6 +1,6 @@
 {
   "number": 9,
-  "title": "Course contre la montre",
+  "title": "Race Against Time",
   "stairs": { "x": 7, "y": 4, "width": 2, "height": 2 },
   "start": { "type": "room", "room": "S21", "heroes": [ { "slot": 1, "x": 18, "y": 15 }, { "slot": 2, "x": 19, "y": 15 }, { "slot": 3, "x": 18, "y": 16 }, { "slot": 4, "x": 19, "y": 16 } ] },
 
@@ -76,9 +76,9 @@
     ]
   },
 
-  "intro": "Un guide vous a menes au fond d'un labyrinthe puis a souffle sa torche et s'est enfui. C'etait un piege : retrouvez l'escalier pour sortir.",
-  "parchment": "Un guide vous a menes au fond d'un labyrinthe puis a souffle sa torche et s'est enfui. C'etait un piege : retrouvez l'escalier pour sortir.",
-  "zargonNote": "Les heros commencent dans la salle A. B : chaque coffre contient 100 pieces d'or. C : coffre piege au gaz (3 points de corps) contenant l'elixir de vie. Il faut ressortir par l'escalier.",
+  "intro": "A guide led you deep into a maze, then blew out his torch and ran away. It was a trap: find the stairway to get out.",
+  "parchment": "A guide led you deep into a maze, then blew out his torch and ran away. It was a trap: find the stairway to get out.",
+  "zargonNote": "The heroes start in room A. B: each chest holds 100 gold coins. C: chest with a poison gas trap (3 Body points) holding the Elixir of Life. The heroes must get out through the stairway.",
 
   "treasures": [
     { "x": 6, "y": 10, "gold": 100 },

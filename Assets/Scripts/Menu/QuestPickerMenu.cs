@@ -122,7 +122,7 @@ public class QuestPickerMenu : MonoBehaviour
                 info.title = quest.title;
             }
         }
-        catch (Exception) { info.title = "(fichier illisible)"; }
+        catch (Exception) { info.title = "(unreadable file)"; }
         return info;
     }
 
@@ -192,7 +192,7 @@ public class QuestPickerMenu : MonoBehaviour
 
     void DrawContent()
     {
-        GUILayout.Label(campaign ? "Campagne" : "Mes quêtes", titleStyle, GUILayout.Height(65f));
+        GUILayout.Label(campaign ? "Campaign" : "My quests", titleStyle, GUILayout.Height(65f));
         GUILayout.Space(10f);
 
         if (campaign) DrawCampaign();
@@ -230,7 +230,7 @@ public class QuestPickerMenu : MonoBehaviour
         int completed = CampaignProgress.CompletedCount;
         bool finished = CampaignProgress.IsFinished;
 
-        GUILayout.Label("Progression de la campagne  •  " + completed + " / " + chapters.Count, infoStyle);
+        GUILayout.Label("Campaign progress  •  " + completed + " / " + chapters.Count, infoStyle);
         GUILayout.Space(8f);
         DrawProgressBar(completed, chapters.Count);
         GUILayout.Space(13f);
@@ -238,22 +238,22 @@ public class QuestPickerMenu : MonoBehaviour
         if (confirmReset)
         {
             GUILayout.Space(26f);
-            GUILayout.Label("Recommencer la campagne ?", sectionStyle);
+            GUILayout.Label("Restart the campaign?", sectionStyle);
             GUILayout.Space(8f);
-            GUILayout.Label("Ta progression sera remise à zéro. Les quêtes personnalisées ne seront pas supprimées.", infoStyle);
+            GUILayout.Label("Your progress will be reset. Custom quests will not be deleted.", infoStyle);
             GUILayout.FlexibleSpace();
-            if (Button("Oui, recommencer depuis la quête 1", true, dangerStyle))
+            if (Button("Yes, restart from quest 1", true, dangerStyle))
                 Defer(() => { CampaignProgress.Reset(); QuestSelection.Clear(); confirmReset = false; Refresh(); });
-            if (Button("Annuler", true)) Defer(() => confirmReset = false);
+            if (Button("Cancel", true)) Defer(() => confirmReset = false);
         }
         else if (chapters.Count == 0)
         {
-            GUILayout.Label("Aucune quête officielle trouvée dans Resources/Quests.", infoStyle);
+            GUILayout.Label("No official quest found.", infoStyle);
             GUILayout.FlexibleSpace();
         }
         else if (finished)
         {
-            GUILayout.Label("Campagne terminée ! Choisis un niveau à rejouer :", infoStyle);
+            GUILayout.Label("Campaign complete! Choose a quest to replay:", infoStyle);
             GUILayout.Space(6f);
             float availableHeight = Mathf.Clamp((Screen.height / Mathf.Max(0.72f, Screen.height / 720f)) * 0.31f, 145f, 225f);
             scroll = GUILayout.BeginScrollView(scroll, GUILayout.Height(availableHeight));
@@ -269,9 +269,9 @@ public class QuestPickerMenu : MonoBehaviour
             if (selectedReplay >= 0 && selectedReplay < chapters.Count)
             {
                 CampaignProgress.Chapter chapter = chapters[selectedReplay];
-                GUILayout.Label("Quête " + chapter.number + " : " + chapter.title, smallStyle);
+                GUILayout.Label("Quest " + chapter.number + ": " + chapter.title, smallStyle);
             }
-            if (Button("Rejouer la quête sélectionnée", selectedReplay >= 0 && selectedReplay < chapters.Count))
+            if (Button("Replay the selected quest", selectedReplay >= 0 && selectedReplay < chapters.Count))
                 Defer(() => PlayReplay(chapters));
             GUILayout.FlexibleSpace();
         }
@@ -281,25 +281,25 @@ public class QuestPickerMenu : MonoBehaviour
             if (CampaignProgress.TryGetNext(out next))
             {
                 GUILayout.Space(38f);
-                GUILayout.Label(completed == 0 ? "Le début de l'aventure" : "Prochain chapitre débloqué", infoStyle);
+                GUILayout.Label(completed == 0 ? "The adventure begins" : "Next chapter unlocked", infoStyle);
                 GUILayout.Space(13f);
-                GUILayout.Label("Quête " + next.number + " : " + next.title, sectionStyle);
+                GUILayout.Label("Quest " + next.number + ": " + next.title, sectionStyle);
                 GUILayout.Space(22f);
-                if (Button(completed == 0 ? "Commencer la campagne" : "Continuer la campagne", true))
+                if (Button(completed == 0 ? "Start the campaign" : "Continue the campaign", true))
                     Defer(PlayCampaign);
             }
             GUILayout.FlexibleSpace();
         }
 
-        if (!confirmReset && completed > 0 && Button("Recommencer la campagne", true, dangerStyle))
+        if (!confirmReset && completed > 0 && Button("Restart the campaign", true, dangerStyle))
             Defer(() => confirmReset = true);
-        if (Button("Retour au menu principal", true)) Defer(Close);
+        if (Button("Back to main menu", true)) Defer(Close);
     }
 
     void ReplayItem(List<CampaignProgress.Chapter> chapters, int index)
     {
         CampaignProgress.Chapter chapter = chapters[index];
-        string title = string.IsNullOrEmpty(chapter.title) ? "Sans titre" : chapter.title;
+        string title = string.IsNullOrEmpty(chapter.title) ? "Untitled" : chapter.title;
         if (title.Length > 29) title = title.Substring(0, 26) + "...";
         string caption = chapter.number.ToString("00") + "  " + title;
         if (GUILayout.Button(caption, index == selectedReplay ? selectedStyle : listStyle,
@@ -312,11 +312,11 @@ public class QuestPickerMenu : MonoBehaviour
 
     void DrawPersonalQuests()
     {
-        GUILayout.Label("Les quêtes créées par les joueurs sont indépendantes de la campagne.", infoStyle);
+        GUILayout.Label("Quests created by players are separate from the campaign.", infoStyle);
         GUILayout.Space(14f);
         if (quests.Count == 0)
         {
-            GUILayout.Label("Aucune quête personnelle enregistrée. Crée-en une dans l'éditeur de quêtes.", sectionStyle);
+            GUILayout.Label("No custom quest saved yet. Create one in the quest editor.", sectionStyle);
             GUILayout.FlexibleSpace();
         }
         else
@@ -325,7 +325,7 @@ public class QuestPickerMenu : MonoBehaviour
             for (int i = 0; i < quests.Count; i++)
             {
                 QuestInfo quest = quests[i];
-                string label = (quest.number > 0 ? "Quête " + quest.number + " : " : "") +
+                string label = (quest.number > 0 ? "Quest " + quest.number + ": " : "") +
                     (string.IsNullOrEmpty(quest.title) ? quest.file : quest.title);
                 if (GUILayout.Button(label, i == selected ? selectedStyle : listStyle, GUILayout.Height(43f)))
                 {
@@ -337,15 +337,15 @@ public class QuestPickerMenu : MonoBehaviour
             GUILayout.FlexibleSpace();
         }
 
-        if (Button("Lancer la quête sélectionnée", selected >= 0 && selected < quests.Count))
+        if (Button("Play the selected quest", selected >= 0 && selected < quests.Count))
             Defer(PlayPersonalQuest);
-        if (Button("Retour au menu principal", true)) Defer(Close);
+        if (Button("Back to main menu", true)) Defer(Close);
     }
 
     bool CanLoadScene()
     {
         if (!string.IsNullOrEmpty(gameScene) && Application.CanStreamedLevelBeLoaded(gameScene)) return true;
-        status = "Scène « " + gameScene + " » absente des Build Settings.";
+        status = "Scene \"" + gameScene + "\" is missing from the Build Settings.";
         Debug.LogWarning("QuestPickerMenu : " + status);
         return false;
     }
@@ -355,7 +355,7 @@ public class QuestPickerMenu : MonoBehaviour
         if (!CanLoadScene()) return;
         if (!QuestSelection.TrySelectNextCampaign())
         {
-            status = "Aucun chapitre disponible.";
+            status = "No chapter available.";
             return;
         }
         SceneManager.LoadScene(gameScene);
@@ -366,7 +366,7 @@ public class QuestPickerMenu : MonoBehaviour
         if (!CampaignProgress.IsFinished || selectedReplay < 0 || selectedReplay >= chapters.Count || !CanLoadScene()) return;
         if (!QuestSelection.TrySelectReplayCampaign(chapters[selectedReplay].fileName))
         {
-            status = "Impossible de sélectionner ce chapitre.";
+            status = "Cannot select this chapter.";
             return;
         }
         SceneManager.LoadScene(gameScene);

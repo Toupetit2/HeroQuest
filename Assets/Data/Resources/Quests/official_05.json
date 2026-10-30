@@ -1,6 +1,6 @@
 {
   "number": 5,
-  "title": "Le labyrinthe de Melar",
+  "title": "Melar's Maze",
   "stairs": { "x": 3, "y": 1, "width": 2, "height": 2 },
   "start": { "type": "stairs", "room": "", "heroes": [ { "slot": 1, "x": 4, "y": 2 }, { "slot": 2, "x": 3, "y": 2 }, { "slot": 3, "x": 4, "y": 1 }, { "slot": 4, "x": 3, "y": 1 } ] },
 
@@ -86,9 +86,9 @@
     ]
   },
 
-  "intro": "Le mage Melar a cache un talisman qui aiguise l'esprit de celui qui le porte, au coeur de son labyrinthe souterrain. Trouvez-le avant les serviteurs de Zargon, en prenant garde aux pieges.",
-  "parchment": "Le mage Melar a cache un talisman qui aiguise l'esprit de celui qui le porte, au coeur de son labyrinthe souterrain. Trouvez-le avant les serviteurs de Zargon, en prenant garde aux pieges.",
-  "zargonNote": "A : une potion de soin (2 points de corps) sur l'etabli. B : la gargouille est une statue qui s'anime quand un heros ouvre la porte de la salle suivante ; elle ne peut pas etre blessee tant qu'elle n'a ni bouge ni attaque. C : coffre piege au gaz (2 points de corps), 144 pieces d'or, rien d'autre dans la salle. D : le Talisman du savoir. E : aucune porte secrete a trouver en cherchant, mais fouiller donne la cle de Melar, qui fait glisser le trone et revele une porte secrete.",
+  "intro": "The wizard Melar hid a talisman that sharpens the mind of whoever wears it, deep in his underground maze. Find it before Zargon's servants do, and beware of the traps.",
+  "parchment": "The wizard Melar hid a talisman that sharpens the mind of whoever wears it, deep in his underground maze. Find it before Zargon's servants do, and beware of the traps.",
+  "zargonNote": "A: a healing potion (2 Body points) on the bench. B: the gargoyle is a statue that comes to life when a hero opens the door of the next room; it cannot be wounded until it has moved or attacked. C: chest with a poison gas trap (2 Body points), 144 gold coins, nothing else in the room. D: the Talisman of Lore. E: no secret door to find by searching, but searching for treasure gives Melar's key, which slides the throne aside and reveals a secret door.",
 
   "treasures": [
     { "x": 8, "y": 5, "item": "PotionDeSoin2" },

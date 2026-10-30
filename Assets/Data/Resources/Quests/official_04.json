@@ -1,6 +1,6 @@
 {
   "number": 4,
-  "title": "L'or du prince Magnus",
+  "title": "Prince Magnus' Gold",
   "stairs": { "x": 19, "y": 14, "width": 2, "height": 2 },
   "start": { "type": "stairs", "room": "", "heroes": [ { "slot": 1, "x": 20, "y": 15 }, { "slot": 2, "x": 19, "y": 15 }, { "slot": 3, "x": 20, "y": 14 }, { "slot": 4, "x": 19, "y": 14 } ] },
 
@@ -92,9 +92,9 @@
     ]
   },
 
-  "intro": "Une bande d'orcs menee par Gulthor, un guerrier de l'effroi, a vole trois coffres d'or destines au roi. Rapportez les trois coffres a l'escalier, sans toucher a l'or qu'ils contiennent.",
-  "parchment": "Une bande d'orcs menee par Gulthor, un guerrier de l'effroi, a vole trois coffres d'or destines au roi. Rapportez les trois coffres a l'escalier, sans toucher a l'or qu'ils contiennent.",
-  "zargonNote": "Les trois coffres du roi sont gardes par Gulthor, un guerrier de l'effroi. Un heros ne porte qu'un coffre a la fois et ne lance alors qu'un de pour se deplacer. L'or doit rester dans les coffres. Recompense : 240 pieces d'or a partager si les trois coffres reviennent a l'escalier.",
+  "intro": "A band of orcs led by Gulthor, a Dread warrior, stole three chests of gold meant for the King. Bring the three chests back to the stairway, without touching the gold inside.",
+  "parchment": "A band of orcs led by Gulthor, a Dread warrior, stole three chests of gold meant for the King. Bring the three chests back to the stairway, without touching the gold inside.",
+  "zargonNote": "The King's three chests are guarded by Gulthor, a Dread warrior. A hero carries only one chest at a time and then rolls only one die to move. The gold must stay in the chests. Reward: 240 gold coins to share if the three chests reach the stairway.",
 
   "rules": ["CoffresLourds"],
 

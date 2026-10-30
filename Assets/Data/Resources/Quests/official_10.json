@@ -1,6 +1,6 @@
 {
   "number": 10,
-  "title": "Le chateau du mystere",
+  "title": "Castle of Mystery",
   "stairs": { "x": 1, "y": 16, "width": 2, "height": 2 },
   "start": { "type": "stairs", "room": "", "heroes": [ { "slot": 1, "x": 2, "y": 17 }, { "slot": 2, "x": 1, "y": 17 }, { "slot": 3, "x": 2, "y": 16 }, { "slot": 4, "x": 1, "y": 16 } ] },
 
@@ -58,9 +58,9 @@
     ]
   },
 
-  "intro": "Le mage Ollar a bati un chateau magique au-dessus d'une mine d'or. Ses portes enchantees deplacent ceux qui les franchissent. Trouvez l'entree de la mine, puis tuez tous les monstres ou retrouvez l'escalier.",
-  "parchment": "Le mage Ollar a bati un chateau magique au-dessus d'une mine d'or. Ses portes enchantees deplacent ceux qui les franchissent. Trouvez l'entree de la mine, puis tuez tous les monstres ou retrouvez l'escalier.",
-  "zargonNote": "Franchir une porte arrete le heros : il lance 2 des rouges et se teleporte sur le repere du meme total. Si la case est occupee, l'occupant perd 1 point de corps et se teleporte a son tour (on relance si on retombe sur la meme case). Une seule porte par tour. A : si les deux guerriers de l'effroi sont vaincus, l'anneau de retour. B : entree de la mine, 5000 pieces d'or ; les porter empeche d'attaquer et de se defendre, les poser les fait disparaitre, et a la fin c'est de l'or sans valeur. Fin : tous les monstres vaincus, ou tous les heros sortis par l'escalier sur un 2 ou un 12. Pas de monstre errant : le fantome d'Ollar ricane et disparait.",
+  "intro": "The wizard Ollar built a magic castle above a gold mine. Its enchanted doors move whoever goes through them. Find the entrance to the mine, then kill every monster or find the stairway.",
+  "parchment": "The wizard Ollar built a magic castle above a gold mine. Its enchanted doors move whoever goes through them. Find the entrance to the mine, then kill every monster or find the stairway.",
+  "zargonNote": "Going through a door stops the hero: roll 2 red dice and teleport to the marker with the same total. If the square is taken, its occupant loses 1 Body point and teleports in turn (roll again if you land on the same square). Only one door per turn. A: if both Dread warriors are defeated, the Ring of Return. B: entrance to the mine, 5000 gold coins; carrying them prevents attacking and defending, dropping them makes them vanish, and at the end it is fool's gold. End: all monsters defeated, or every hero out through the stairway on a 2 or a 12. No wandering monster: Ollar's ghost laughs and vanishes.",
 
   "treasures": [
     { "x": 23, "y": 11, "item": "AnneauDuRetour", "requiredKills": ["guerrier1", "guerrier2"] }

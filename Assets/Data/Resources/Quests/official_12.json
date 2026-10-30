@@ -1,6 +1,6 @@
 {
   "number": 12,
-  "title": "Barak Tor, le tertre du seigneur sorcier",
+  "title": "Barak Tor - Barrow of the Witch Lord",
   "stairs": { "x": 1, "y": 14, "width": 2, "height": 2 },
   "start": { "type": "stairs", "room": "", "heroes": [ { "slot": 1, "x": 2, "y": 15 }, { "slot": 2, "x": 1, "y": 15 }, { "slot": 3, "x": 2, "y": 14 }, { "slot": 4, "x": 1, "y": 14 } ] },
 
@@ -87,9 +87,9 @@
     ]
   },
 
-  "intro": "Pour unir le royaume avant la guerre contre les orcs, le roi veut l'Etoile de l'Ouest. Elle repose a Barak Tor, le tombeau du seigneur sorcier, vaincu jadis par l'Epee de l'Esprit. Rapportez l'Etoile a l'escalier.",
-  "parchment": "Pour unir le royaume avant la guerre contre les orcs, le roi veut l'Etoile de l'Ouest. Elle repose a Barak Tor, le tombeau du seigneur sorcier, vaincu jadis par l'Epee de l'Esprit. Rapportez l'Etoile a l'escalier.",
-  "zargonNote": "A : fausses portes, elles ne s'ouvrent jamais. B : l'Etoile de l'Ouest est dans la main du zombie. C : bloc qui tombe tout seul apres le passage du dernier heros et coupe le chemin de l'escalier. D : tombeau du seigneur sorcier ; il se reveille sur la case X des qu'un heros entre dans la salle. Seule l'Epee de l'Esprit peut le blesser ; il avance d'une case par tour, lance 2 des d'attaque et connait appel des morts, peur, commandement et boule de feu. E : le baton du sorcier, cache derriere la bibliotheque. Recompense : 200 pieces d'or a partager.",
+  "intro": "To unite the kingdom before the war against the orcs, the King wants the Star of the West. It lies in Barak Tor, the tomb of the Witch Lord, once defeated by the Spirit Blade. Bring the Star back to the stairway.",
+  "parchment": "To unite the kingdom before the war against the orcs, the King wants the Star of the West. It lies in Barak Tor, the tomb of the Witch Lord, once defeated by the Spirit Blade. Bring the Star back to the stairway.",
+  "zargonNote": "A: false doors, they never open. B: the Star of the West is in the zombie's hand. C: falling block that drops by itself after the last hero passes and cuts off the way to the stairway. D: the Witch Lord's tomb; he wakes up on square X as soon as a hero enters the room. Only the Spirit Blade can harm him; he moves one square per turn, rolls 2 attack dice and knows summon undead, fear, command and ball of flame. E: the wizard's staff, hidden behind the bookcase. Reward: 200 gold coins to share.",
 
   "treasures": [
     { "x": 5, "y": 17, "item": "BatonDuSorcier" }

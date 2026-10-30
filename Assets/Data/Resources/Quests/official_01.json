@@ -1,6 +1,6 @@
 {
   "number": 1,
-  "title": "L'Epreuve",
+  "title": "The Trial",
   "stairs": { "x": 1, "y": 14, "width": 2, "height": 2 },
   "start": { "type": "stairs", "room": "", "heroes": [ { "slot": 1, "x": 2, "y": 15 }, { "slot": 2, "x": 1, "y": 15 }, { "slot": 3, "x": 2, "y": 14 }, { "slot": 4, "x": 1, "y": 14 } ] },
 
@@ -76,9 +76,9 @@
   "traps": [],
   "wanderingMonster": "Orc",
 
-  "intro": "Votre premiere epreuve : descendez dans les catacombes du tombeau de Fellmarg et detruisez Verag, la gargouille qui s'y cache. Restez unis, seuls vous n'y survivrez pas.",
-  "parchment": "Votre premiere epreuve : descendez dans les catacombes du tombeau de Fellmarg et detruisez Verag, la gargouille qui s'y cache. Restez unis, seuls vous n'y survivrez pas.",
-  "zargonNote": "Verag est la gargouille a vaincre. La momie qui garde le tombeau de Fellmarg lance 4 des d'attaque. Deux tresors d'or sont caches : 84 et 120 pieces.",
+  "intro": "Your first trial: go down into the catacombs of Fellmarg's tomb and destroy Verag, the gargoyle hiding there. Stay together, alone you will not survive.",
+  "parchment": "Your first trial: go down into the catacombs of Fellmarg's tomb and destroy Verag, the gargoyle hiding there. Stay together, alone you will not survive.",
+  "zargonNote": "Verag is the gargoyle to defeat. The mummy guarding Fellmarg's tomb rolls 4 attack dice. Two gold treasures are hidden: 84 and 120 coins.",
 
   "treasures": [
     { "x": 11, "y": 15 },

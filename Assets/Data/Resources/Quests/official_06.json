@@ -1,6 +1,6 @@
 {
   "number": 6,
-  "title": "L'heritage du seigneur orc",
+  "title": "Legacy of the Orc Warlord",
   "stairs": { "x": 5, "y": 13, "width": 2, "height": 2 },
   "start": { "type": "room", "room": "S13", "heroes": [ { "slot": 1, "x": 5, "y": 10 }, { "slot": 2, "x": 6, "y": 10 }, { "slot": 3, "x": 5, "y": 11 }, { "slot": 4, "x": 6, "y": 11 } ] },
 
@@ -79,9 +79,9 @@
     ]
   },
 
-  "intro": "Grak, le fils d'Ulag, vous a captures pour venger son pere. Vous avez reussi a ouvrir votre cellule : retrouvez votre equipement et fuyez par l'escalier.",
-  "parchment": "Grak, le fils d'Ulag, vous a captures pour venger son pere. Vous avez reussi a ouvrir votre cellule : retrouvez votre equipement et fuyez par l'escalier.",
-  "zargonNote": "Les heros commencent dans la cellule, sans equipement ni sorts : ils attaquent avec 1 de et se defendent avec 2. On ne fouille pas la cellule. A : l'equipement est dans le placard ; chaque heros doit entrer dans la salle pour reprendre le sien, et les sorts reviennent alors. B : l'escalier mene a la liberte. Grak (deplacement 8, attaque 4, defense 4, corps 3, esprit 3) porte la cape du sorcier et peut lancer peur, sommeil et tempete a la place d'une attaque.",
+  "intro": "Grak, Ulag's son, captured you to avenge his father. You managed to open your cell: find your equipment and escape through the stairway.",
+  "parchment": "Grak, Ulag's son, captured you to avenge his father. You managed to open your cell: find your equipment and escape through the stairway.",
+  "zargonNote": "The heroes start in the cell, without equipment or spells: they attack with 1 die and defend with 2. The cell cannot be searched. A: the equipment is in the cupboard; each hero must enter the room to take theirs back, and spells come back then. B: the stairway leads to freedom. Grak (movement 8, attack 4, defend 4, body 3, mind 3) wears the wizard's cloak and can cast fear, sleep and tempest instead of attacking.",
 
   "treasures": [
     { "x": 1, "y": 3, "item": "EquipementDesHeros" }

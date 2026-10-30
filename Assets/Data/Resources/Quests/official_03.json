@@ -1,6 +1,6 @@
 {
   "number": 3,
-  "title": "Le repaire du seigneur orc",
+  "title": "Lair of the Orc Warlord",
   "stairs": { "x": 9, "y": 1, "width": 2, "height": 2 },
   "start": { "type": "stairs", "room": "", "heroes": [ { "slot": 1, "x": 10, "y": 2 }, { "slot": 2, "x": 9, "y": 2 }, { "slot": 3, "x": 10, "y": 1 }, { "slot": 4, "x": 9, "y": 1 } ] },
 
@@ -67,9 +67,9 @@
     ]
   },
 
-  "intro": "Le prince Magnus veut la fin d'Ulag, le seigneur orc qui a fait enfermer Sir Ragnar. Trouvez-le dans son repaire, detruisez-le, puis revenez a l'escalier.",
-  "parchment": "Le prince Magnus veut la fin d'Ulag, le seigneur orc qui a fait enfermer Sir Ragnar. Trouvez-le dans son repaire, detruisez-le, puis revenez a l'escalier.",
-  "zargonNote": "Ulag, le seigneur orc, est bien plus fort qu'un orc normal (deplacement 10, attaque 4, defense 5, corps 2, esprit 3). Tresors : un baton, puis une potion de soin et 24 pieces d'or. Recompense : 180 pieces d'or a partager pour la mort d'Ulag.",
+  "intro": "Prince Magnus wants the end of Ulag, the orc warlord who had Sir Ragnar locked up. Find him in his lair, destroy him, then return to the stairway.",
+  "parchment": "Prince Magnus wants the end of Ulag, the orc warlord who had Sir Ragnar locked up. Find him in his lair, destroy him, then return to the stairway.",
+  "zargonNote": "Ulag, the orc warlord, is much stronger than a normal orc (movement 10, attack 4, defend 5, body 2, mind 3). Treasures: a staff, then a healing potion and 24 gold coins. Reward: 180 gold coins to share for Ulag's death.",
 
   "treasures": [
     { "x": 3, "y": 3, "item": "Baton" },

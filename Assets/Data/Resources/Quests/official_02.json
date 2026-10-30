@@ -1,6 +1,6 @@
 {
   "number": 2,
-  "title": "Le sauvetage de Sir Ragnar",
+  "title": "The Rescue of Sir Ragnar",
   "stairs": { "x": 10, "y": 7, "width": 2, "height": 2 },
   "start": { "type": "stairs", "room": "", "heroes": [ { "slot": 1, "x": 11, "y": 8 }, { "slot": 2, "x": 10, "y": 8 }, { "slot": 3, "x": 11, "y": 7 }, { "slot": 4, "x": 10, "y": 7 } ] },
 
@@ -72,9 +72,9 @@
     ]
   },
 
-  "intro": "Sir Ragnar, un chevalier du roi, est retenu prisonnier par le seigneur orc Ulag. Retrouvez-le et ramenez-le vivant jusqu'a l'escalier.",
-  "parchment": "Sir Ragnar, un chevalier du roi, est retenu prisonnier par le seigneur orc Ulag. Retrouvez-le et ramenez-le vivant jusqu'a l'escalier.",
-  "zargonNote": "Sir Ragnar est prisonnier sur la case X ; on ne peut pas fouiller sa cellule. Des qu'un heros le trouve, l'alarme sonne : toutes les portes s'ouvrent. Ragnar n'attaque pas, se defend avec 2 des et n'a que 2 points de corps : s'il meurt, la quete est perdue. Un coffre est piege (1 point de corps). Recompense : 240 pieces d'or a partager.",
+  "intro": "Sir Ragnar, a knight of the King, is held prisoner by Ulag the orc warlord. Find him and bring him back alive to the stairway.",
+  "parchment": "Sir Ragnar, a knight of the King, is held prisoner by Ulag the orc warlord. Find him and bring him back alive to the stairway.",
+  "zargonNote": "Sir Ragnar is held prisoner on square X; his cell cannot be searched. As soon as a hero finds him, the alarm sounds: every door opens. Ragnar does not attack, defends with 2 dice and has only 2 Body points: if he dies, the quest is lost. One chest is trapped (1 Body point). Reward: 240 gold coins to share.",
 
   "treasures": [
     { "x": 2, "y": 13, "trapped": true, "trapDamage": 1 },

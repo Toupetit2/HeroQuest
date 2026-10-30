@@ -299,7 +299,7 @@ public class QuestEditorModel
         }
         catch (Exception e)
         {
-            message = "Impossible d'ouvrir la quête : " + e.Message;
+            message = "Cannot open the quest: " + e.Message;
             return;
         }
         if (q == null) return;
@@ -313,7 +313,7 @@ public class QuestEditorModel
             number = NextNumber();
             loadedFile = "";
             snapshot = "";
-            message = "Quête du livret ouverte : vos changements seront enregistrés comme une nouvelle quête (n°" + number + ").";
+            message = "Rulebook quest opened: your changes will be saved as a new quest (no. " + number + ").";
             return;
         }
 
@@ -423,7 +423,7 @@ public class QuestEditorModel
         }
         catch (Exception e)
         {
-            message = "Enregistrement impossible : " + e.Message;
+            message = "Cannot save: " + e.Message;
             return;
         }
 
@@ -432,7 +432,7 @@ public class QuestEditorModel
         RefreshFileList();
         int index = fileNames.IndexOf(name);
         if (index >= 0) selectedFile = index;
-        message = "Quête n°" + number + " enregistrée";
+        message = "Quest no. " + number + " saved";
     }
 
     // =====================================================================
@@ -470,7 +470,7 @@ public class QuestEditorModel
             case QuestPaintTool.Meuble:
                 if (cx + furnitureW > map.width || cy + furnitureH > map.height)
                 {
-                    message = "Le meuble dépasse du plateau";
+                    message = "The furniture goes off the board";
                     break;
                 }
                 furniture.Add(new FurnitureEntry
@@ -494,7 +494,7 @@ public class QuestEditorModel
             case QuestPaintTool.Tresor:
                 if (map.Get(cx, cy).IsCorridor())
                 {
-                    message = "Un trésor se trouve toujours dans une salle, pas dans un couloir";
+                    message = "A treasure is always in a room, never in a corridor";
                     break;
                 }
                 if (!treasures.Exists(tr => tr.x == cx && tr.y == cy))
@@ -650,7 +650,7 @@ public class QuestEditorModel
     {
         for (int i = 1; ; i++)
         {
-            string id = "allie" + i;
+            string id = "ally" + i;
             if (!allies.Exists(a => a.id == id)) return id;
         }
     }
@@ -669,7 +669,7 @@ public class QuestEditorModel
     public string EnsureMonsterId(MonsterEntry monster)
     {
         if (!string.IsNullOrEmpty(monster.id)) return monster.id;
-        string baseName = (monster.type ?? "monstre").ToLower();
+        string baseName = (monster.type ?? "monster").ToLower();
         for (int i = 1; ; i++)
         {
             string id = baseName + i;
@@ -681,7 +681,7 @@ public class QuestEditorModel
         }
     }
 
-    // objets des tresors poses (pour l'objectif "Trouver un objet")
+    // objets des tresors poses (pour l'objectif "Find an item")
     public List<TreasureEntry> TreasuresWithItem()
     {
         return treasures.FindAll(tr => !string.IsNullOrWhiteSpace(tr.item));
@@ -747,28 +747,28 @@ public class QuestEditorModel
         warnings.Clear();
         if (map == null) return;
 
-        if (string.IsNullOrWhiteSpace(title)) warnings.Add("La quête n'a pas de titre.");
-        if (number < 1) errors.Add("Le numéro de la quête doit être au moins 1.");
+        if (string.IsNullOrWhiteSpace(title)) warnings.Add("The quest has no title.");
+        if (number < 1) errors.Add("The quest number must be at least 1.");
 
         // escalier et depart
         if (!InRect(stairs.x, stairs.y, stairs.width, stairs.height))
-            errors.Add("L'escalier dépasse du plateau.");
+            errors.Add("The stairway goes off the board.");
         if (startType == "room" && (startRoom == "." || !zones.Contains(startRoom)))
-            errors.Add("Choisissez la salle de départ des héros.");
+            errors.Add("Choose the room where the heroes start.");
 
         // portes
         HashSet<string> edges = new HashSet<string>();
-        CheckDoors(doors, "Une porte", edges);
-        CheckDoors(secretDoors, "Une porte secrète", edges);
-        CheckDoors(falseDoors, "Une fausse porte", edges);
+        CheckDoors(doors, "A door", edges);
+        CheckDoors(secretDoors, "A secret door", edges);
+        CheckDoors(falseDoors, "A false door", edges);
 
         // zones de roche
         foreach (string z in rockZones)
-            if (!zones.Contains(z)) errors.Add("Zone de roche inconnue : " + ZoneName(z) + ".");
+            if (!zones.Contains(z)) errors.Add("Unknown solid rock area: " + ZoneName(z) + ".");
 
         // cases bloquees
         foreach (CellEntry c in blocked)
-            if (!map.InBounds(c.x, c.y)) errors.Add("Une case bloquée est hors du plateau " + Cell(c.x, c.y) + ".");
+            if (!map.InBounds(c.x, c.y)) errors.Add("A blocked square is off the board " + Cell(c.x, c.y) + ".");
 
         // meubles
         Dictionary<Vector2Int, string> furnitureCells = new Dictionary<Vector2Int, string>();
@@ -777,15 +777,15 @@ public class QuestEditorModel
             string name = QuestEditorNames.Of(ParseEnum(f.type, FurnitureType.Table));
             if (!InRect(f.x, f.y, f.width, f.height))
             {
-                errors.Add(name + " dépasse du plateau " + Cell(f.x, f.y) + ".");
+                errors.Add(name + " goes off the board " + Cell(f.x, f.y) + ".");
                 continue;
             }
             if (Array.IndexOf(RotationValues, ((f.rotation % 360) + 360) % 360) < 0)
-                warnings.Add(name + " : l'orientation doit être 0, 90, 180 ou 270 degrés.");
+                warnings.Add(name + ": the orientation must be 0, 90, 180 or 270 degrees.");
             if (!Enum.IsDefined(typeof(FurnitureType), f.type ?? ""))
-                errors.Add("Type de meuble inconnu : \"" + f.type + "\".");
+                errors.Add("Unknown furniture type: \"" + f.type + "\".");
             if (!SingleZone(f.x, f.y, f.width, f.height))
-                errors.Add(name + " " + Cell(f.x, f.y) + " est à cheval sur deux pièces.");
+                errors.Add(name + " " + Cell(f.x, f.y) + " overlaps two rooms.");
 
             for (int y = f.y; y < f.y + f.height; y++)
             {
@@ -793,7 +793,7 @@ public class QuestEditorModel
                 {
                     Vector2Int cell = new Vector2Int(x, y);
                     if (furnitureCells.ContainsKey(cell))
-                        errors.Add("Deux meubles se chevauchent " + Cell(x, y) + ".");
+                        errors.Add("Two pieces of furniture overlap " + Cell(x, y) + ".");
                     furnitureCells[cell] = f.type;
                 }
             }
@@ -807,18 +807,18 @@ public class QuestEditorModel
             string name = QuestEditorNames.Of(ParseEnum(m.type, MonsterClass.Gobelin));
             if (!map.InBounds(m.x, m.y))
             {
-                errors.Add(name + " est hors du plateau " + Cell(m.x, m.y) + ".");
+                errors.Add(name + " is off the board " + Cell(m.x, m.y) + ".");
                 continue;
             }
             Vector2Int cell = new Vector2Int(m.x, m.y);
-            if (!occupied.Add(cell)) errors.Add("Deux personnages sur la même case " + Cell(m.x, m.y) + ".");
-            if (furnitureCells.ContainsKey(cell)) errors.Add(name + " est posé sur un meuble " + Cell(m.x, m.y) + ".");
-            if (IsBlocked(m.x, m.y)) errors.Add(name + " est sur une case bloquée " + Cell(m.x, m.y) + ".");
-            if (!string.IsNullOrEmpty(m.id) && !ids.Add(m.id)) errors.Add("Deux monstres portent le même nom : \"" + m.id + "\".");
+            if (!occupied.Add(cell)) errors.Add("Two characters on the same square " + Cell(m.x, m.y) + ".");
+            if (furnitureCells.ContainsKey(cell)) errors.Add(name + " stands on furniture " + Cell(m.x, m.y) + ".");
+            if (IsBlocked(m.x, m.y)) errors.Add(name + " is on a blocked square " + Cell(m.x, m.y) + ".");
+            if (!string.IsNullOrEmpty(m.id) && !ids.Add(m.id)) errors.Add("Two monsters have the same name: \"" + m.id + "\".");
 
             MonsterTrigger wake = ParseEnum(m.wakeOn, MonsterTrigger.Aucun);
             if (wake != MonsterTrigger.Aucun && !Rooms().Contains(m.wakeRoom ?? ""))
-                errors.Add(name + " " + Cell(m.x, m.y) + " : choisissez la salle qui le réveille.");
+                errors.Add(name + " " + Cell(m.x, m.y) + ": choose the room that wakes it up.");
         }
 
         // allies
@@ -827,20 +827,20 @@ public class QuestEditorModel
         {
             if (!map.InBounds(a.x, a.y))
             {
-                errors.Add("L'allié \"" + a.id + "\" est hors du plateau " + Cell(a.x, a.y) + ".");
+                errors.Add("The ally \"" + a.id + "\" is off the board " + Cell(a.x, a.y) + ".");
                 continue;
             }
-            if (string.IsNullOrEmpty(a.id)) errors.Add("Un allié n'a pas de nom " + Cell(a.x, a.y) + ".");
-            else if (!allyIds.Add(a.id)) errors.Add("Deux alliés portent le même nom : \"" + a.id + "\".");
-            if (!occupied.Add(new Vector2Int(a.x, a.y))) errors.Add("Deux personnages sur la même case " + Cell(a.x, a.y) + ".");
-            if (a.body < 1) errors.Add("L'allié \"" + a.id + "\" doit avoir au moins 1 point de corps.");
+            if (string.IsNullOrEmpty(a.id)) errors.Add("An ally has no name " + Cell(a.x, a.y) + ".");
+            else if (!allyIds.Add(a.id)) errors.Add("Two allies have the same name: \"" + a.id + "\".");
+            if (!occupied.Add(new Vector2Int(a.x, a.y))) errors.Add("Two characters on the same square " + Cell(a.x, a.y) + ".");
+            if (a.body < 1) errors.Add("The ally \"" + a.id + "\" must have at least 1 Body point.");
         }
 
         // pieges
         foreach (TrapEntry t in traps)
         {
-            if (!map.InBounds(t.x, t.y)) errors.Add("Un piège est hors du plateau " + Cell(t.x, t.y) + ".");
-            else if (furnitureCells.ContainsKey(new Vector2Int(t.x, t.y))) errors.Add("Un piège est sous un meuble " + Cell(t.x, t.y) + ".");
+            if (!map.InBounds(t.x, t.y)) errors.Add("A trap is off the board " + Cell(t.x, t.y) + ".");
+            else if (furnitureCells.ContainsKey(new Vector2Int(t.x, t.y))) errors.Add("A trap is under furniture " + Cell(t.x, t.y) + ".");
         }
 
         // tresors : toujours dans une salle (on ne fouille pas les couloirs)
@@ -848,46 +848,46 @@ public class QuestEditorModel
         {
             if (!map.InBounds(tr.x, tr.y))
             {
-                errors.Add("Un trésor est hors du plateau " + Cell(tr.x, tr.y) + ".");
+                errors.Add("A treasure is off the board " + Cell(tr.x, tr.y) + ".");
                 continue;
             }
-            if (map.Get(tr.x, tr.y).IsCorridor()) errors.Add("Un trésor est dans un couloir " + Cell(tr.x, tr.y) + " : il doit être dans une salle.");
-            if (tr.gold <= 0 && string.IsNullOrWhiteSpace(tr.item)) warnings.Add("Le trésor " + Cell(tr.x, tr.y) + " ne contient rien.");
-            if (tr.trapped && tr.trapDamage < 1) warnings.Add("Le trésor piégé " + Cell(tr.x, tr.y) + " ne fait perdre aucun point de corps.");
+            if (map.Get(tr.x, tr.y).IsCorridor()) errors.Add("A treasure is in a corridor " + Cell(tr.x, tr.y) + ": it must be in a room.");
+            if (tr.gold <= 0 && string.IsNullOrWhiteSpace(tr.item)) warnings.Add("The treasure " + Cell(tr.x, tr.y) + " contains nothing.");
+            if (tr.trapped && tr.trapDamage < 1) warnings.Add("The trapped treasure " + Cell(tr.x, tr.y) + " does not remove any Body point.");
             if (tr.requiredKills != null)
                 foreach (string id in tr.requiredKills)
-                    if (!ids.Contains(id)) errors.Add("Le trésor " + Cell(tr.x, tr.y) + " attend la mort de \"" + id + "\", mais aucun monstre ne porte ce nom.");
+                    if (!ids.Contains(id)) errors.Add("The treasure " + Cell(tr.x, tr.y) + " waits for the death of \"" + id + "\", but no monster has this name.");
         }
 
         // reperes
         foreach (MarkerEntry mk in markers)
         {
-            if (!map.InBounds(mk.x, mk.y)) errors.Add("Le repère " + mk.label + " est hors du plateau " + Cell(mk.x, mk.y) + ".");
-            if (string.IsNullOrWhiteSpace(mk.label)) warnings.Add("Un repère n'a pas d'étiquette " + Cell(mk.x, mk.y) + ".");
+            if (!map.InBounds(mk.x, mk.y)) errors.Add("The marker " + mk.label + " is off the board " + Cell(mk.x, mk.y) + ".");
+            if (string.IsNullOrWhiteSpace(mk.label)) warnings.Add("A marker has no label " + Cell(mk.x, mk.y) + ".");
         }
 
         // depart des heros : 4 cases libres, sur l'escalier ou dans la salle de depart
         for (int slot = 1; slot <= HeroStartLayout.Count; slot++)
-            if (!heroStarts.Exists(h => h.slot == slot)) errors.Add("Le héros H" + slot + " n'a pas de case de départ (outil Départ).");
+            if (!heroStarts.Exists(h => h.slot == slot)) errors.Add("Hero H" + slot + " has no starting square (Heroes tool).");
         HashSet<Vector2Int> startCells = new HashSet<Vector2Int>();
         HashSet<int> slots = new HashSet<int>();
         foreach (HeroStartEntry c in heroStarts)
         {
-            string who = "Le départ du héros H" + c.slot + " " + Cell(c.x, c.y);
-            if (c.slot < 1 || c.slot > HeroStartLayout.Count) errors.Add(who + " : le numéro doit aller de 1 à " + HeroStartLayout.Count + ".");
-            else if (!slots.Add(c.slot)) errors.Add("Le héros H" + c.slot + " a deux cases de départ.");
+            string who = "The start of hero H" + c.slot + " " + Cell(c.x, c.y);
+            if (c.slot < 1 || c.slot > HeroStartLayout.Count) errors.Add(who + ": the number must be between 1 and " + HeroStartLayout.Count + ".");
+            else if (!slots.Add(c.slot)) errors.Add("Hero H" + c.slot + " has two starting squares.");
             if (!map.InBounds(c.x, c.y))
             {
-                errors.Add(who + " est hors du plateau.");
+                errors.Add(who + " is off the board.");
                 continue;
             }
             Vector2Int cell = new Vector2Int(c.x, c.y);
-            if (!startCells.Add(cell)) errors.Add("Deux héros partent de la même case " + Cell(c.x, c.y) + ".");
-            if (furnitureCells.ContainsKey(cell) || IsBlocked(c.x, c.y)) errors.Add(who + " est sur un meuble ou une case bloquée.");
-            if (occupied.Contains(cell)) errors.Add(who + " est sur la case d'un monstre ou d'un allié.");
+            if (!startCells.Add(cell)) errors.Add("Two heroes start on the same square " + Cell(c.x, c.y) + ".");
+            if (furnitureCells.ContainsKey(cell) || IsBlocked(c.x, c.y)) errors.Add(who + " is on furniture or a blocked square.");
+            if (occupied.Contains(cell)) errors.Add(who + " is on the square of a monster or an ally.");
             bool onStairs = c.x >= stairs.x && c.x < stairs.x + stairs.width && c.y >= stairs.y && c.y < stairs.y + stairs.height;
-            if (startType == "stairs" && !onStairs) warnings.Add(who + " n'est pas sur l'escalier.");
-            if (startType == "room" && map.Get(c.x, c.y).zone != startRoom) warnings.Add(who + " n'est pas dans la salle de départ.");
+            if (startType == "stairs" && !onStairs) warnings.Add(who + " is not on the stairway.");
+            if (startType == "room" && map.Get(c.x, c.y).zone != startRoom) warnings.Add(who + " is not in the starting room.");
         }
 
         // l'escalier ne doit pas etre sous un meuble
@@ -895,7 +895,7 @@ public class QuestEditorModel
         for (int y = stairs.y; y < stairs.y + stairs.height; y++)
             for (int x = stairs.x; x < stairs.x + stairs.width; x++)
                 if (furnitureCells.ContainsKey(new Vector2Int(x, y))) stairsCovered = true;
-        if (stairsCovered) warnings.Add("Un meuble recouvre l'escalier.");
+        if (stairsCovered) warnings.Add("Furniture covers the stairway.");
 
         // notes : une meme lettre peut etre posee plusieurs fois sur la carte (ex : quete 7),
         // le texte n'est ecrit qu'une fois
@@ -907,45 +907,45 @@ public class QuestEditorModel
         {
             bool placed = note.x >= 0 || note.y >= 0;
             if (placed && !map.InBounds(note.x, note.y))
-                errors.Add("La note " + note.letter + " est hors du plateau " + Cell(note.x, note.y) + ".");
+                errors.Add("Note " + note.letter + " is off the board " + Cell(note.x, note.y) + ".");
             if (string.IsNullOrWhiteSpace(note.text) && (string.IsNullOrEmpty(note.letter) || !lettersWithText.Contains(note.letter)))
-                warnings.Add("La note " + (string.IsNullOrEmpty(note.letter) ? "sans lettre" : note.letter) + " est vide.");
+                warnings.Add("Note " + (string.IsNullOrEmpty(note.letter) ? "without letter" : note.letter) + " is empty.");
         }
-        if (string.IsNullOrWhiteSpace(parchment)) warnings.Add("Le parchemin d'introduction est vide.");
+        if (string.IsNullOrWhiteSpace(parchment)) warnings.Add("The introduction parchment is empty.");
 
         // regles speciales
         foreach (string r in rules)
-            if (!Enum.IsDefined(typeof(QuestRule), r ?? "")) errors.Add("Règle spéciale inconnue : \"" + r + "\".");
+            if (!Enum.IsDefined(typeof(QuestRule), r ?? "")) errors.Add("Unknown special rule: \"" + r + "\".");
 
         // recompense
-        if (goldShared < 0 || goldEach < 0) errors.Add("La récompense ne peut pas être négative.");
+        if (goldShared < 0 || goldEach < 0) errors.Add("The reward cannot be negative.");
         foreach (BountyEntry b in bounties)
-            if (b.gold < 0) errors.Add("Une prime ne peut pas être négative.");
+            if (b.gold < 0) errors.Add("A bounty cannot be negative.");
 
         // victoire
-        if (objectives.Count == 0) errors.Add("Aucun objectif : la quête ne pourra jamais être gagnée.");
+        if (objectives.Count == 0) errors.Add("No objective: the quest can never be won.");
         foreach (ObjectiveEntry o in objectives)
         {
             ObjectiveType ot = ParseEnum(o.type, ObjectiveType.Escalier);
             if (ot == ObjectiveType.Tuer)
             {
-                if (string.IsNullOrEmpty(o.target)) errors.Add("Objectif « Vaincre un monstre » : choisissez le monstre.");
-                else if (!ids.Contains(o.target)) errors.Add("Objectif « Vaincre un monstre » : aucun monstre ne s'appelle \"" + o.target + "\".");
+                if (string.IsNullOrEmpty(o.target)) errors.Add("Objective \"Defeat a monster\": choose the monster.");
+                else if (!ids.Contains(o.target)) errors.Add("Objective \"Defeat a monster\": no monster is called \"" + o.target + "\".");
             }
             if (ot == ObjectiveType.Escorter)
             {
-                if (string.IsNullOrEmpty(o.target)) errors.Add("Objectif « Escorter » : choisissez l'allié à escorter.");
-                else if (!allyIds.Contains(o.target)) errors.Add("Objectif « Escorter » : aucun allié ne s'appelle \"" + o.target + "\".");
+                if (string.IsNullOrEmpty(o.target)) errors.Add("Objective \"Escort\": choose the ally to escort.");
+                else if (!allyIds.Contains(o.target)) errors.Add("Objective \"Escort\": no ally is called \"" + o.target + "\".");
             }
             if (ot == ObjectiveType.TrouverObjet)
             {
-                if (string.IsNullOrWhiteSpace(o.target)) errors.Add("Objectif « Trouver un objet » : indiquez l'objet.");
-                if (string.IsNullOrEmpty(o.room) || !Rooms().Contains(o.room)) errors.Add("Objectif « Trouver un objet » : choisissez la salle.");
+                if (string.IsNullOrWhiteSpace(o.target)) errors.Add("Objective \"Find an item\": enter the item.");
+                if (string.IsNullOrEmpty(o.room) || !Rooms().Contains(o.room)) errors.Add("Objective \"Find an item\": choose the room.");
             }
             if (ot == ObjectiveType.Rapporter)
             {
-                if (string.IsNullOrWhiteSpace(o.target)) errors.Add("Objectif « Rapporter » : indiquez l'objet.");
-                if (o.count < 1) errors.Add("Objectif « Rapporter » : le nombre doit être au moins 1.");
+                if (string.IsNullOrWhiteSpace(o.target)) errors.Add("Objective \"Bring back\": enter the item.");
+                if (o.count < 1) errors.Add("Objective \"Bring back\": the number must be at least 1.");
             }
         }
     }
@@ -957,33 +957,33 @@ public class QuestEditorModel
             Side side;
             if (!Enum.TryParse(d.side, out side) || !Enum.IsDefined(typeof(Side), side))
             {
-                errors.Add(label + " " + Cell(d.x, d.y) + " a un côté inconnu.");
+                errors.Add(label + " " + Cell(d.x, d.y) + " has an unknown side.");
                 continue;
             }
 
             Vector2Int n = Neighbor(d.x, d.y, side);
             if (!map.InBounds(d.x, d.y) || !map.InBounds(n.x, n.y))
             {
-                errors.Add(label + " " + Cell(d.x, d.y) + " donne hors du plateau.");
+                errors.Add(label + " " + Cell(d.x, d.y) + " leads off the board.");
                 continue;
             }
             if (!map.HasWall(d.x, d.y, n.x, n.y))
-                errors.Add(label + " " + Cell(d.x, d.y) + ", côté " + QuestEditorNames.Of(side) + ", n'est pas sur un mur.");
+                errors.Add(label + " " + Cell(d.x, d.y) + ", side " + QuestEditorNames.Of(side) + ", is not on a wall.");
             if (!edges.Add(EdgeKey(d.x, d.y, side)))
-                errors.Add("Deux portes au même endroit " + Cell(d.x, d.y) + ", côté " + QuestEditorNames.Of(side) + ".");
+                errors.Add("Two doors at the same place " + Cell(d.x, d.y) + ", side " + QuestEditorNames.Of(side) + ".");
         }
     }
 
     // position lisible par un joueur : "(colonne 5, ligne 3)"
     public static string Cell(int x, int y)
     {
-        return "(colonne " + x + ", ligne " + y + ")";
+        return "(column " + x + ", row " + y + ")";
     }
 
     public static string ZoneName(string zone)
     {
-        if (zone == ".") return "les couloirs";
-        if (!string.IsNullOrEmpty(zone) && zone.StartsWith("S")) return "salle " + zone.Substring(1);
+        if (zone == ".") return "the corridors";
+        if (!string.IsNullOrEmpty(zone) && zone.StartsWith("S")) return "room " + zone.Substring(1);
         return "\"" + zone + "\"";
     }
 
@@ -1098,7 +1098,7 @@ public static class QuestEditorNames
     {
         switch (v)
         {
-            case MonsterClass.GuerrierDeLaTerreur: return "Guerrier de l'effroi";
+            case MonsterClass.GuerrierDeLaTerreur: return "Dread Warrior";
             default: return v.ToString();
         }
     }
@@ -1107,12 +1107,12 @@ public static class QuestEditorNames
     {
         switch (v)
         {
-            case FurnitureType.Trone: return "Trône";
-            case FurnitureType.EtabliAlchimiste: return "Établi d'alchimiste";
-            case FurnitureType.TableSorcier: return "Table du sorcier";
-            case FurnitureType.Bibliotheque: return "Bibliothèque";
-            case FurnitureType.Cheminee: return "Cheminée";
-            case FurnitureType.RatelierArmes: return "Râtelier d'armes";
+            case FurnitureType.Trone: return "Throne";
+            case FurnitureType.EtabliAlchimiste: return "Alchemist's Bench";
+            case FurnitureType.TableSorcier: return "Sorcerer's Table";
+            case FurnitureType.Bibliotheque: return "Bookcase";
+            case FurnitureType.Cheminee: return "Fireplace";
+            case FurnitureType.RatelierArmes: return "Weapons Rack";
             default: return v.ToString();
         }
     }
@@ -1121,9 +1121,9 @@ public static class QuestEditorNames
     {
         switch (v)
         {
-            case TrapType.Fosse: return "Fosse";
-            case TrapType.BlocQuiTombe: return "Bloc qui tombe";
-            default: return "Lance";
+            case TrapType.Fosse: return "Pit";
+            case TrapType.BlocQuiTombe: return "Falling block";
+            default: return "Spear";
         }
     }
 
@@ -1131,28 +1131,28 @@ public static class QuestEditorNames
     {
         switch (v)
         {
-            case Side.North: return "haut";
-            case Side.South: return "bas";
-            case Side.East: return "droite";
-            default: return "gauche";
+            case Side.North: return "top";
+            case Side.South: return "bottom";
+            case Side.East: return "right";
+            default: return "left";
         }
     }
 
     public static string Of(VictoryMode v)
     {
-        return v == VictoryMode.Tous ? "Tous les objectifs" : "Un seul objectif suffit";
+        return v == VictoryMode.Tous ? "All objectives" : "Any one objective";
     }
 
     public static string Of(ObjectiveType v)
     {
         switch (v)
         {
-            case ObjectiveType.Tuer: return "Vaincre un monstre";
-            case ObjectiveType.TuerTous: return "Vaincre tous les monstres";
-            case ObjectiveType.TrouverObjet: return "Trouver un objet";
-            case ObjectiveType.Escorter: return "Escorter un allié";
-            case ObjectiveType.Rapporter: return "Rapporter des objets";
-            default: return "Revenir à l'escalier";
+            case ObjectiveType.Tuer: return "Defeat a monster";
+            case ObjectiveType.TuerTous: return "Defeat all monsters";
+            case ObjectiveType.TrouverObjet: return "Find an item";
+            case ObjectiveType.Escorter: return "Escort an ally";
+            case ObjectiveType.Rapporter: return "Bring back items";
+            default: return "Return to the stairway";
         }
     }
 
@@ -1160,10 +1160,10 @@ public static class QuestEditorNames
     {
         switch (v)
         {
-            case MonsterTrigger.EntrerSalle: return "Un héros entre dans la salle";
-            case MonsterTrigger.OuvrirPorte: return "Un héros ouvre la porte de la salle";
-            case MonsterTrigger.PiegeDeclenche: return "Le piège du coffre se déclenche";
-            default: return "Toujours actif";
+            case MonsterTrigger.EntrerSalle: return "A hero enters the room";
+            case MonsterTrigger.OuvrirPorte: return "A hero opens the room's door";
+            case MonsterTrigger.PiegeDeclenche: return "The chest's trap is sprung";
+            default: return "Always active";
         }
     }
 
@@ -1171,13 +1171,13 @@ public static class QuestEditorNames
     {
         switch (v)
         {
-            case QuestRule.SauvetageRagnar: return "Sauvetage : quand l'allié est trouvé, l'alarme sonne et toutes les portes s'ouvrent";
-            case QuestRule.CoffresLourds: return "Coffres lourds : un héros ne porte qu'un coffre et ne lance qu'un dé pour se déplacer";
-            case QuestRule.SansEquipement: return "Sans équipement : ni armes ni sorts tant que l'équipement n'a pas été retrouvé";
-            case QuestRule.Teleportation: return "Portes magiques : passer une porte téléporte le héros sur un repère numéroté (2 dés)";
-            case QuestRule.OrDeLaMine: return "Or de la mine : le porter empêche d'attaquer et de se défendre, il ne vaut rien à la fin";
-            case QuestRule.EboulementDerriere: return "Éboulement : le bloc tombe tout seul après le passage du dernier héros";
-            case QuestRule.BlocsSansBlocage: return "Chutes de pierres : les blocs ne bloquent pas, mais peuvent blesser (1 dé)";
+            case QuestRule.SauvetageRagnar: return "Rescue: when the ally is found, the alarm sounds and every door opens";
+            case QuestRule.CoffresLourds: return "Heavy chests: a hero carries only one chest and rolls only one die to move";
+            case QuestRule.SansEquipement: return "No equipment: no weapons and no spells until the equipment is found";
+            case QuestRule.Teleportation: return "Magic doors: going through a door teleports the hero to a numbered marker (2 dice)";
+            case QuestRule.OrDeLaMine: return "Mine gold: carrying it prevents attacking and defending, and it is worthless at the end";
+            case QuestRule.EboulementDerriere: return "Cave-in: the block falls by itself after the last hero has passed";
+            case QuestRule.BlocsSansBlocage: return "Falling rocks: blocks do not block the way, but can wound (1 die)";
             default: return v.ToString();
         }
     }

@@ -47,7 +47,7 @@ public class QuestEditorMenu : MonoBehaviour
 
         model.EnsureInit();
         model.LoadBoard(boardFile != null ? boardFile.text : null,
-            "Aucun plateau : assignez Data/Board/board.txt au champ Board File de QuestEditorMenu.");
+            "No board: assign Data/Board/board.txt to the Board File field of QuestEditorMenu.");
         model.RefreshFileList();
         if (!model.started)
         {

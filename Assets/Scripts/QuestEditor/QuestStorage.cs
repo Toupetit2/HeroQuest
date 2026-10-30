@@ -90,7 +90,7 @@ public static class QuestStorage
         if (File.Exists(path)) return File.ReadAllText(path);
 
         TextAsset asset = Resources.Load<TextAsset>(ResourcesFolder + "/" + Path.GetFileNameWithoutExtension(fileName));
-        if (asset == null) throw new FileNotFoundException("Quete introuvable : " + fileName);
+        if (asset == null) throw new FileNotFoundException("Quest not found: " + fileName);
         return asset.text;
     }
 
@@ -98,7 +98,7 @@ public static class QuestStorage
     public static void Write(string fileName, string json)
     {
         if (!Path.GetFileName(fileName).StartsWith(CustomPrefix, StringComparison.Ordinal))
-            throw new InvalidOperationException("Seules les quetes perso (" + CustomPrefix + "NN.json) peuvent etre enregistrees.");
+            throw new InvalidOperationException("Only custom quests (" + CustomPrefix + "NN.json) can be saved.");
 
         Directory.CreateDirectory(QuestDir);
         File.WriteAllText(Path.Combine(QuestDir, fileName), json, new UTF8Encoding(false));
