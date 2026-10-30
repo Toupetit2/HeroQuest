@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
 
     private List<HeroClass> turnOrder = new();
 
-    private int currentPlayerIndex = 0;
+    private int currentHeroIndex = 0;
     private bool isZargonTurn = false;
 
     [Header("État du tour")]    
@@ -47,6 +47,8 @@ public class GameManager : MonoBehaviour
 
     [Header("Spells")]
     [SerializeField] private Spell[] allSpells;
+
+    public List<Player> players = new List<Player>();
 
     private void Awake()
     {
@@ -136,20 +138,21 @@ public class GameManager : MonoBehaviour
     {
         hasMoveAction = true;
         hasAction = true;
+        uiManager.SetTurnText();
     }
 
     public void EndTurn()
     {
-        currentPlayerIndex++;
+        currentHeroIndex++;
 
-        if (currentPlayerIndex >= gameState.heroList.Count)
+        if (currentHeroIndex >= turnOrder.Count)
         {
-            currentPlayerIndex = 0;
+            currentHeroIndex = 0;
             isZargonTurn = true;
         }
         if (isZargonTurn) 
         {
-            currentPlayerIndex = 0;
+            currentHeroIndex = 0;
             currentTurn++;
             isZargonTurn = false;
 
@@ -172,9 +175,21 @@ public class GameManager : MonoBehaviour
         turnOrder.Add(hero);
     }
 
-    public void GiveSpellType(SpellType type) 
+    public bool GiveSpellType(HeroClass heroClass, SpellType type)
     {
-        GetHero(turnOrder[currentPlayerIndex]).spells.Add(type);
+        Hero hero = GetHero(heroClass);
+
+        if (hero == null)
+            return false;
+
+        foreach (Hero h in gameState.heroList)
+        {
+            if (h.spells.Contains(type))
+                return false;
+        }
+
+        hero.spells.Add(type);
+        return true;
     }
 
     public bool UseAction() 
@@ -234,16 +249,26 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
-    public Hero GetCurrentHero() 
+    public Hero GetHeroByClass(HeroClass heroClass)
     {
-        foreach (Hero h in gameState.heroList) 
+        foreach (Hero hero in gameState.heroList)
         {
-            if (h.data.heroClass == turnOrder[currentPlayerIndex]) 
-            {
-                return h;
-            }
+            if (hero.data.heroClass == heroClass)
+                return hero;
         }
+
         return null;
+    }
+
+    public Hero GetCurrentHero()
+    {
+        if (turnOrder == null || turnOrder.Count == 0)
+            return null;
+
+        if (currentHeroIndex < 0 || currentHeroIndex >= turnOrder.Count)
+            return null;
+
+        return GetHeroByClass(turnOrder[currentHeroIndex]);
     }
 
     [Button]
@@ -466,5 +491,54 @@ public class GameManager : MonoBehaviour
     public void DropLoot(Equipment equipment, Vector2Int position) 
     {
         lootController.DropLoot(equipment, position);
+    }
+
+    public void InitializePlayers(int playerCount)
+    {
+        players.Clear();
+        turnOrder.Clear();
+        currentHeroIndex = 0;
+
+        for (int i = 0; i < playerCount; i++)
+        {
+            players.Add(new Player
+            {
+                playerID = i + 1
+            });
+        }
+    }
+
+    public bool AssignHero(int playerIndex, Hero hero)
+    {
+        if (playerIndex < 0 || playerIndex >= players.Count)
+            return false;
+
+        if (hero == null)
+            return false;
+
+        foreach (Player player in players)
+        {
+            foreach (Hero assignedHero in player.heroes)
+            {
+                if (assignedHero.data.heroClass == hero.data.heroClass)
+                    return false;
+            }
+        }
+
+        players[playerIndex].heroes.Add(hero);
+
+        AddHeroTurn(hero.data.heroClass);
+
+        return true;
+    }
+
+    public bool AreAllHeroesAssigned()
+    {
+        int total = 0;
+
+        foreach (Player player in players)
+            total += player.heroes.Count;
+
+        return total == 4;
     }
 }

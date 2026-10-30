@@ -3,21 +3,22 @@ using UnityEngine;
 
 public class GameState
 {
-    public List<Hero> heroList = new List<Hero>();
-    public List<Monster> monsterList;
-    public List<Door> doorList;
-    public List<Furniture> furnitureList;
-    public List<Trap> trapList;
+    public List<Hero> heroList = new();
+    public List<Monster> monsterList = new();
+    public List<Door> doorList = new();
+    public List<Furniture> furnitureList = new();
+    public List<Trap> trapList = new();
+
     public RectInt stairs;
     public List<Vector2Int> heroStartCells = new List<Vector2Int>();   // case de depart de H1 a H4 ([0] = H1), rempli par le QuestLoader
     public int stairsRotation;   // 0, 90, 180 ou 270 : rotation de l'image de l'escalier
     public MonsterClass wanderingMonster;
     public bool hasWanderingMonster;    // faux pour la quete 10
     public Victory victory;
-    public List<Treasure> treasureList;
-    public List<Ally> allyList;
-    public List<Marker> markerList;
-    public List<QuestRule> rules;
+    public List<Treasure> treasureList = new();
+    public List<Ally> allyList = new();
+    public List<Marker> markerList = new();
+    public List<QuestRule> rules = new();
     public Reward reward;
     public string intro;                // texte lu aux joueurs au debut (ecrit par nous)
     public GameStatus gameStatus = GameStatus.Playing;
