@@ -2,7 +2,7 @@
   "number": 10,
   "title": "Le chateau du mystere",
   "stairs": { "x": 1, "y": 16, "width": 2, "height": 2 },
-  "start": { "type": "stairs", "room": "" },
+  "start": { "type": "stairs", "room": "", "heroes": [ { "slot": 1, "x": 2, "y": 17 }, { "slot": 2, "x": 1, "y": 17 }, { "slot": 3, "x": 2, "y": 16 }, { "slot": 4, "x": 1, "y": 16 } ] },
 
   "doors": [
     { "x": 8, "y": 2, "side": "East" },
@@ -59,6 +59,8 @@
   },
 
   "intro": "Le mage Ollar a bati un chateau magique au-dessus d'une mine d'or. Ses portes enchantees deplacent ceux qui les franchissent. Trouvez l'entree de la mine, puis tuez tous les monstres ou retrouvez l'escalier.",
+  "parchment": "Le mage Ollar a bati un chateau magique au-dessus d'une mine d'or. Ses portes enchantees deplacent ceux qui les franchissent. Trouvez l'entree de la mine, puis tuez tous les monstres ou retrouvez l'escalier.",
+  "zargonNote": "Franchir une porte arrete le heros : il lance 2 des rouges et se teleporte sur le repere du meme total. Si la case est occupee, l'occupant perd 1 point de corps et se teleporte a son tour (on relance si on retombe sur la meme case). Une seule porte par tour. A : si les deux guerriers de l'effroi sont vaincus, l'anneau de retour. B : entree de la mine, 5000 pieces d'or ; les porter empeche d'attaquer et de se defendre, les poser les fait disparaitre, et a la fin c'est de l'or sans valeur. Fin : tous les monstres vaincus, ou tous les heros sortis par l'escalier sur un 2 ou un 12. Pas de monstre errant : le fantome d'Ollar ricane et disparait.",
 
   "treasures": [
     { "x": 23, "y": 11, "item": "AnneauDuRetour", "requiredKills": ["guerrier1", "guerrier2"] }

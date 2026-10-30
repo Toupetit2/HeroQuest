@@ -2,7 +2,7 @@
   "number": 12,
   "title": "Barak Tor, le tertre du seigneur sorcier",
   "stairs": { "x": 1, "y": 14, "width": 2, "height": 2 },
-  "start": { "type": "stairs", "room": "" },
+  "start": { "type": "stairs", "room": "", "heroes": [ { "slot": 1, "x": 2, "y": 15 }, { "slot": 2, "x": 1, "y": 15 }, { "slot": 3, "x": 2, "y": 14 }, { "slot": 4, "x": 1, "y": 14 } ] },
 
   "doors": [
     { "x": 3, "y": 0, "side": "South" },
@@ -88,6 +88,8 @@
   },
 
   "intro": "Pour unir le royaume avant la guerre contre les orcs, le roi veut l'Etoile de l'Ouest. Elle repose a Barak Tor, le tombeau du seigneur sorcier, vaincu jadis par l'Epee de l'Esprit. Rapportez l'Etoile a l'escalier.",
+  "parchment": "Pour unir le royaume avant la guerre contre les orcs, le roi veut l'Etoile de l'Ouest. Elle repose a Barak Tor, le tombeau du seigneur sorcier, vaincu jadis par l'Epee de l'Esprit. Rapportez l'Etoile a l'escalier.",
+  "zargonNote": "A : fausses portes, elles ne s'ouvrent jamais. B : l'Etoile de l'Ouest est dans la main du zombie. C : bloc qui tombe tout seul apres le passage du dernier heros et coupe le chemin de l'escalier. D : tombeau du seigneur sorcier ; il se reveille sur la case X des qu'un heros entre dans la salle. Seule l'Epee de l'Esprit peut le blesser ; il avance d'une case par tour, lance 2 des d'attaque et connait appel des morts, peur, commandement et boule de feu. E : le baton du sorcier, cache derriere la bibliotheque. Recompense : 200 pieces d'or a partager.",
 
   "treasures": [
     { "x": 5, "y": 17, "item": "BatonDuSorcier" }

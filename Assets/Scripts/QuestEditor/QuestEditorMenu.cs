@@ -9,7 +9,6 @@ using UnityEngine;
 public class QuestEditorMenu : MonoBehaviour
 {
     public TextAsset boardFile;                 // le meme board.txt que celui utilise par le jeu
-    public TextAsset[] builtInQuests;           // quetes fournies avec le jeu : copiees dans le dossier des quetes si absentes
     public KeyCode toggleKey = KeyCode.F2;      // touche de test, KeyCode.None pour la desactiver
 
     public static bool IsOpen { get; private set; }
@@ -46,7 +45,6 @@ public class QuestEditorMenu : MonoBehaviour
     {
         if (gui != null) return;
 
-        SeedBuiltInQuests();
         model.EnsureInit();
         model.LoadBoard(boardFile != null ? boardFile.text : null,
             "Aucun plateau : assignez Data/Board/board.txt au champ Board File de QuestEditorMenu.");
@@ -58,26 +56,6 @@ public class QuestEditorMenu : MonoBehaviour
         }
 
         gui = new QuestEditorGUI(model) { RequestClose = Close };
-    }
-
-    // dans un jeu compile, le dossier des quetes est vide au depart : on y copie les quetes du jeu
-    public void SeedBuiltInQuests()
-    {
-        if (builtInQuests == null) return;
-
-        foreach (TextAsset quest in builtInQuests)
-        {
-            if (quest == null) continue;
-            string fileName = quest.name + ".json";
-            try
-            {
-                if (!QuestStorage.Exists(fileName)) QuestStorage.Write(fileName, quest.text);
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogWarning("Quete " + fileName + " non copiee : " + e.Message);
-            }
-        }
     }
 
     void OnGUI()

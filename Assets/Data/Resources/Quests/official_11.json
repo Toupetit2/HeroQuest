@@ -2,7 +2,7 @@
   "number": 11,
   "title": "Le bastion de l'effroi",
   "stairs": { "x": 7, "y": 10, "width": 2, "height": 2 },
-  "start": { "type": "stairs", "room": "" },
+  "start": { "type": "stairs", "room": "", "heroes": [ { "slot": 1, "x": 8, "y": 11 }, { "slot": 2, "x": 7, "y": 11 }, { "slot": 3, "x": 8, "y": 10 }, { "slot": 4, "x": 7, "y": 10 } ] },
 
   "doors": [
     { "x": 8, "y": 4, "side": "East" },
@@ -94,6 +94,8 @@
   },
 
   "intro": "Des orcs et des gobelins allies a Zargon ravagent l'est du royaume, menes par quelques guerriers de l'effroi. Entrez dans leur forteresse et tuez tous les monstres : chaque monstre tue rapporte une prime.",
+  "parchment": "Des orcs et des gobelins allies a Zargon ravagent l'est du royaume, menes par quelques guerriers de l'effroi. Entrez dans leur forteresse et tuez tous les monstres : chaque monstre tue rapporte une prime.",
+  "zargonNote": "Primes pour chaque monstre vaincu : 10 pieces d'or par gobelin, 20 par orc, 30 par abomination, 50 par guerrier de l'effroi. A : un bouclier dans l'armurerie, les autres armes sont inutilisables. B : la gargouille est une statue ; fouiller sans desarmer le piege du coffre la reveille et elle attaque aussitot ; elle ne peut pas etre blessee tant qu'elle n'a pas agi. C : ce guerrier de l'effroi porte le Fleau des orcs, pour celui qui le tue.",
 
   "treasures": [
     { "x": 19, "y": 14, "item": "Bouclier" },

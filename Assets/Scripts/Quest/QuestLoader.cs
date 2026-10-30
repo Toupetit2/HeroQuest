@@ -39,6 +39,7 @@ public class QuestLoader
         // escalier
         RectEntry s = quest.stairs;
         gameState.stairs = new RectInt(s.x, s.y, s.width, s.height);
+        gameState.stairsRotation = ((s.rotation % 360) + 360) % 360;
 
         // portes : elles doivent etre sur un mur
         foreach (DoorEntry d in quest.doors) AddDoor(d, false, false);
@@ -73,6 +74,9 @@ public class QuestLoader
 
         // monstres
         foreach (MonsterEntry m in quest.monsters) AddMonster(m);
+
+        // depart des heros (apres les meubles et les monstres, pour verifier que les cases sont libres)
+        AddHeroStarts(quest.start, s);
 
         // monstre errant : vide = aucun
         gameState.hasWanderingMonster = !string.IsNullOrEmpty(quest.wanderingMonster);
@@ -206,6 +210,41 @@ public class QuestLoader
         if (!string.IsNullOrEmpty(m.id)) monstersById[m.id] = monster;
     }
 
+    // case de depart de H1 a H4 (heroStartCells[0] = H1) ; ancienne quete sans le champ = positions par defaut
+    void AddHeroStarts(StartEntry start, RectEntry stairs)
+    {
+        gameState.heroStartCells = new List<Vector2Int>();
+
+        if (start == null || start.heroes == null || start.heroes.Length == 0)
+        {
+            Debug.LogWarning("Pas de depart des heros dans la quete : positions par defaut sur l'escalier");
+            gameState.heroStartCells.AddRange(HeroStartLayout.OnStairs(stairs.x, stairs.y, stairs.width, stairs.height, stairs.rotation));
+            return;
+        }
+
+        Vector2Int?[] cells = new Vector2Int?[HeroStartLayout.Count];
+        foreach (HeroStartEntry h in start.heroes)
+        {
+            string who = "Depart du heros H" + h.slot + " (" + h.x + ", " + h.y + ")";
+            if (h.slot < 1 || h.slot > HeroStartLayout.Count) throw new Exception(who + " : le numero doit aller de 1 a " + HeroStartLayout.Count);
+            if (cells[h.slot - 1] != null) throw new Exception(who + " : ce heros a deja une case de depart");
+
+            Tile tile = GetTile(h.x, h.y, "depart du heros H" + h.slot);
+            Vector2Int cell = new Vector2Int(h.x, h.y);
+            if (tile.blocked || tile.furniture != null) throw new Exception(who + " : la case est bloquee ou couverte par un meuble");
+            if (Array.IndexOf(cells, cell) >= 0) throw new Exception(who + " : deux heros sur la meme case");
+            foreach (Monster m in gameState.monsterList)
+                if (m.position == cell) throw new Exception(who + " : un monstre est deja sur la case");
+            cells[h.slot - 1] = cell;
+        }
+
+        for (int i = 0; i < cells.Length; i++)
+        {
+            if (cells[i] == null) throw new Exception("Depart du heros H" + (i + 1) + " manquant");
+            gameState.heroStartCells.Add(cells[i].Value);
+        }
+    }
+
     void AddTreasure(TreasureEntry t)
     {
         // les regles : on ne trouve des tresors que dans les salles
@@ -337,10 +376,10 @@ public class QuestLoader
         return value;
     }
 
-    // charge Resources/Quests/quest_01.json ... quest_14.json
+    // charge une quete du livret : Resources/Quests/official_01.json ... official_14.json
     public void LoadQuest(int questNumber)
     {
-        TextAsset file = Resources.Load<TextAsset>("Quests/quest_" + questNumber.ToString("00"));
+        TextAsset file = Resources.Load<TextAsset>("Quests/official_" + questNumber.ToString("00"));
         if (file == null) throw new Exception("Quete " + questNumber + " introuvable dans Resources/Quests");
         Load(file.text);
     }

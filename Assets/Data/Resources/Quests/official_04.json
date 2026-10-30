@@ -2,7 +2,7 @@
   "number": 4,
   "title": "L'or du prince Magnus",
   "stairs": { "x": 19, "y": 14, "width": 2, "height": 2 },
-  "start": { "type": "stairs", "room": "" },
+  "start": { "type": "stairs", "room": "", "heroes": [ { "slot": 1, "x": 20, "y": 15 }, { "slot": 2, "x": 19, "y": 15 }, { "slot": 3, "x": 20, "y": 14 }, { "slot": 4, "x": 19, "y": 14 } ] },
 
   "doors": [
     { "x": 8, "y": 2, "side": "East" },
@@ -93,6 +93,8 @@
   },
 
   "intro": "Une bande d'orcs menee par Gulthor, un guerrier de l'effroi, a vole trois coffres d'or destines au roi. Rapportez les trois coffres a l'escalier, sans toucher a l'or qu'ils contiennent.",
+  "parchment": "Une bande d'orcs menee par Gulthor, un guerrier de l'effroi, a vole trois coffres d'or destines au roi. Rapportez les trois coffres a l'escalier, sans toucher a l'or qu'ils contiennent.",
+  "zargonNote": "Les trois coffres du roi sont gardes par Gulthor, un guerrier de l'effroi. Un heros ne porte qu'un coffre a la fois et ne lance alors qu'un de pour se deplacer. L'or doit rester dans les coffres. Recompense : 240 pieces d'or a partager si les trois coffres reviennent a l'escalier.",
 
   "rules": ["CoffresLourds"],
 

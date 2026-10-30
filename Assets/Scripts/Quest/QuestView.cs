@@ -12,6 +12,7 @@ public class QuestView : MonoBehaviour
     public GameObject secretDoorPrefab;
     public GameObject blockedPrefab;
     public GameObject stairsPrefab;
+    public Texture2D stairsTexture;   // optionnel : image de l'escalier (sinon Resources/HeroQuest/StairsTexture.png)
     public GameObject allyPrefab;
     public GameObject trapPrefab;
     public FurniturePrefab[] furniturePrefabs;
@@ -51,7 +52,10 @@ public class QuestView : MonoBehaviour
         root.SetParent(transform, false);
 
         RectInt s = gameState.stairs;
-        Place("Stairs", stairsPrefab, s, stairsHeight, 0, Color.green);
+        HQStairsVisual.SetTexture(stairsTexture);
+        // l'image Resources/HeroQuest/StairsTexture.png est posee a plat sur l'escalier ; sans image, on garde le prefab
+        if (!PlaceTexturedStairs(s, gameState.stairsRotation))
+            Place("Stairs", stairsPrefab, s, stairsHeight, 0, Color.green);
 
         foreach (Door door in gameState.doorList) PlaceDoor(door);
 
@@ -195,6 +199,19 @@ public class QuestView : MonoBehaviour
 
         placed[go] = rect;
         return go;
+    }
+
+    // escalier = image a plat qui couvre toutes ses cases ; renvoie false si l'image est introuvable
+    bool PlaceTexturedStairs(RectInt rect, int rotation)
+    {
+        GameObject go = HQStairsVisual.Create("Stairs_" + rect.x + "_" + rect.y,
+            rect.width * board.cellSize, rect.height * board.cellSize, rotation);
+        if (go == null) return false;
+
+        go.transform.position = RectCenter(rect) + new Vector3(0f, HQStairsVisual.HeightAboveFloor, 0f);
+        go.transform.SetParent(root, true);
+        placed[go] = rect;
+        return true;
     }
 
     // conteneur + modele ajuste a la taille "size", range sous la racine de la quete

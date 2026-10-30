@@ -439,7 +439,15 @@ public class HeroQuestSimplePCG : MonoBehaviour
                 startRoomId = room;
                 Vector3 pos = transform.TransformPoint(CellLocal(origin) +
                               new Vector3(cellSize * 0.5f, 0.18f, cellSize * 0.5f));
-                if (stairsPrefab != null)
+                GameObject stairsImage = HQStairsVisual.Create("Stairs_2x2", cellSize * 2f, cellSize * 2f);
+                if (stairsImage != null)
+                {
+                    // image Resources/HeroQuest/StairsTexture.png posee a plat (pos contient deja un decalage de 0.18 pour le prefab)
+                    stairsImage.transform.SetParent(generatedRoot, false);
+                    stairsImage.transform.SetPositionAndRotation(
+                        pos - transform.up * 0.18f + transform.up * HQStairsVisual.HeightAboveFloor, transform.rotation);
+                }
+                else if (stairsPrefab != null)
                     Instantiate(stairsPrefab, pos, transform.rotation, generatedRoot);
                 else if (useDemoObjects)
                     DemoCube("Demo_Stairs_2x2", pos, transform.rotation,

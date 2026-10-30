@@ -44,6 +44,7 @@ public class RectEntry
     public int y;
     public int width;
     public int height;
+    public int rotation;   // 0, 90, 180 ou 270 (affichage seulement, sens des aiguilles d'une montre ; 0 = comme avant)
 }
 
 [Serializable]
@@ -51,6 +52,16 @@ public class StartEntry
 {
     public string type;    // "stairs" ou "room"
     public string room;    // ex : "S7", seulement si type = "room"
+    public HeroStartEntry[] heroes;   // case de depart de chaque heros (H1 a H4)
+}
+
+// case de depart d'un heros : slot 1 = H1 (premier a jouer), 2 = H2, 3 = H3, 4 = H4
+[Serializable]
+public class HeroStartEntry
+{
+    public int slot;
+    public int x;
+    public int y;
 }
 
 // une porte est sur le bord "side" de la case (x, y)

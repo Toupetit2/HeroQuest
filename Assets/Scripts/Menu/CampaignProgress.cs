@@ -25,7 +25,8 @@ public static class CampaignProgress
         List<Chapter> chapters = new List<Chapter>();
         foreach (TextAsset asset in Resources.LoadAll<TextAsset>("Quests"))
         {
-            if (asset == null) continue;
+            // le dossier contient aussi les quetes perso (custom_) : seules les official_ font la campagne
+            if (asset == null || !QuestStorage.IsOfficial(asset.name)) continue;
             try
             {
                 QuestDefinition definition = JsonUtility.FromJson<QuestDefinition>(asset.text);

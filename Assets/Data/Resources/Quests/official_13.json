@@ -2,7 +2,7 @@
   "number": 13,
   "title": "La quete de l'Epee de l'Esprit",
   "stairs": { "x": 14, "y": 7, "width": 2, "height": 2 },
-  "start": { "type": "stairs", "room": "" },
+  "start": { "type": "stairs", "room": "", "heroes": [ { "slot": 1, "x": 15, "y": 8 }, { "slot": 2, "x": 14, "y": 8 }, { "slot": 3, "x": 15, "y": 7 }, { "slot": 4, "x": 14, "y": 7 } ] },
 
   "doors": [
     { "x": 12, "y": 6, "side": "South" },
@@ -82,6 +82,8 @@
   },
 
   "intro": "Le seigneur sorcier s'est reveille et seule l'Epee de l'Esprit peut le blesser. Forgee par les nains et trempee dans une fontaine elfique, elle repose dans un temple en ruine. Trouvez-la et rapportez-la a l'escalier.",
+  "parchment": "Le seigneur sorcier s'est reveille et seule l'Epee de l'Esprit peut le blesser. Forgee par les nains et trempee dans une fontaine elfique, elle repose dans un temple en ruine. Trouvez-la et rapportez-la a l'escalier.",
+  "zargonNote": "Les blocs qui tombent ne sont pas poses et ne bloquent pas : un heros qui entre sur une de ces cases lance 1 de rouge et perd 1 point de corps sur 4, 5 ou 6 (sur 6 seulement s'il porte un casque). Les monstres ne sont pas concernes. A : l'Epee de l'Esprit. B : le coffre contient 200 pieces d'or.",
 
   "treasures": [
     { "x": 6, "y": 11, "gold": 200 },

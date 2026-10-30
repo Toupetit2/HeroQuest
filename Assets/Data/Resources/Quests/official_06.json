@@ -2,7 +2,7 @@
   "number": 6,
   "title": "L'heritage du seigneur orc",
   "stairs": { "x": 5, "y": 13, "width": 2, "height": 2 },
-  "start": { "type": "room", "room": "S13" },
+  "start": { "type": "room", "room": "S13", "heroes": [ { "slot": 1, "x": 5, "y": 10 }, { "slot": 2, "x": 6, "y": 10 }, { "slot": 3, "x": 5, "y": 11 }, { "slot": 4, "x": 6, "y": 11 } ] },
 
   "doors": [
     { "x": 0, "y": 2, "side": "East" },
@@ -80,6 +80,8 @@
   },
 
   "intro": "Grak, le fils d'Ulag, vous a captures pour venger son pere. Vous avez reussi a ouvrir votre cellule : retrouvez votre equipement et fuyez par l'escalier.",
+  "parchment": "Grak, le fils d'Ulag, vous a captures pour venger son pere. Vous avez reussi a ouvrir votre cellule : retrouvez votre equipement et fuyez par l'escalier.",
+  "zargonNote": "Les heros commencent dans la cellule, sans equipement ni sorts : ils attaquent avec 1 de et se defendent avec 2. On ne fouille pas la cellule. A : l'equipement est dans le placard ; chaque heros doit entrer dans la salle pour reprendre le sien, et les sorts reviennent alors. B : l'escalier mene a la liberte. Grak (deplacement 8, attaque 4, defense 4, corps 3, esprit 3) porte la cape du sorcier et peut lancer peur, sommeil et tempete a la place d'une attaque.",
 
   "treasures": [
     { "x": 1, "y": 3, "item": "EquipementDesHeros" }

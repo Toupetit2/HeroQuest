@@ -2,7 +2,7 @@
   "number": 1,
   "title": "L'Epreuve",
   "stairs": { "x": 1, "y": 14, "width": 2, "height": 2 },
-  "start": { "type": "stairs", "room": "" },
+  "start": { "type": "stairs", "room": "", "heroes": [ { "slot": 1, "x": 2, "y": 15 }, { "slot": 2, "x": 1, "y": 15 }, { "slot": 3, "x": 2, "y": 14 }, { "slot": 4, "x": 1, "y": 14 } ] },
 
   "doors": [
     { "x": 4, "y": 2, "side": "East" },
@@ -77,6 +77,8 @@
   "wanderingMonster": "Orc",
 
   "intro": "Votre premiere epreuve : descendez dans les catacombes du tombeau de Fellmarg et detruisez Verag, la gargouille qui s'y cache. Restez unis, seuls vous n'y survivrez pas.",
+  "parchment": "Votre premiere epreuve : descendez dans les catacombes du tombeau de Fellmarg et detruisez Verag, la gargouille qui s'y cache. Restez unis, seuls vous n'y survivrez pas.",
+  "zargonNote": "Verag est la gargouille a vaincre. La momie qui garde le tombeau de Fellmarg lance 4 des d'attaque. Deux tresors d'or sont caches : 84 et 120 pieces.",
 
   "treasures": [
     { "x": 11, "y": 15 },

@@ -2,7 +2,7 @@
   "number": 9,
   "title": "Course contre la montre",
   "stairs": { "x": 7, "y": 4, "width": 2, "height": 2 },
-  "start": { "type": "room", "room": "S21" },
+  "start": { "type": "room", "room": "S21", "heroes": [ { "slot": 1, "x": 18, "y": 15 }, { "slot": 2, "x": 19, "y": 15 }, { "slot": 3, "x": 18, "y": 16 }, { "slot": 4, "x": 19, "y": 16 } ] },
 
   "doors": [
     { "x": 2, "y": 0, "side": "South" },
@@ -77,6 +77,8 @@
   },
 
   "intro": "Un guide vous a menes au fond d'un labyrinthe puis a souffle sa torche et s'est enfui. C'etait un piege : retrouvez l'escalier pour sortir.",
+  "parchment": "Un guide vous a menes au fond d'un labyrinthe puis a souffle sa torche et s'est enfui. C'etait un piege : retrouvez l'escalier pour sortir.",
+  "zargonNote": "Les heros commencent dans la salle A. B : chaque coffre contient 100 pieces d'or. C : coffre piege au gaz (3 points de corps) contenant l'elixir de vie. Il faut ressortir par l'escalier.",
 
   "treasures": [
     { "x": 6, "y": 10, "gold": 100 },

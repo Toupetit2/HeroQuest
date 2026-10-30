@@ -261,9 +261,20 @@ public class HQCampaignQuestLoader : MonoBehaviour
                         (size.y - 1) * board.cellSize * .5f);
         Vector3 world = transform.TransformPoint(localCenter) + transform.up * heightOffset;
         Quaternion rotation = transform.rotation * Quaternion.Euler(0, record.angle, 0);
-        GameObject go;
-        if (prefab != null) go = Instantiate(prefab, world, rotation, campaignRoot);
-        else
+        GameObject go = null;
+        // escalier : image Resources/HeroQuest/StairsTexture.png posee a plat
+        if (isStairs)
+        {
+            go = HQStairsVisual.Create("Stairs", size.x * board.cellSize, size.y * board.cellSize);
+            if (go != null)
+            {
+                go.transform.SetParent(campaignRoot, false);
+                go.transform.SetPositionAndRotation(
+                    transform.TransformPoint(localCenter) + transform.up * HQStairsVisual.HeightAboveFloor, rotation);
+            }
+        }
+        if (go == null && prefab != null) go = Instantiate(prefab, world, rotation, campaignRoot);
+        else if (go == null)
         {
             float h = isStairs || kind == HeroQuestSimplePCG.ContentKind.Trap ? .12f :
                       kind == HeroQuestSimplePCG.ContentKind.Obstacle ? .4f : 1.1f;

@@ -2,7 +2,7 @@
   "number": 8,
   "title": "Le mage du feu",
   "stairs": { "x": 21, "y": 7, "width": 2, "height": 2 },
-  "start": { "type": "stairs", "room": "" },
+  "start": { "type": "stairs", "room": "", "heroes": [ { "slot": 1, "x": 22, "y": 8 }, { "slot": 2, "x": 21, "y": 8 }, { "slot": 3, "x": 22, "y": 7 }, { "slot": 4, "x": 21, "y": 7 } ] },
 
   "doors": [
     { "x": 2, "y": 0, "side": "South" },
@@ -100,6 +100,8 @@
   },
 
   "intro": "Les orcs des montagnes Noires attaquent avec l'aide de la magie du feu. Balur, le mage du feu, en serait la cause. Descendez dans son repaire et detruisez-le : la magie du feu ne peut rien contre lui.",
+  "parchment": "Les orcs des montagnes Noires attaquent avec l'aide de la magie du feu. Balur, le mage du feu, en serait la cause. Descendez dans son repaire et detruisez-le : la magie du feu ne peut rien contre lui.",
+  "zargonNote": "Balur utilise la figurine du sorcier de l'effroi ; la magie du feu ne le touche pas. Il peut lancer une fois chacun : boule de feu, tempete de feu, tempete, appel des orcs, peur et fuite. La fuite le transporte sur la case XX, ou il n'apparait que quand les heros ouvrent la porte. A : le coffre contient 150 pieces d'or et la baguette de magie. Recompense : 100 pieces d'or par heros.",
 
   "treasures": [
     { "x": 21, "y": 11, "gold": 150, "item": "BaguetteDeMagie" }

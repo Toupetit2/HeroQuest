@@ -2,7 +2,7 @@
   "number": 14,
   "title": "Retour a Barak Tor",
   "stairs": { "x": 1, "y": 14, "width": 2, "height": 2 },
-  "start": { "type": "stairs", "room": "" },
+  "start": { "type": "stairs", "room": "", "heroes": [ { "slot": 1, "x": 2, "y": 15 }, { "slot": 2, "x": 1, "y": 15 }, { "slot": 3, "x": 2, "y": 14 }, { "slot": 4, "x": 1, "y": 14 } ] },
 
   "doors": [
     { "x": 3, "y": 0, "side": "South" },
@@ -83,6 +83,8 @@
   },
 
   "intro": "Avec l'Epee de l'Esprit, retournez a Barak Tor et detruisez le seigneur sorcier avant qu'il ne lance son armee de morts-vivants sur les arrieres du roi.",
+  "parchment": "Avec l'Epee de l'Esprit, retournez a Barak Tor et detruisez le seigneur sorcier avant qu'il ne lance son armee de morts-vivants sur les arrieres du roi.",
+  "zargonNote": "A : le tombeau est vide. Le seigneur sorcier (deplacement 10, attaque 5, defense 6, corps 4, esprit 6) n'est blesse que par l'Epee de l'Esprit. Sorts : appel des morts, peur (deux fois), boule de feu, commandement et tempete. Vaincu, il disparait et laisse l'anneau de sort. Les heros survivants recoivent le titre de Champion.",
 
   "markers": [
     { "label": "X", "x": 23, "y": 3 }

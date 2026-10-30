@@ -2,7 +2,7 @@
   "number": 5,
   "title": "Le labyrinthe de Melar",
   "stairs": { "x": 3, "y": 1, "width": 2, "height": 2 },
-  "start": { "type": "stairs", "room": "" },
+  "start": { "type": "stairs", "room": "", "heroes": [ { "slot": 1, "x": 4, "y": 2 }, { "slot": 2, "x": 3, "y": 2 }, { "slot": 3, "x": 4, "y": 1 }, { "slot": 4, "x": 3, "y": 1 } ] },
 
   "doors": [
     { "x": 6, "y": 0, "side": "South" },
@@ -87,6 +87,8 @@
   },
 
   "intro": "Le mage Melar a cache un talisman qui aiguise l'esprit de celui qui le porte, au coeur de son labyrinthe souterrain. Trouvez-le avant les serviteurs de Zargon, en prenant garde aux pieges.",
+  "parchment": "Le mage Melar a cache un talisman qui aiguise l'esprit de celui qui le porte, au coeur de son labyrinthe souterrain. Trouvez-le avant les serviteurs de Zargon, en prenant garde aux pieges.",
+  "zargonNote": "A : une potion de soin (2 points de corps) sur l'etabli. B : la gargouille est une statue qui s'anime quand un heros ouvre la porte de la salle suivante ; elle ne peut pas etre blessee tant qu'elle n'a ni bouge ni attaque. C : coffre piege au gaz (2 points de corps), 144 pieces d'or, rien d'autre dans la salle. D : le Talisman du savoir. E : aucune porte secrete a trouver en cherchant, mais fouiller donne la cle de Melar, qui fait glisser le trone et revele une porte secrete.",
 
   "treasures": [
     { "x": 8, "y": 5, "item": "PotionDeSoin2" },
