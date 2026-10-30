@@ -2,7 +2,7 @@
   "number": 13,
   "title": "La quete de l'Epee de l'Esprit",
   "stairs": { "x": 14, "y": 7, "width": 2, "height": 2 },
-  "start": { "type": "stairs", "room": "" },
+  "start": { "type": "stairs", "room": "", "heroes": [ { "slot": 1, "x": 15, "y": 8 }, { "slot": 2, "x": 14, "y": 8 }, { "slot": 3, "x": 15, "y": 7 }, { "slot": 4, "x": 14, "y": 7 } ] },
 
   "doors": [
     { "x": 12, "y": 6, "side": "South" },

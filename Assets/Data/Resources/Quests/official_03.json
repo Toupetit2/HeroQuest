@@ -2,7 +2,7 @@
   "number": 3,
   "title": "Le repaire du seigneur orc",
   "stairs": { "x": 9, "y": 1, "width": 2, "height": 2 },
-  "start": { "type": "stairs", "room": "" },
+  "start": { "type": "stairs", "room": "", "heroes": [ { "slot": 1, "x": 10, "y": 2 }, { "slot": 2, "x": 9, "y": 2 }, { "slot": 3, "x": 10, "y": 1 }, { "slot": 4, "x": 9, "y": 1 } ] },
 
   "doors": [
     { "x": 0, "y": 2, "side": "East" },

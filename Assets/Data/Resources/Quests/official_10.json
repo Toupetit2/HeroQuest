@@ -2,7 +2,7 @@
   "number": 10,
   "title": "Le chateau du mystere",
   "stairs": { "x": 1, "y": 16, "width": 2, "height": 2 },
-  "start": { "type": "stairs", "room": "" },
+  "start": { "type": "stairs", "room": "", "heroes": [ { "slot": 1, "x": 2, "y": 17 }, { "slot": 2, "x": 1, "y": 17 }, { "slot": 3, "x": 2, "y": 16 }, { "slot": 4, "x": 1, "y": 16 } ] },
 
   "doors": [
     { "x": 8, "y": 2, "side": "East" },

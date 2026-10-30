@@ -2,7 +2,7 @@
   "number": 7,
   "title": "Le mage disparu",
   "stairs": { "x": 7, "y": 4, "width": 2, "height": 2 },
-  "start": { "type": "stairs", "room": "" },
+  "start": { "type": "stairs", "room": "", "heroes": [ { "slot": 1, "x": 8, "y": 5 }, { "slot": 2, "x": 7, "y": 5 }, { "slot": 3, "x": 8, "y": 4 }, { "slot": 4, "x": 7, "y": 4 } ] },
 
   "doors": [
     { "x": 4, "y": 6, "side": "East" },

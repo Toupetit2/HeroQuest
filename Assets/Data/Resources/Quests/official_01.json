@@ -2,7 +2,7 @@
   "number": 1,
   "title": "L'Epreuve",
   "stairs": { "x": 1, "y": 14, "width": 2, "height": 2 },
-  "start": { "type": "stairs", "room": "" },
+  "start": { "type": "stairs", "room": "", "heroes": [ { "slot": 1, "x": 2, "y": 15 }, { "slot": 2, "x": 1, "y": 15 }, { "slot": 3, "x": 2, "y": 14 }, { "slot": 4, "x": 1, "y": 14 } ] },
 
   "doors": [
     { "x": 4, "y": 2, "side": "East" },

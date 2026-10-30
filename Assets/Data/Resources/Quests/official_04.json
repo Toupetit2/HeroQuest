@@ -2,7 +2,7 @@
   "number": 4,
   "title": "L'or du prince Magnus",
   "stairs": { "x": 19, "y": 14, "width": 2, "height": 2 },
-  "start": { "type": "stairs", "room": "" },
+  "start": { "type": "stairs", "room": "", "heroes": [ { "slot": 1, "x": 20, "y": 15 }, { "slot": 2, "x": 19, "y": 15 }, { "slot": 3, "x": 20, "y": 14 }, { "slot": 4, "x": 19, "y": 14 } ] },
 
   "doors": [
     { "x": 8, "y": 2, "side": "East" },

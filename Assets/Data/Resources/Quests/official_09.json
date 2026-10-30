@@ -2,7 +2,7 @@
   "number": 9,
   "title": "Course contre la montre",
   "stairs": { "x": 7, "y": 4, "width": 2, "height": 2 },
-  "start": { "type": "room", "room": "S21" },
+  "start": { "type": "room", "room": "S21", "heroes": [ { "slot": 1, "x": 18, "y": 15 }, { "slot": 2, "x": 19, "y": 15 }, { "slot": 3, "x": 18, "y": 16 }, { "slot": 4, "x": 19, "y": 16 } ] },
 
   "doors": [
     { "x": 2, "y": 0, "side": "South" },

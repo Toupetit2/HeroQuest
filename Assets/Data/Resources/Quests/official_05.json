@@ -2,7 +2,7 @@
   "number": 5,
   "title": "Le labyrinthe de Melar",
   "stairs": { "x": 3, "y": 1, "width": 2, "height": 2 },
-  "start": { "type": "stairs", "room": "" },
+  "start": { "type": "stairs", "room": "", "heroes": [ { "slot": 1, "x": 4, "y": 2 }, { "slot": 2, "x": 3, "y": 2 }, { "slot": 3, "x": 4, "y": 1 }, { "slot": 4, "x": 3, "y": 1 } ] },
 
   "doors": [
     { "x": 6, "y": 0, "side": "South" },

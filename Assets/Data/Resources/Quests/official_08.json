@@ -2,7 +2,7 @@
   "number": 8,
   "title": "Le mage du feu",
   "stairs": { "x": 21, "y": 7, "width": 2, "height": 2 },
-  "start": { "type": "stairs", "room": "" },
+  "start": { "type": "stairs", "room": "", "heroes": [ { "slot": 1, "x": 22, "y": 8 }, { "slot": 2, "x": 21, "y": 8 }, { "slot": 3, "x": 22, "y": 7 }, { "slot": 4, "x": 21, "y": 7 } ] },
 
   "doors": [
     { "x": 2, "y": 0, "side": "South" },

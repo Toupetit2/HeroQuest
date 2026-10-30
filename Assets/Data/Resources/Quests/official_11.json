@@ -2,7 +2,7 @@
   "number": 11,
   "title": "Le bastion de l'effroi",
   "stairs": { "x": 7, "y": 10, "width": 2, "height": 2 },
-  "start": { "type": "stairs", "room": "" },
+  "start": { "type": "stairs", "room": "", "heroes": [ { "slot": 1, "x": 8, "y": 11 }, { "slot": 2, "x": 7, "y": 11 }, { "slot": 3, "x": 8, "y": 10 }, { "slot": 4, "x": 7, "y": 10 } ] },
 
   "doors": [
     { "x": 8, "y": 4, "side": "East" },

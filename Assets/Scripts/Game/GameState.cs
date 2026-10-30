@@ -9,6 +9,7 @@ public class GameState
     public List<Furniture> furnitureList;
     public List<Trap> trapList;
     public RectInt stairs;
+    public List<Vector2Int> heroStartCells = new List<Vector2Int>();   // case de depart de H1 a H4 ([0] = H1), rempli par le QuestLoader
     public int stairsRotation;   // 0, 90, 180 ou 270 : rotation de l'image de l'escalier
     public MonsterClass wanderingMonster;
     public bool hasWanderingMonster;    // faux pour la quete 10

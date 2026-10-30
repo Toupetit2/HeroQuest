@@ -2,7 +2,7 @@
   "number": 6,
   "title": "L'heritage du seigneur orc",
   "stairs": { "x": 5, "y": 13, "width": 2, "height": 2 },
-  "start": { "type": "room", "room": "S13" },
+  "start": { "type": "room", "room": "S13", "heroes": [ { "slot": 1, "x": 5, "y": 10 }, { "slot": 2, "x": 6, "y": 10 }, { "slot": 3, "x": 5, "y": 11 }, { "slot": 4, "x": 6, "y": 11 } ] },
 
   "doors": [
     { "x": 0, "y": 2, "side": "East" },

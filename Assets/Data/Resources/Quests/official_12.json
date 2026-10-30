@@ -2,7 +2,7 @@
   "number": 12,
   "title": "Barak Tor, le tertre du seigneur sorcier",
   "stairs": { "x": 1, "y": 14, "width": 2, "height": 2 },
-  "start": { "type": "stairs", "room": "" },
+  "start": { "type": "stairs", "room": "", "heroes": [ { "slot": 1, "x": 2, "y": 15 }, { "slot": 2, "x": 1, "y": 15 }, { "slot": 3, "x": 2, "y": 14 }, { "slot": 4, "x": 1, "y": 14 } ] },
 
   "doors": [
     { "x": 3, "y": 0, "side": "South" },
