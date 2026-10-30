@@ -20,6 +20,10 @@ public class MouseInput : MonoBehaviour
     void Update()
     {
         if (!ClickPressed() || board == null || cam == null) return;
+
+        // un clic sur un bouton de l'interface, ou pendant la pause, ne doit pas choisir une case du plateau
+        if (PauseMenu.IsOpen) return;
+        if (UnityEngine.EventSystems.EventSystem.current != null && UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) return;
         if (board.map == null)
         {
             Debug.LogWarning("MouseInput : le plateau n'est pas encore genere (board.map est null).");
