@@ -38,7 +38,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private BoardBuilder boardBuilder;   // celui de la scene, a glisser dans l'Inspector
     [SerializeField] private QuestView questView;       // celui de la scene, a glisser dans l'Inspector
     private QuestLoader questLoader;
+
+    [Header("Hero")]
+    [SerializeField] private List<HeroData> heroInitList; 
     
+
     [Header("Spells")]
     [SerializeField] private Spell[] allSpells;
 
@@ -108,6 +112,12 @@ public class GameManager : MonoBehaviour
         potionController = new PotionController(this);
         equipmentController = new EquipmentController(this);
         lootController = new LootController(this);
+
+        foreach (HeroData hero in heroInitList) 
+        {
+            gameState.heroList.Add(new Hero(hero));
+        }
+
     }
 
     public void StartGame()
