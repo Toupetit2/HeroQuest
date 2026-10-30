@@ -12,10 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ada874060cd943747b276bb29691f7cb, type: 3}
   m_Name: E_EauBenite
   m_EditorClassIdentifier: Assembly-CSharp::Equipment
-  equipmentName: 
-  description: 
+  equipmentName: "Eau b\xE9nite"
+  description: "Vous pouvez utiliser l\u2019eau b\xE9nite au lieu d\u2019attaquer.
+    Elle d\xE9truit n\u2019importe quel mort-vivant (squelette, zombie ou momie).
+    Une fois utilis\xE9e, la carte doit \xEAtre d\xE9fauss\xE9e."
   illustration: {fileID: 0}
-  price: 0
-  effect: {fileID: 0}
+  price: 400
+  effect: {fileID: 11400000, guid: 188372ef50bfa1e4a90f09cbfbb3cdc8, type: 2}
   bannedHeros: 
   bannedEquipments: []
+  singleUse: 1

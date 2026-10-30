@@ -34,13 +34,15 @@ public class GameManager : MonoBehaviour
     private EquipmentController equipmentController;
     private LootController lootController;
     private SpellsController spellsController;
+    private MoveHero moveHero;
     
     [SerializeField] private BoardBuilder boardBuilder;   // celui de la scene, a glisser dans l'Inspector
     [SerializeField] private QuestView questView;       // celui de la scene, a glisser dans l'Inspector
     private QuestLoader questLoader;
 
     [Header("Hero")]
-    [SerializeField] private List<HeroData> heroInitList; 
+    [SerializeField] private List<HeroData> heroInitList;
+    [SerializeField] private Object heroPrefab;
     
 
     [Header("Spells")]
@@ -54,6 +56,7 @@ public class GameManager : MonoBehaviour
         equipmentController = new EquipmentController(this);
         lootController = new LootController(this);
         spellsController = new SpellsController(this);
+        moveHero = new MoveHero(heroPrefab);
     }
 
     private void Start()
@@ -119,12 +122,13 @@ public class GameManager : MonoBehaviour
         }
 
     }
-
+    [Button]
     public void StartGame()
     {
         uiManager.ShowGameUI();
         isGameStarted = true;
         spellsController.Init(allSpells);
+        moveHero.Init(gameState.heroList);
         StartTurn();
     }
 
@@ -294,6 +298,7 @@ public class GameManager : MonoBehaviour
     public void MovementConfirmMove() 
     {
         movementController.ConfirmMove(selectedTile);
+        moveHero.UpdatePosition(gameState.heroList);
     }
 
     // Attaque

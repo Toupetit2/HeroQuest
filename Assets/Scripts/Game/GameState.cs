@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class GameState
 {
-    public List<Hero> heroList;
+    public List<Hero> heroList = new List<Hero>();
     public List<Monster> monsterList;
     public List<Door> doorList;
     public List<Furniture> furnitureList;

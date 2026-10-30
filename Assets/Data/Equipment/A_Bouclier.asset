@@ -9,15 +9,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00b43f983534a534e8797d2ef4ef7113, type: 3}
+  m_Script: {fileID: 11500000, guid: 6306e2af04d6ec646afcd40ca5cecdc4, type: 3}
   m_Name: A_Bouclier
   m_EditorClassIdentifier: Assembly-CSharp::Armor
-  equipmentName: 
-  description: 
-  illustration: {fileID: 0}
-  price: 0
+  equipmentName: Bouclier
+  description: "Armure\u2014Cet \xE9quipement de protection vous procure 1 d\xE9
+    de d\xE9fense suppl\xE9mentaire. Ne peut pas \xEAtre utilis\xE9 avec la hache
+    de combat ou le b\xE2ton. Ne peut pas \xEAtre utilis\xE9 par l\u2019enchanteur."
+  illustration: {fileID: 21300000, guid: ac65f566f6a675348a2698826cee9943, type: 3}
+  price: 150
   effect: {fileID: 0}
-  bannedHeros: 
-  bannedEquipments: []
-  defenseDice: 0
-  stacksWith: []
+  bannedHeros: 03000000
+  bannedEquipments:
+  - {fileID: 11400000, guid: 93d8a43cc301e424190384d42efab170, type: 2}
+  - {fileID: 11400000, guid: 1abfd7773da256d449c2d802496fb7ee, type: 2}
+  singleUse: 0
+  defenseDice: 1
+  stacksWith:
+  - {fileID: 11400000, guid: 98d2cc2a355bcda4fb80bde6532ed53d, type: 2}
+  - {fileID: 11400000, guid: d61b08c60b6b03d4eafbc765c81cfdb0, type: 2}
+  - {fileID: 11400000, guid: 05717b004e91d5640ada94be4ef649a9, type: 2}
+  - {fileID: 11400000, guid: 4415bda94960f3140939da17b1045990, type: 2}

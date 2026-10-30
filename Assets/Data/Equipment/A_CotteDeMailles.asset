@@ -9,15 +9,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00b43f983534a534e8797d2ef4ef7113, type: 3}
+  m_Script: {fileID: 11500000, guid: 6306e2af04d6ec646afcd40ca5cecdc4, type: 3}
   m_Name: A_CotteDeMailles
   m_EditorClassIdentifier: Assembly-CSharp::Armor
-  equipmentName: Cote de mailles
-  description: 
-  illustration: {fileID: 0}
-  price: 0
+  equipmentName: Cotte de mailles
+  description: "Armure\u2014Cette armure en m\xE9tal l\xE9g\xE8re vous procure 1
+    d\xE9 de d\xE9fense suppl\xE9mentaire. Peut \xEAtre combin\xE9e au casque et/ou
+    au bouclier. Ne peut pas \xEAtre utilis\xE9e par l\u2019enchanteur."
+  illustration: {fileID: 21300000, guid: 5540a2ec44556064bb47870df9fb560a, type: 3}
+  price: 500
   effect: {fileID: 0}
-  bannedHeros: 
+  bannedHeros: 03000000
   bannedEquipments: []
+  singleUse: 0
   defenseDice: 0
-  stacksWith: []
+  stacksWith:
+  - {fileID: 11400000, guid: 98d2cc2a355bcda4fb80bde6532ed53d, type: 2}
+  - {fileID: 11400000, guid: 793dca47f6f8815439d613a2bf641016, type: 2}
+  - {fileID: 11400000, guid: d61b08c60b6b03d4eafbc765c81cfdb0, type: 2}
+  - {fileID: 11400000, guid: 05717b004e91d5640ada94be4ef649a9, type: 2}
