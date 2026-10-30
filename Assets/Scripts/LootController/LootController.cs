@@ -5,7 +5,7 @@ using UnityEngine;
 public class LootController
 {
     private GameManager gameManager;
-    private List<Tuple<Equipment, Vector2Int>> droppedEquipment;
+    private List<Tuple<Equipment, Vector2Int>> droppedEquipment = new List<Tuple<Equipment, Vector2Int>>();
 
     public LootController(GameManager gameManager)
     {
@@ -19,11 +19,14 @@ public class LootController
 
     public void PickUpLoot(Hero hero, Vector2Int position)
     {
-        foreach(Tuple<Equipment, Vector2Int> equipment in droppedEquipment) 
+        // a l'envers : on retire du sol ce qui est ramasse
+        for (int i = droppedEquipment.Count - 1; i >= 0; i--)
         {
-            if (equipment.Item2 == position) 
+            Tuple<Equipment, Vector2Int> equipment = droppedEquipment[i];
+            if (equipment.Item2 == position)
             {
                 hero.AddEquipment(equipment.Item1);
+                droppedEquipment.RemoveAt(i);
             }
         }
     }

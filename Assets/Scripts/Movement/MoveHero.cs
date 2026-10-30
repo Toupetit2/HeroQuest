@@ -4,29 +4,34 @@ using UnityEngine;
 public class MoveHero
 {
     private Object heroPrefab;
-    private List<GameObject> heroObjectList; 
+    private List<GameObject> heroObjectList = new List<GameObject>();
     private float groundLevel = 0;
 
-    public MoveHero(Object _heroPrefab) 
+    public MoveHero(Object _heroPrefab)
     {
         heroPrefab = _heroPrefab;
     }
 
     public void Init(List<Hero> heroList)
     {
-        foreach (Hero hero in heroList) 
+        heroObjectList.Clear();
+        foreach (Hero hero in heroList)
         {
-            Object.Instantiate(heroPrefab, new Vector3(hero.position.x, groundLevel, hero.position.y), Quaternion.identity);
+            GameObject heroObject = Object.Instantiate(heroPrefab, new Vector3(hero.position.x, groundLevel, hero.position.y), Quaternion.identity) as GameObject;
+            heroObjectList.Add(heroObject);
         }
     }
 
-    public void UpdatePosition(List<Hero> heroList) 
+    public void UpdatePosition(List<Hero> heroList)
     {
-        for (int i = 0; i < heroList.Count; i++) 
+        for (int i = 0; i < heroList.Count && i < heroObjectList.Count; i++)
         {
             Hero hero = heroList[i];
             GameObject heroObject = heroObjectList[i];
+            if (heroObject == null) continue;
+
             heroObject.transform.position = new Vector3(hero.position.x, groundLevel, hero.position.y);
+            heroObject.SetActive(!hero.isDead);   // un heros mort quitte le plateau
         }
     }
 }

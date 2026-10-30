@@ -144,25 +144,121 @@ public class GameManager : MonoBehaviour
     public void EndTurn()
     {
         currentHeroIndex++;
+        SkipDeadHeroes();
 
         if (currentHeroIndex >= turnOrder.Count)
         {
             currentHeroIndex = 0;
             isZargonTurn = true;
         }
-        if (isZargonTurn) 
+        if (isZargonTurn)
         {
             currentHeroIndex = 0;
             currentTurn++;
             isZargonTurn = false;
 
-            foreach (Monster monster in gameState.monsterList) 
+            foreach (Monster monster in gameState.monsterList)
             {
                 monster.isSleeping = false;
                 monster.isInTornado = false;
             }
+            SkipDeadHeroes();
         }
         StartTurn();
+    }
+
+    // les heros morts ne jouent plus
+    private void SkipDeadHeroes()
+    {
+        while (currentHeroIndex < turnOrder.Count)
+        {
+            Hero hero = GetHeroByClass(turnOrder[currentHeroIndex]);
+            if (hero == null || !hero.isDead) return;
+            currentHeroIndex++;
+        }
+    }
+
+    // retire du plateau les monstres et les heros a 0 PV ou moins, puis verifie victoire et defaite
+    // a appeler apres tout ce qui peut faire perdre des PV (attaque, sort, objet)
+    public void CheckDeaths()
+    {
+        for (int i = gameState.monsterList.Count - 1; i >= 0; i--)
+        {
+            Monster monster = gameState.monsterList[i];
+            if (monster.currentHealth <= 0) KillMonster(monster);
+        }
+
+        foreach (Hero hero in gameState.heroList)
+        {
+            if (!hero.isDead && hero.currentHealth <= 0) KillHero(hero);
+        }
+
+        UpdateGameStatus();
+    }
+
+    private void KillMonster(Monster monster)
+    {
+        gameState.monsterList.Remove(monster);
+        questView.RemoveMonster(monster);
+        if (selectedMonster == monster) selectedMonster = null;
+
+        if (!string.IsNullOrEmpty(monster.id)) gameState.killedMonsterIds.Add(monster.id);
+
+        // pas encore de catalogue d'objets pour transformer le nom en Equipment
+        if (!string.IsNullOrEmpty(monster.item))
+            Debug.Log($"{monster.data.monsterClass} laisse tomber : {monster.item}");
+
+        Debug.Log($"{monster.data.monsterClass} est mort");
+    }
+
+    private void KillHero(Hero hero)
+    {
+        hero.isDead = true;
+        hero.currentHealth = 0;
+
+        // ses objets restent sur sa case, les autres heros peuvent les ramasser
+        foreach (Equipment equipment in hero.inventory)
+        {
+            lootController.DropLoot(equipment, hero.position);
+        }
+        hero.inventory.Clear();
+        hero.equippedItems.Clear();
+
+        moveHero.UpdatePosition(gameState.heroList);
+        Debug.Log($"{hero.data.heroClass} est mort");
+    }
+
+    private void UpdateGameStatus()
+    {
+        if (gameState.gameStatus != GameStatus.Playing) return;
+
+        if (gameState.victory != null)
+        {
+            foreach (Objective objective in gameState.victory.objectives)
+            {
+                if (objective.type == ObjectiveType.Tuer && gameState.killedMonsterIds.Contains(objective.target))
+                    objective.isDone = true;
+                if (objective.type == ObjectiveType.TuerTous && gameState.monsterList.Count == 0)
+                    objective.isDone = true;
+            }
+        }
+
+        bool allHeroesDead = gameState.heroList.Count > 0;
+        foreach (Hero hero in gameState.heroList)
+        {
+            if (!hero.isDead) allHeroesDead = false;
+        }
+
+        if (allHeroesDead)
+        {
+            gameState.gameStatus = GameStatus.Lost;
+            Debug.Log("Tous les heros sont morts : partie perdue");
+        }
+        else if (gameState.victory != null && gameState.victory.IsWon())
+        {
+            gameState.gameStatus = GameStatus.Won;
+            Debug.Log("Quete reussie");
+        }
     }
 
     public bool IsZargonTurn()
@@ -209,6 +305,7 @@ public class GameManager : MonoBehaviour
     public void SpellAction(Spell spell) 
     {
         spellsController.UseSpell(GetCurrentHero(), spell);
+        CheckDeaths();
     }
 
     public void SearchTreasureAction() // une fois par joueur par pièce
@@ -353,6 +450,7 @@ public class GameManager : MonoBehaviour
     {
         Monster monster = GetMonsterFromTile(selectedTile);
         attackController.ConfirmAttack(monster, customAttackDice);
+        CheckDeaths();
     }
 
     [Button]
@@ -405,6 +503,7 @@ public class GameManager : MonoBehaviour
     public void EquipmentConfirm() 
     {
         equipmentController.ConfirmEquipmentUse(selectedEquipment);
+        CheckDeaths();
     }
 
     [Button]
@@ -418,7 +517,7 @@ public class GameManager : MonoBehaviour
     {
         foreach (Hero hero in gameState.heroList)
         {
-            if (hero.position == new Vector2Int(tile.x, tile.y))
+            if (!hero.isDead && hero.position == new Vector2Int(tile.x, tile.y))
             {
                 return hero;
             }
@@ -429,8 +528,12 @@ public class GameManager : MonoBehaviour
     [Button]
     public void ZargonAttackHero() 
     {
-        attackController.ZargonConfirmAttack(selectedMonster, GetHeroFromTile(selectedTile));
-        Debug.Log($"Zargon attaque {GetHeroFromTile(selectedTile).data.heroClass.ToString()} avec {selectedMonster.data.monsterClass.ToString()}");
+        Hero target = GetHeroFromTile(selectedTile);
+        if (selectedMonster == null || target == null) return;
+
+        attackController.ZargonConfirmAttack(selectedMonster, target);
+        Debug.Log($"Zargon attaque {target.data.heroClass.ToString()} avec {selectedMonster.data.monsterClass.ToString()}");
+        CheckDeaths();
     }
 
     public Tile GetSelectedTile() 

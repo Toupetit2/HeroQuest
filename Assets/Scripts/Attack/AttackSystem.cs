@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 public class AttackSystem
 {
@@ -85,15 +86,17 @@ public class AttackSystem
             }
         }
 
-        target.currentHealth -= totalAttack - totalDefense;
+        target.currentHealth -= Mathf.Max(0, totalAttack - totalDefense);
 
 
         if (IsThrown(hero.position, target.position, hero.CanAttackDiagonaly())) 
         {
-            foreach (Weapon weapon in hero.inventory)
+            foreach (Weapon weapon in hero.inventory.OfType<Weapon>().ToList())
             {
                 if (weapon.lostWhenThrown)
                 {
+                    hero.inventory.Remove(weapon);
+                    hero.equippedItems.Remove(weapon);
                     gameManager.DropLoot(weapon, target.position);
                 }
             }
@@ -130,15 +133,12 @@ public class AttackSystem
             }
         }
 
-        int totalDefense = target.GetDefenseDice();
+        // GetDefenseDice compte deja les armures equipees
+        int defenseDice = target.GetDefenseDice();
 
-        foreach (Armor armor in target.inventory) 
-        {
-            totalDefense += armor.defenseDice;
-        }
+        int totalDefense = 0;
 
-
-        for (int i = 0; i < totalDefense; i++)
+        for (int i = 0; i < defenseDice; i++)
         {
             if (Dices.RollCombatDice() == CombatDiceFace.WhiteShield)
             {
@@ -146,9 +146,10 @@ public class AttackSystem
             }
         }
 
-        target.currentHealth -= totalAttack - totalDefense;
+        int damage = Mathf.Max(0, totalAttack - totalDefense);
+        target.currentHealth -= damage;
 
-        if ((totalAttack - totalDefense) > 0) 
+        if (damage > 0)
         {
             target.bonusDefenseDice = 0;
         }

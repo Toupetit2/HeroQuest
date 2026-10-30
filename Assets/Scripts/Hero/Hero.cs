@@ -20,6 +20,8 @@ public class Hero
 
     public int bonusDefenseDice = 0;
 
+    public bool isDead = false;     // mort : ne joue plus et n'occupe plus de case
+
     public List<Equipment> inventory = new List<Equipment>();
     public List<Equipment> equippedItems = new List<Equipment>();
     public List<SpellType> spells = new List<SpellType>();
@@ -44,7 +46,7 @@ public class Hero
         if (data.baseArmor != null)
         {
             inventory.Add(data.baseArmor);
-            equippedItems.Add(data.baseWeapon);
+            equippedItems.Add(data.baseArmor);
         }
     }
 
@@ -63,9 +65,9 @@ public class Hero
         return total;
     }
 
-    public int GetAttackDice() 
+    public int GetAttackDice()
     {
-        int total = data.defenseDices;
+        int total = data.attackDices;
 
         foreach (Equipment item in equippedItems)
         {
@@ -85,9 +87,9 @@ public class Hero
 
     public bool CanThrow() 
     {
-        foreach (Weapon item in equippedItems) 
+        foreach (Equipment item in equippedItems)
         {
-            if (item.canBeThrown) 
+            if (item is Weapon weapon && weapon.canBeThrown)
             {
                 return true;
             }
@@ -97,9 +99,9 @@ public class Hero
 
     public bool CanAttackDiagonaly() 
     {
-        foreach (Weapon item in equippedItems)
+        foreach (Equipment item in equippedItems)
         {
-            if (item.canAttackDiagonally)
+            if (item is Weapon weapon && weapon.canAttackDiagonally)
             {
                 return true;
             }
