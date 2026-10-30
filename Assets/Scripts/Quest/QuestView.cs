@@ -421,12 +421,7 @@ public class QuestView : MonoBehaviour
 
         if (source != null)
         {
-            Material m = new Material(source);
-            m.SetColor("FogColor", fogColor);
-            m.SetFloat("FogDensity", fogDensity);
-            m.SetFloat("FogNoise", fogNoise);
-            m.SetFloat("FogSpeed", fogSpeed);
-            return m;
+            return new Material(source);
         }
 
         // pas de materiau : plan opaque uni, qui cache aussi tout ce qui est sous lui

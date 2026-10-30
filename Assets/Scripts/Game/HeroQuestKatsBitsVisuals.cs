@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 // mais leur MeshRenderer est masque et un modele 3D devient leur enfant.
 public static class HeroQuestKatsBitsVisuals
 {
-    private const string Folder = "HQSelectedTerrain/Prefabs/";
+    private const string Folder = "HeroQuestTerrain/Prefabs/";
     private const float Epsilon = 0.00001f;
     private static readonly Dictionary<string, Material> MaterialCache = new Dictionary<string, Material>();
     private static readonly Dictionary<string, GameObject> PreparedPrefabs = new Dictionary<string, GameObject>();
