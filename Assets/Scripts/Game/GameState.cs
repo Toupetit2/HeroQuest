@@ -22,5 +22,6 @@ public class GameState
     public Reward reward;
     public string intro;                // texte lu aux joueurs au debut (ecrit par nous)
     public GameStatus gameStatus = GameStatus.Playing;
+    public List<string> killedMonsterIds = new List<string>();   // ids des monstres nommes deja tues (objectifs Tuer, tresors requiredKills)
     public Map map;
 }

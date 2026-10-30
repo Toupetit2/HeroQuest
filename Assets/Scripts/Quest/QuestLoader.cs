@@ -25,6 +25,8 @@ public class QuestLoader
         Map map = gameState.map;
 
         gameState.monsterList = new List<Monster>();
+        gameState.killedMonsterIds = new List<string>();
+        gameState.gameStatus = GameStatus.Playing;
         gameState.doorList = new List<Door>();
         gameState.furnitureList = new List<Furniture>();
         gameState.trapList = new List<Trap>();

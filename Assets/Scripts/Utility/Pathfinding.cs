@@ -9,7 +9,7 @@ public class Pathfinding
 
         foreach (Hero hero in gameState.heroList) 
         {
-            if (hero != gameManager.GetCurrentHero()) 
+            if (hero != gameManager.GetCurrentHero() && !hero.isDead)
             {
                 if (hero.position == position) 
                 {

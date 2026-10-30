@@ -141,6 +141,16 @@ public class QuestView : MonoBehaviour
         }
     }
 
+    // un monstre mort quitte le plateau
+    public void RemoveMonster(Monster monster)
+    {
+        GameObject go;
+        if (!monsterObjects.TryGetValue(monster, out go)) return;
+
+        monsterObjects.Remove(monster);
+        if (go != null) Destroy(go);
+    }
+
     [ContextMenu("Clear")]
     public void Clear()
     {
