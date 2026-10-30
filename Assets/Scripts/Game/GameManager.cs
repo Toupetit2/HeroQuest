@@ -58,7 +58,7 @@ public class GameManager : MonoBehaviour
         equipmentController = new EquipmentController(this);
         lootController = new LootController(this);
         spellsController = new SpellsController(this);
-        moveHero = new MoveHero(heroPrefab);
+        moveHero = new MoveHero(heroPrefab, boardBuilder);
     }
 
     private void Start()
@@ -118,9 +118,12 @@ public class GameManager : MonoBehaviour
         equipmentController = new EquipmentController(this);
         lootController = new LootController(this);
 
-        foreach (HeroData hero in heroInitList) 
+        // H1 = premier heros de heroInitList, H2 = deuxieme... : chacun prend sa case de depart lue dans la quete
+        for (int i = 0; i < heroInitList.Count; i++)
         {
-            gameState.heroList.Add(new Hero(hero));
+            Hero hero = new Hero(heroInitList[i]);
+            if (i < gameState.heroStartCells.Count) hero.position = gameState.heroStartCells[i];
+            gameState.heroList.Add(hero);
         }
 
     }
