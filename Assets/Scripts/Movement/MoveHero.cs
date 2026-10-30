@@ -16,7 +16,6 @@ public class MoveHero
     {
         foreach (Hero hero in heroList) 
         {
-            Debug.Log(new Vector3(hero.position.x, groundLevel, hero.position.y));
             Object.Instantiate(heroPrefab, new Vector3(hero.position.x, groundLevel, hero.position.y), Quaternion.identity);
         }
     }
