@@ -9,15 +9,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00b43f983534a534e8797d2ef4ef7113, type: 3}
+  m_Script: {fileID: 11500000, guid: 6306e2af04d6ec646afcd40ca5cecdc4, type: 3}
   m_Name: A_Casque
   m_EditorClassIdentifier: Assembly-CSharp::Armor
   equipmentName: Casque
-  description: 
-  illustration: {fileID: 0}
-  price: 0
+  description: "Armure\u2014Cette protection en m\xE9tal pour la t\xEAte vous procure
+    1 d\xE9 de d\xE9fense suppl\xE9mentaire. Ne peut pas \xEAtre utilis\xE9 par l\u2019enchanteur."
+  illustration: {fileID: 21300000, guid: 4080a6a6a5920024b9188b16c0a5fb43, type: 3}
+  price: 125
   effect: {fileID: 0}
-  bannedHeros: 
+  bannedHeros: 03000000
   bannedEquipments: []
-  defenseDice: 0
-  stacksWith: []
+  singleUse: 0
+  defenseDice: 1
+  stacksWith:
+  - {fileID: 11400000, guid: 98d2cc2a355bcda4fb80bde6532ed53d, type: 2}
+  - {fileID: 11400000, guid: 793dca47f6f8815439d613a2bf641016, type: 2}
+  - {fileID: 11400000, guid: d61b08c60b6b03d4eafbc765c81cfdb0, type: 2}
+  - {fileID: 11400000, guid: 4415bda94960f3140939da17b1045990, type: 2}

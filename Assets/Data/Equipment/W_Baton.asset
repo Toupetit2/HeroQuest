@@ -9,17 +9,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 608f9b923f27bbd4dafd86113e73e3eb, type: 3}
+  m_Script: {fileID: 11500000, guid: 325ed85b59f56784098879911ee81a5e, type: 3}
   m_Name: W_Baton
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
-  equipmentName: 
-  description: 
-  illustration: {fileID: 0}
-  price: 0
+  equipmentName: "B\xE2ton"
+  description: "Arme\u2014Ce long b\xE2ton en bois vous procure une capacit\xE9 d\u2019attaque
+    de 1 d\xE9 de combat. Sa longueur permet \xE9galement d\u2019attaquer en diagonale.
+    Vous ne pouvez pas utiliser un bouclier avec cette arme."
+  illustration: {fileID: 21300000, guid: 17433e6dc6fa0ec4bbd56bb685a33a8d, type: 3}
+  price: 100
   effect: {fileID: 0}
   bannedHeros: 
-  bannedEquipments: []
-  attackDice: 0
-  canAttackDiagonally: 0
+  bannedEquipments:
+  - {fileID: 11400000, guid: 793dca47f6f8815439d613a2bf641016, type: 2}
+  singleUse: 0
+  attackDice: 1
+  canAttackDiagonally: 1
   canBeThrown: 0
   lostWhenThrown: 0

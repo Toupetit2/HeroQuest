@@ -18,7 +18,7 @@ MonoBehaviour:
   health: 8
   spirit: 2
   movementDice: 2
-  baseWeapon: {fileID: 0}
+  baseWeapon: {fileID: 11400000, guid: 98da5143eec453f40b3ac1a29df0897f, type: 2}
   baseArmor: {fileID: 0}
   canUseSpells: 0
   baseGold: 0

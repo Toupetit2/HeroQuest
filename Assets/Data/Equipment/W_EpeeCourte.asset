@@ -9,17 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 608f9b923f27bbd4dafd86113e73e3eb, type: 3}
+  m_Script: {fileID: 11500000, guid: 325ed85b59f56784098879911ee81a5e, type: 3}
   m_Name: W_EpeeCourte
   m_EditorClassIdentifier: Assembly-CSharp::Weapon
-  equipmentName: 
-  description: 
-  illustration: {fileID: 0}
-  price: 0
+  equipmentName: "Ep\xE9e courte"
+  description: "Arme\u2014L\u2019\xE9p\xE9e courte vous procure une capacit\xE9 d\u2019attaque
+    de 2 d\xE9s de combat. Ne peut pas \xEAtre utilis\xE9e par l\u2019enchanteur."
+  illustration: {fileID: 21300000, guid: 94b04655d1ad6ec4a8b3e8370c662791, type: 3}
+  price: 150
   effect: {fileID: 0}
-  bannedHeros: 
+  bannedHeros: 03000000
   bannedEquipments: []
-  attackDice: 0
+  singleUse: 0
+  attackDice: 2
   canAttackDiagonally: 0
   canBeThrown: 0
   lostWhenThrown: 0

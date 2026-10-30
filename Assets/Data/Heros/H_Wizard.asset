@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: H_Wizard
   m_EditorClassIdentifier: Assembly-CSharp::HeroData
   heroClass: 3
-  attackDices: 0
-  defenseDices: 0
-  health: 0
-  spirit: 0
-  movementDice: 0
-  baseWeapon: {fileID: 0}
+  attackDices: 1
+  defenseDices: 2
+  health: 4
+  spirit: 6
+  movementDice: 2
+  baseWeapon: {fileID: 11400000, guid: d74d8472c5f8724488e95b28fdc52fd5, type: 2}
   baseArmor: {fileID: 0}
-  canUseSpells: 0
+  canUseSpells: 1
   baseGold: 0
