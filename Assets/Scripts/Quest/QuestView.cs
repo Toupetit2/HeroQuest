@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,6 +22,18 @@ public class QuestView : MonoBehaviour
     public float doorHeight = 2f;
     public float doorThickness = 0.3f;
     public float blockedHeight = 2.5f;
+
+    // brouillard : tout ce qui n'est pas dans le champ de vision des heros est cache
+    // (la roche inaccessible n'est jamais vue, donc toujours sous le brouillard)
+    // c'est le shader "Dynamic Vertical Fog" : un plan transparent qui voile tout ce qui est SOUS lui
+    // il faut une camera Perspective ; la texture de profondeur est activee ici sur la camera principale
+    public bool useFog = true;
+    public Material fogMaterialAsset;        // DynamicVerticalFogMaterial ; vide = Resources/HeroQuest/DynamicVerticalFogMaterial
+    public float fogBelowWall = 0.3f;        // le plan est un peu sous le haut des murs : on voit ou sont les murs
+    public Color fogColor = new Color(0.5f, 0.55f, 0.62f, 1f);   // l'alpha regle la transparence du brouillard
+    public float fogDensity = 4f;            // epaisseur : plus c'est haut, plus le brouillard est opaque
+    public float fogNoise = 6f;              // taille des nuages (plus grand = plus fin)
+    public float fogSpeed = 0.02f;           // vitesse de deplacement des nuages
     public float stairsHeight = 0.2f;
     public float furnitureHeight = 1f;
     public float monsterHeight = 1.5f;
@@ -34,6 +47,12 @@ public class QuestView : MonoBehaviour
 
     GameState gameState;
     Transform root;
+
+    bool[,] seenCells;                 // cases vues par au moins un heros ; null = pas de heros, on garde les salles "revealed"
+    GameObject fogObject;             // un seul maillage : un carre par case sous le brouillard
+    Mesh fogMesh;
+    Material fogMaterial;
+    int lastSignature = int.MinValue; // ce qui compte pour la vue : positions, portes, options
 
     // chaque objet pose et les cases qu'il couvre (pour le brouillard)
     Dictionary<GameObject, RectInt> placed = new Dictionary<GameObject, RectInt>();
@@ -95,6 +114,17 @@ public class QuestView : MonoBehaviour
             trapObjects[t] = go;
         }
 
+        BuildFog();
+        lastSignature = int.MinValue;
+        Refresh();
+    }
+
+    // la vue change quand un heros bouge, qu'une porte s'ouvre ou qu'un monstre se deplace
+    void Update()
+    {
+        if (gameState == null) return;
+        int signature = Signature();
+        if (signature == lastSignature) return;
         Refresh();
     }
 
@@ -104,6 +134,8 @@ public class QuestView : MonoBehaviour
     public void Refresh()
     {
         if (gameState == null) return;
+
+        UpdateVisibility();
 
         foreach (KeyValuePair<GameObject, RectInt> pair in placed)
             pair.Key.SetActive(showAll || IsRevealed(pair.Value));
@@ -139,6 +171,9 @@ public class QuestView : MonoBehaviour
             GameObject wall = board.GetWall(door.x, door.y, door.side);
             if (wall != null) wall.SetActive(!visible);
         }
+
+        UpdateFog();
+        lastSignature = Signature();
     }
 
     [ContextMenu("Clear")]
@@ -162,6 +197,21 @@ public class QuestView : MonoBehaviour
         allyObjects.Clear();
         doorObjects.Clear();
         trapObjects.Clear();
+        if (fogMesh != null)
+        {
+            if (Application.isPlaying) Destroy(fogMesh);
+            else DestroyImmediate(fogMesh);
+        }
+        fogMesh = null;
+        if (fogMaterial != null)
+        {
+            if (Application.isPlaying) Destroy(fogMaterial);
+            else DestroyImmediate(fogMaterial);
+        }
+        fogMaterial = null;
+        fogObject = null;
+        seenCells = null;
+        lastSignature = int.MinValue;
         gameState = null;
     }
 
@@ -199,6 +249,195 @@ public class QuestView : MonoBehaviour
 
         placed[go] = rect;
         return go;
+    }
+
+    // cases ou se trouvent les heros (une case de depart tant qu'un heros n'est pas encore place)
+    List<Vector2Int> Viewers()
+    {
+        List<Vector2Int> list = new List<Vector2Int>();
+        List<Vector2Int> starts = gameState.heroStartCells;
+
+        int count = gameState.heroList.Count;
+        if (count == 0)
+        {
+            if (starts != null) list.AddRange(starts);
+            return list;
+        }
+
+        for (int i = 0; i < count; i++)
+        {
+            Vector2Int p = gameState.heroList[i].position;
+            if (p == Vector2Int.zero && starts != null && i < starts.Count) p = starts[i];
+            list.Add(p);
+        }
+        return list;
+    }
+
+    void UpdateVisibility()
+    {
+        seenCells = null;
+        if (!useFog) return;
+
+        List<Vector2Int> viewers = Viewers();
+        if (viewers.Count == 0) return;
+        seenCells = QuestVision.Compute(gameState, viewers);
+    }
+
+    // une case est visible si un heros la voit ; sans heros, on retombe sur les salles revelees
+    bool IsCellVisible(int x, int y)
+    {
+        if (!gameState.map.InBounds(x, y)) return false;
+        if (seenCells != null) return seenCells[x, y];
+        return gameState.map.Get(x, y).revealed;
+    }
+
+    // valeur qui change des que la vue doit etre recalculee
+    int Signature()
+    {
+        int h = 17;
+        foreach (Vector2Int v in Viewers()) h = h * 31 + v.x * 64 + v.y;
+        foreach (Door d in gameState.doorList) h = h * 31 + (d.isOpen ? 1 : 0) + (d.isFound ? 2 : 0);
+        foreach (Monster m in gameState.monsterList) h = h * 31 + m.position.x * 64 + m.position.y;
+        foreach (Ally a in gameState.allyList) h = h * 31 + a.position.x * 64 + a.position.y;
+        h = h * 31 + (showAll ? 1 : 0) + (showHidden ? 2 : 0) + (useFog ? 4 : 0);
+        return h;
+    }
+
+    // plan de brouillard : un seul objet, mis a jour a chaque Refresh
+    void BuildFog()
+    {
+        GameObject go = new GameObject("Fog");
+        go.transform.SetParent(root, false);
+
+        fogMesh = new Mesh();
+        fogMesh.name = "FogMesh";
+        fogMesh.MarkDynamic();
+        go.AddComponent<MeshFilter>().sharedMesh = fogMesh;
+
+        fogMaterial = CreateFogMaterial();
+        MeshRenderer r = go.AddComponent<MeshRenderer>();
+        r.sharedMaterial = fogMaterial;
+        r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        r.receiveShadows = false;
+        fogObject = go;
+
+        // le shader mesure la profondeur de la scene derriere le plan
+        Camera cam = Camera.main;
+        if (cam != null)
+        {
+            if (cam.orthographic)
+                Debug.LogWarning("HeroQuest : le brouillard vertical demande une camera en projection Perspective.");
+            EnableDepthTexture(cam);
+        }
+    }
+
+    // active la texture de profondeur de la camera, sans reference directe a URP
+    // (une reference directe ne compile pas si le script est dans un assembly qui ne voit pas URP)
+    static void EnableDepthTexture(Camera cam)
+    {
+        // pipeline integre (sans effet sous URP)
+        cam.depthTextureMode |= DepthTextureMode.Depth;
+
+        // URP : UniversalAdditionalCameraData.requiresDepthTexture
+        try
+        {
+            Type type = null;
+            foreach (System.Reflection.Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                type = assembly.GetType("UnityEngine.Rendering.Universal.UniversalAdditionalCameraData");
+                if (type != null) break;
+            }
+            if (type == null) return;
+
+            Component data = cam.GetComponent(type);
+            if (data == null) data = cam.gameObject.AddComponent(type);
+
+            System.Reflection.PropertyInfo property = type.GetProperty("requiresDepthTexture");
+            if (property != null && property.CanWrite) property.SetValue(data, true, null);
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning("HeroQuest : impossible d'activer la texture de profondeur sur la camera : " + e.Message);
+        }
+    }
+
+    // un carre de brouillard sur chaque case non visible, a hauteur (mur - fogBelowWall)
+    // le shader voile ce qui est en dessous : sol et bas des murs caches, haut des murs visible
+    void UpdateFog()
+    {
+        if (fogObject == null || fogMesh == null) return;
+
+        Map map = gameState.map;
+        float planeY = board.transform.position.y + board.wallHeight - fogBelowWall;
+        float h = board.cellSize * 0.5f;
+
+        List<Vector3> vertices = new List<Vector3>();
+        List<Vector3> normals = new List<Vector3>();
+        List<Vector2> uvs = new List<Vector2>();
+        List<int> triangles = new List<int>();
+
+        for (int y = 0; y < map.height; y++)
+        {
+            for (int x = 0; x < map.width; x++)
+            {
+                if (!useFog || showAll || IsCellVisible(x, y)) continue;
+
+                Vector3 c = board.CellToWorld(x, y);
+                Vector3[] corners =
+                {
+                    new Vector3(c.x - h, planeY, c.z - h),
+                    new Vector3(c.x - h, planeY, c.z + h),
+                    new Vector3(c.x + h, planeY, c.z + h),
+                    new Vector3(c.x + h, planeY, c.z - h)
+                };
+
+                int first = vertices.Count;
+                foreach (Vector3 corner in corners)
+                {
+                    vertices.Add(root.InverseTransformPoint(corner));
+                    normals.Add(Vector3.up);
+                    // UV continues sur tout le plateau (10 unites = 1), pour que les nuages ne se repetent pas par case
+                    uvs.Add(new Vector2(corner.x / 10f, corner.z / 10f));
+                }
+                triangles.Add(first); triangles.Add(first + 1); triangles.Add(first + 2);
+                triangles.Add(first); triangles.Add(first + 2); triangles.Add(first + 3);
+            }
+        }
+
+        fogMesh.Clear();
+        fogMesh.SetVertices(vertices);
+        fogMesh.SetNormals(normals);
+        fogMesh.SetUVs(0, uvs);
+        fogMesh.SetTriangles(triangles, 0);
+        fogMesh.RecalculateBounds();
+        fogObject.SetActive(vertices.Count > 0);
+    }
+
+    // copie du materiau Dynamic Vertical Fog avec nos reglages (l'asset reste intact)
+    Material CreateFogMaterial()
+    {
+        Material source = fogMaterialAsset;
+        if (source == null) source = Resources.Load<Material>("HeroQuest/DynamicVerticalFogMaterial");
+
+        if (source != null)
+        {
+            Material m = new Material(source);
+            m.SetColor("FogColor", fogColor);
+            m.SetFloat("FogDensity", fogDensity);
+            m.SetFloat("FogNoise", fogNoise);
+            m.SetFloat("FogSpeed", fogSpeed);
+            return m;
+        }
+
+        // pas de materiau : plan opaque uni, qui cache aussi tout ce qui est sous lui
+        Debug.LogWarning("HeroQuest : DynamicVerticalFogMaterial introuvable (champ Fog Material Asset de QuestView, "
+            + "ou Resources/HeroQuest). Brouillard uni utilise a la place.");
+        Shader shader = Shader.Find("Universal Render Pipeline/Unlit");
+        if (shader == null) shader = Shader.Find("Unlit/Color");
+        Material fallback = new Material(shader);
+        if (fallback.HasProperty("_BaseColor")) fallback.SetColor("_BaseColor", fogColor);
+        fallback.color = fogColor;
+        return fallback;
     }
 
     // escalier = image a plat qui couvre toutes ses cases ; renvoie false si l'image est introuvable
@@ -247,8 +486,7 @@ public class QuestView : MonoBehaviour
         {
             for (int x = rect.x; x < rect.x + rect.width; x++)
             {
-                Tile t = gameState.map.Get(x, y);
-                if (t != null && t.revealed) return true;
+                if (IsCellVisible(x, y)) return true;
             }
         }
         return false;

@@ -38,6 +38,10 @@ public class Pathfinding
         if (map.HasWall(from.x, from.y, direction.x, direction.y))
             return false;
 
+        // la roche pleine est inaccessible pour tout le monde (meme un fantome)
+        if (map.tiles[to.x, to.y].rock)
+            return false;
+
         if (!hero.isGhosted) 
         {
             if (!map.tiles[to.x, to.y].isWalkable())

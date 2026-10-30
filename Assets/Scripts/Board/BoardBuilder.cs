@@ -9,6 +9,9 @@ public class BoardBuilder : MonoBehaviour
     public float wallThickness = 0.2f;
     public float floorThickness = 0.1f;
 
+    // les murs descendent un peu sous le sol : aucun jour possible entre le mur et la dalle
+    public float wallSink = 0.05f;
+
     // le mur doit etre oriente le long de X ; taille et pivot sont ajustes automatiquement (sols aussi)
     // laisser vide = cubes de secours
     public GameObject floorPrefab;
@@ -25,6 +28,9 @@ public class BoardBuilder : MonoBehaviour
 
     // chaque mur est range sous ses deux noms : "5_3_E" et "6_3_W" donnent le meme mur
     Dictionary<string, GameObject> walls = new Dictionary<string, GameObject>();
+
+    // sommets de la grille ou un pilier de coin a deja ete pose (evite les doublons)
+    HashSet<long> posts = new HashSet<long>();
 
     [ContextMenu("Generate")]
     public void Generate()
@@ -62,6 +68,7 @@ public class BoardBuilder : MonoBehaviour
             else DestroyImmediate(child);
         }
         walls.Clear();
+        posts.Clear();
     }
 
     // le mur sur le bord "side" de la case (x, y), ou null s'il n'y en a pas
@@ -124,9 +131,14 @@ public class BoardBuilder : MonoBehaviour
                 r.sharedMaterial = m;
         }
 
-        // FitInBox pose le bas a y = 0, on descend le sol pour que son dessus soit a y = 0
         floor.transform.SetParent(transform);
-        floor.transform.position = CellToWorld(t.x, t.y) - new Vector3(0f, floorThickness, 0f);
+        floor.transform.position = CellToWorld(t.x, t.y);
+
+        // on mesure le sol reel et on cale son DESSUS exactement au niveau du plateau :
+        // une dalle plate (epaisseur 0) ou plus fine que prevu laissait sinon un vide sous les murs
+        Bounds fb = GetBounds(floor);
+        if (fb.size != Vector3.zero)
+            floor.transform.position += new Vector3(0f, transform.position.y - fb.max.y, 0f);
     }
 
     // renvoie le style de la zone, ou null si elle n'en a pas
@@ -160,14 +172,67 @@ public class BoardBuilder : MonoBehaviour
         model.transform.SetParent(wall.transform, false);
 
         // le modele prend la taille du mur et se pose sur le sol, quel que soit son pivot
-        FitInBox(wall, model, new Vector3(cellSize, wallHeight, wallThickness));
+        // (il est un peu plus haut et enfonce de wallSink dans le sol)
+        FitInBox(wall, model, new Vector3(cellSize, wallHeight + wallSink, wallThickness));
 
         // on place ensuite le conteneur sur le bord de la case
         wall.transform.SetParent(transform);
-        wall.transform.position = pos;
+        wall.transform.position = pos - new Vector3(0f, wallSink, 0f);
         wall.transform.rotation = Quaternion.Euler(0f, rotY, 0f);
 
         RegisterWall(x, y, side, wall);
+
+        // un pilier a chaque bout : comble le coin vide ou deux murs se rejoignent
+        // sommets en demi-cases : l'est de (x, y) touche (2x+1, 2y-1) et (2x+1, 2y+1), etc.
+        if (side == Side.East || side == Side.West)
+        {
+            int vx = side == Side.East ? 2 * x + 1 : 2 * x - 1;
+            PlacePost(vx, 2 * y - 1);
+            PlacePost(vx, 2 * y + 1);
+        }
+        else
+        {
+            int vy = side == Side.South ? 2 * y + 1 : 2 * y - 1;
+            PlacePost(2 * x - 1, vy);
+            PlacePost(2 * x + 1, vy);
+        }
+    }
+
+    // petit pilier a un sommet de la grille ; vx et vy sont en demi-cases
+    void PlacePost(int vx, int vy)
+    {
+        long key = ((long)(vx + 1000) << 32) | (long)(vy + 1000);
+        if (!posts.Add(key)) return;
+
+        // un peu plus large et plus haut que les murs : il les recouvre sans faire de scintillement
+        float margin = 0.01f;
+        float side = wallThickness + margin;
+        float height = wallHeight + wallSink + margin;
+
+        GameObject post = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        post.name = "Post_" + vx + "_" + vy;
+
+        // meme materiau que les murs, pour que le coin ait la meme pierre
+        Material wallMaterial = null;
+        if (wallPrefab != null)
+        {
+            Renderer wr = wallPrefab.GetComponentInChildren<Renderer>(true);
+            if (wr != null) wallMaterial = wr.sharedMaterial;
+        }
+        if (wallMaterial != null) post.GetComponent<Renderer>().sharedMaterial = wallMaterial;
+
+        // la boite physique du cube est inutile : les murs ont deja leurs collisions
+        Collider c = post.GetComponent<Collider>();
+        if (c != null)
+        {
+            if (Application.isPlaying) Destroy(c);
+            else DestroyImmediate(c);
+        }
+
+        post.transform.SetParent(transform);
+        post.transform.localScale = new Vector3(side, height, side);
+        post.transform.position = transform.position
+            + new Vector3(vx * cellSize * 0.5f, -wallSink - margin * 0.5f + height * 0.5f, -vy * cellSize * 0.5f);
     }
 
     // redimensionne le modele pour qu'il remplisse une boite de taille "size",

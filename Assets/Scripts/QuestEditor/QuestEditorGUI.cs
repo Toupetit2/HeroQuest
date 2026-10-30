@@ -776,7 +776,8 @@ public class QuestEditorGUI
         Map map = model.map;
         Fill(r, new Color(0.12f, 0.12f, 0.12f));
 
-        // fond : une couleur par zone ; les zones de roche sont assombries
+        // fond : une couleur par zone ; seules les cases que les heros ne peuvent pas atteindre sont assombries
+        bool[,] reachable = model.ReachableCells();
         for (int y = 0; y < map.height; y++)
         {
             for (int x = 0; x < map.width; x++)
@@ -784,7 +785,7 @@ public class QuestEditorGUI
                 Rect c = CellRect(r, x, y);
                 string z = map.Get(x, y).zone;
                 Color color = model.ZoneColor(z);
-                if (model.rockZones.Contains(z)) color = Color.Lerp(color, new Color(0.3f, 0.2f, 0.2f), 0.7f);
+                if (!reachable[x, y]) color = Color.Lerp(color, new Color(0.3f, 0.2f, 0.2f), 0.7f);
                 Fill(new Rect(c.x + 0.5f, c.y + 0.5f, c.width - 1f, c.height - 1f), color);
             }
         }
