@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
-public enum QuestPaintTool { Porte, PorteSecrete, CaseBloquee, Meuble, Monstre, Piege, Escalier, Note, Gomme }
+public enum QuestPaintTool { Porte, PorteSecrete, FaussePorte, CaseBloquee, Meuble, Monstre, Piege, Tresor, Allie, Repere, Escalier, Note, Gomme }
 
 // donnees + logique de l'editeur de quetes, sans aucun dessin et sans UnityEditor :
 // la meme classe sert a la fenetre d'editeur (QuestGeneratorWindow) et au menu du jeu (QuestEditorMenu)
 // [Serializable] : la fenetre d'editeur garde la quete en cours apres une recompilation
+// l'editeur gere TOUS les champs du format de quete (QuestDefinition) : rien n'est perdu a l'enregistrement
 [Serializable]
 public class QuestEditorModel
 {
@@ -18,22 +19,28 @@ public class QuestEditorModel
     public RectEntry stairs = new RectEntry { x = 1, y = 14, width = 2, height = 2 };
     public string startType = "stairs";                // "stairs" ou "room"
     public string startRoom = "";
+    public bool noWanderingMonster;                    // vrai = aucun monstre errant (quete 10)
     public MonsterClass wanderingMonster = MonsterClass.Orc;
     public VictoryMode victoryMode = VictoryMode.Tous;
     public List<ObjectiveEntry> objectives = new List<ObjectiveEntry>();
     public List<DoorEntry> doors = new List<DoorEntry>();
     public List<DoorEntry> secretDoors = new List<DoorEntry>();
+    public List<DoorEntry> falseDoors = new List<DoorEntry>();
+    public List<string> rockZones = new List<string>();
     public List<CellEntry> blocked = new List<CellEntry>();
     public List<FurnitureEntry> furniture = new List<FurnitureEntry>();
     public List<MonsterEntry> monsters = new List<MonsterEntry>();
     public List<TrapEntry> traps = new List<TrapEntry>();
+    public List<TreasureEntry> treasures = new List<TreasureEntry>();
+    public List<AllyEntry> allies = new List<AllyEntry>();
+    public List<MarkerEntry> markers = new List<MarkerEntry>();
+    public List<string> rules = new List<string>();
+    public int goldShared;
+    public int goldEach;
+    public List<BountyEntry> bounties = new List<BountyEntry>();
     public string parchment = "";                      // texte lu a voix haute aux joueurs
     public string zargonNote = "";                     // consigne secrete pour Zargon
     public List<NoteEntry> notes = new List<NoteEntry>();
-
-    // champs du JSON que l'editeur ne modifie pas (tresors, allies, marqueurs, regles, recompenses, fausses portes...) :
-    // gardes tels quels a l'enregistrement pour ne rien perdre quand on rouvre une quete qui en contient
-    public EditorQuestDefinition extras;
 
     // ---------- reglages de l'outil ----------
     public QuestPaintTool tool = QuestPaintTool.Porte;
@@ -44,10 +51,12 @@ public class QuestEditorModel
     public MonsterClass monsterType = MonsterClass.Gobelin;
     public string monsterId = "";
     public TrapType trapType = TrapType.Fosse;
+    public string allyId = "";
+    public string markerLabel = "X";
     public string noteLetter = "";                     // vide = prochaine lettre libre
 
     // ---------- fichier ----------
-    public string loadedFile = "";                     // ex : "quest_01.json", vide pour une nouvelle quete
+    public string loadedFile = "";                     // ex : "custom_01.json", vide pour une nouvelle quete
     public string snapshot = "";                       // etat enregistre/charge, pour detecter les modifications
     public int selectedFile;
 
@@ -61,6 +70,12 @@ public class QuestEditorModel
     [NonSerialized] public List<string> errors = new List<string>();
     [NonSerialized] public List<string> warnings = new List<string>();
     [NonSerialized] string message;
+
+    // historique pour le bouton Annuler : etats precedents de la quete (JSON)
+    [NonSerialized] List<string> history = new List<string>();
+    [NonSerialized] string lastState;
+    [NonSerialized] float lastChangeTime;
+    const int MaxHistory = 100;
 
     // =====================================================================
     //  initialisation
@@ -79,11 +94,73 @@ public class QuestEditorModel
         if (objectives == null) objectives = new List<ObjectiveEntry>();
         if (doors == null) doors = new List<DoorEntry>();
         if (secretDoors == null) secretDoors = new List<DoorEntry>();
+        if (falseDoors == null) falseDoors = new List<DoorEntry>();
+        if (rockZones == null) rockZones = new List<string>();
         if (blocked == null) blocked = new List<CellEntry>();
         if (furniture == null) furniture = new List<FurnitureEntry>();
         if (monsters == null) monsters = new List<MonsterEntry>();
         if (traps == null) traps = new List<TrapEntry>();
+        if (treasures == null) treasures = new List<TreasureEntry>();
+        if (allies == null) allies = new List<AllyEntry>();
+        if (markers == null) markers = new List<MarkerEntry>();
+        if (rules == null) rules = new List<string>();
+        if (bounties == null) bounties = new List<BountyEntry>();
         if (notes == null) notes = new List<NoteEntry>();
+    }
+
+    // =====================================================================
+    //  annuler
+    // =====================================================================
+
+    // a appeler apres chaque modification possible (une fois par image) : garde l'etat precedent
+    // les frappes rapides au clavier (moins d'une seconde d'ecart) comptent pour une seule etape
+    public void TrackChanges()
+    {
+        if (history == null) history = new List<string>();
+        string now = Serialize();
+        if (lastState == null)
+        {
+            lastState = now;
+            return;
+        }
+        if (now == lastState) return;
+
+        float time = Time.realtimeSinceStartup;
+        if (history.Count == 0 || time - lastChangeTime > 1f)
+        {
+            history.Add(lastState);
+            if (history.Count > MaxHistory) history.RemoveAt(0);
+        }
+        lastChangeTime = time;
+        lastState = now;
+    }
+
+    public bool CanUndo
+    {
+        get { return history != null && history.Count > 0; }
+    }
+
+    public void Undo()
+    {
+        if (!CanUndo) return;
+        string previous = history[history.Count - 1];
+        history.RemoveAt(history.Count - 1);
+
+        string file = loadedFile;
+        string saved = snapshot;
+        Apply(JsonUtility.FromJson<EditorQuestDefinition>(previous));
+        loadedFile = file;
+        snapshot = saved;
+        lastState = Serialize();
+        lastChangeTime = 0f;
+    }
+
+    // nouvelle quete ou quete ouverte : on ne revient pas en arriere vers la precedente
+    void ClearHistory()
+    {
+        if (history == null) history = new List<string>();
+        history.Clear();
+        lastState = null;
     }
 
     // message a afficher a l'utilisateur (une seule fois)
@@ -143,25 +220,27 @@ public class QuestEditorModel
     //  fichiers
     // =====================================================================
 
+    // l'editeur liste aussi les quetes du livret : on peut les ouvrir pour s'en inspirer
     public void RefreshFileList()
     {
         EnsureInit();
-        fileNames = QuestStorage.ListFiles();
+        fileNames = QuestStorage.ListFiles(true);
         if (selectedFile >= fileNames.Count || selectedFile < 0) selectedFile = 0;
     }
 
+    // l'editeur n'enregistre que des quetes perso
     public string FileNameFor(int questNumber)
     {
-        return "quest_" + questNumber.ToString("00") + ".json";
+        return QuestStorage.CustomFileName(questNumber);
     }
 
-    // numero de la prochaine quete : plus grand numero existant + 1
+    // numero de la prochaine quete perso : plus grand numero existant + 1
     public int NextNumber()
     {
         int max = 0;
         foreach (string name in fileNames)
         {
-            Match m = Regex.Match(name, @"quest_(\d+)\.json");
+            Match m = Regex.Match(name, "^" + QuestStorage.CustomPrefix + @"(\d+)\.json$");
             if (m.Success) max = Mathf.Max(max, int.Parse(m.Groups[1].Value));
         }
         return max + 1;
@@ -173,12 +252,9 @@ public class QuestEditorModel
         number = NextNumber();
         title = "";
         loadedFile = "";
-        if (!copyCurrent)
-        {
-            ResetContent();
-            extras = null;
-        }
+        if (!copyCurrent) ResetContent();
         snapshot = Serialize();
+        ClearHistory();
     }
 
     void ResetContent()
@@ -186,15 +262,25 @@ public class QuestEditorModel
         stairs = new RectEntry { x = 1, y = 14, width = 2, height = 2 };
         startType = "stairs";
         startRoom = "";
+        noWanderingMonster = false;
         wanderingMonster = MonsterClass.Orc;
         victoryMode = VictoryMode.Tous;
         objectives = new List<ObjectiveEntry> { new ObjectiveEntry { type = ObjectiveType.Escalier.ToString() } };
         doors = new List<DoorEntry>();
         secretDoors = new List<DoorEntry>();
+        falseDoors = new List<DoorEntry>();
+        rockZones = new List<string>();
         blocked = new List<CellEntry>();
         furniture = new List<FurnitureEntry>();
         monsters = new List<MonsterEntry>();
         traps = new List<TrapEntry>();
+        treasures = new List<TreasureEntry>();
+        allies = new List<AllyEntry>();
+        markers = new List<MarkerEntry>();
+        rules = new List<string>();
+        goldShared = 0;
+        goldEach = 0;
+        bounties = new List<BountyEntry>();
         parchment = "";
         zargonNote = "";
         notes = new List<NoteEntry>();
@@ -209,11 +295,31 @@ public class QuestEditorModel
         }
         catch (Exception e)
         {
-            message = "Lecture impossible : " + e.Message;
+            message = "Impossible d'ouvrir la quête : " + e.Message;
             return;
         }
         if (q == null) return;
 
+        Apply(q);
+        ClearHistory();
+
+        if (QuestStorage.IsOfficial(fileName))
+        {
+            // une quete du livret ne s'ecrase jamais : elle devient une nouvelle quete perso
+            number = NextNumber();
+            loadedFile = "";
+            snapshot = "";
+            message = "Quête du livret ouverte : vos changements seront enregistrés comme une nouvelle quête (n°" + number + ").";
+            return;
+        }
+
+        loadedFile = fileName;
+        snapshot = Serialize();
+    }
+
+    // remplit l'editeur avec le contenu d'une quete
+    void Apply(EditorQuestDefinition q)
+    {
         number = q.number;
         title = q.title ?? "";
         stairs = q.stairs ?? new RectEntry { x = 1, y = 14, width = 2, height = 2 };
@@ -221,14 +327,27 @@ public class QuestEditorModel
         startRoom = (q.start != null && q.start.room != null) ? q.start.room : "";
         doors = ToList(q.doors);
         secretDoors = ToList(q.secretDoors);
+        falseDoors = ToList(q.falseDoors);
+        rockZones = ToList(q.rockZones);
         blocked = ToList(q.blocked);
         furniture = ToList(q.furniture);
         monsters = ToList(q.monsters);
         traps = ToList(q.traps);
+        treasures = ToList(q.treasures);
+        allies = ToList(q.allies);
+        markers = ToList(q.markers);
+        rules = ToList(q.rules);
+        goldShared = q.reward != null ? q.reward.goldShared : 0;
+        goldEach = q.reward != null ? q.reward.goldEach : 0;
+        bounties = q.reward != null ? ToList(q.reward.bounties) : new List<BountyEntry>();
         parchment = !string.IsNullOrEmpty(q.parchment) ? q.parchment : (q.intro ?? "");
         zargonNote = q.zargonNote ?? "";
         notes = ToList(q.notes);
+
+        // vide dans le JSON = aucun monstre errant (ne pas le remplacer par un Orc)
+        noWanderingMonster = string.IsNullOrEmpty(q.wanderingMonster);
         wanderingMonster = ParseEnum(q.wanderingMonster, MonsterClass.Orc);
+
         if (q.victory != null)
         {
             victoryMode = ParseEnum(q.victory.mode, VictoryMode.Tous);
@@ -239,10 +358,6 @@ public class QuestEditorModel
             victoryMode = VictoryMode.Tous;
             objectives = new List<ObjectiveEntry>();
         }
-
-        extras = q;
-        loadedFile = fileName;
-        snapshot = Serialize();
     }
 
     public EditorQuestDefinition BuildDefinition()
@@ -254,27 +369,23 @@ public class QuestEditorModel
         q.start = new StartEntry { type = startType, room = startType == "room" ? startRoom : "" };
         q.doors = doors.ToArray();
         q.secretDoors = secretDoors.ToArray();
+        q.falseDoors = falseDoors.ToArray();
+        q.rockZones = rockZones.ToArray();
         q.blocked = blocked.ToArray();
         q.furniture = furniture.ToArray();
         q.monsters = monsters.ToArray();
         q.traps = traps.ToArray();
-        q.parchment = parchment ?? "";
+        q.wanderingMonster = noWanderingMonster ? "" : wanderingMonster.ToString();
+        q.victory = new VictoryEntry { mode = victoryMode.ToString(), objectives = objectives.ToArray() };
         q.intro = parchment ?? "";   // "intro" est le champ lu par le jeu (GameState.intro)
+        q.treasures = treasures.ToArray();
+        q.allies = allies.ToArray();
+        q.markers = markers.ToArray();
+        q.rules = rules.ToArray();
+        q.reward = new RewardEntry { goldShared = goldShared, goldEach = goldEach, bounties = bounties.ToArray() };
+        q.parchment = parchment ?? "";
         q.zargonNote = zargonNote ?? "";
         q.notes = notes.ToArray();
-        q.wanderingMonster = wanderingMonster.ToString();
-        q.victory = new VictoryEntry { mode = victoryMode.ToString(), objectives = objectives.ToArray() };
-
-        if (extras != null)
-        {
-            q.falseDoors = extras.falseDoors;
-            q.rockZones = extras.rockZones;
-            q.treasures = extras.treasures;
-            q.allies = extras.allies;
-            q.markers = extras.markers;
-            q.rules = extras.rules;
-            q.reward = extras.reward;
-        }
         return q;
     }
 
@@ -305,7 +416,7 @@ public class QuestEditorModel
         }
         catch (Exception e)
         {
-            message = "Ecriture impossible : " + e.Message;
+            message = "Enregistrement impossible : " + e.Message;
             return;
         }
 
@@ -314,7 +425,7 @@ public class QuestEditorModel
         RefreshFileList();
         int index = fileNames.IndexOf(name);
         if (index >= 0) selectedFile = index;
-        message = "Quete " + number + " enregistree";
+        message = "Quête n°" + number + " enregistrée";
     }
 
     // =====================================================================
@@ -333,11 +444,15 @@ public class QuestEditorModel
         switch (t)
         {
             case QuestPaintTool.Porte:
-                ToggleDoor(cx, cy, NearestSide(fx, fy), false);
+                ToggleDoor(cx, cy, NearestSide(fx, fy), doors);
                 break;
 
             case QuestPaintTool.PorteSecrete:
-                ToggleDoor(cx, cy, NearestSide(fx, fy), true);
+                ToggleDoor(cx, cy, NearestSide(fx, fy), secretDoors);
+                break;
+
+            case QuestPaintTool.FaussePorte:
+                ToggleDoor(cx, cy, NearestSide(fx, fy), falseDoors);
                 break;
 
             case QuestPaintTool.CaseBloquee:
@@ -348,7 +463,7 @@ public class QuestEditorModel
             case QuestPaintTool.Meuble:
                 if (cx + furnitureW > map.width || cy + furnitureH > map.height)
                 {
-                    message = "Le meuble sort du plateau";
+                    message = "Le meuble dépasse du plateau";
                     break;
                 }
                 furniture.Add(new FurnitureEntry
@@ -361,12 +476,34 @@ public class QuestEditorModel
             case QuestPaintTool.Monstre:
                 monsters.RemoveAll(m => m.x == cx && m.y == cy);
                 monsters.Add(new MonsterEntry { id = monsterId, type = monsterType.ToString(), x = cx, y = cy });
-                monsterId = ""; // un id ne doit servir qu'a un seul monstre
+                monsterId = ""; // un nom ne doit servir qu'a un seul monstre
                 break;
 
             case QuestPaintTool.Piege:
                 traps.RemoveAll(p => p.x == cx && p.y == cy);
                 traps.Add(new TrapEntry { type = trapType.ToString(), x = cx, y = cy });
+                break;
+
+            case QuestPaintTool.Tresor:
+                if (map.Get(cx, cy).IsCorridor())
+                {
+                    message = "Un trésor se trouve toujours dans une salle, pas dans un couloir";
+                    break;
+                }
+                if (!treasures.Exists(tr => tr.x == cx && tr.y == cy))
+                    treasures.Add(new TreasureEntry { x = cx, y = cy, item = "" });
+                break;
+
+            case QuestPaintTool.Allie:
+                allies.RemoveAll(a => a.x == cx && a.y == cy);
+                allies.Add(new AllyEntry { id = string.IsNullOrEmpty(allyId) ? NextAllyId() : allyId, x = cx, y = cy, attack = 2, defense = 2, body = 4 });
+                allyId = "";
+                break;
+
+            case QuestPaintTool.Repere:
+                string label = string.IsNullOrEmpty(markerLabel) ? "X" : markerLabel.ToUpper();
+                if (!markers.Exists(mk => mk.x == cx && mk.y == cy && mk.label == label))
+                    markers.Add(new MarkerEntry { label = label, x = cx, y = cy });
                 break;
 
             case QuestPaintTool.Escalier:
@@ -390,23 +527,27 @@ public class QuestEditorModel
             string key = EdgeKey(cx, cy, NearestSide(fx, fy));
             if (doors.RemoveAll(d => EdgeKey(d) == key) > 0) return;
             if (secretDoors.RemoveAll(d => EdgeKey(d) == key) > 0) return;
+            if (falseDoors.RemoveAll(d => EdgeKey(d) == key) > 0) return;
         }
 
         if (monsters.RemoveAll(m => m.x == cx && m.y == cy) > 0) return;
+        if (allies.RemoveAll(a => a.x == cx && a.y == cy) > 0) return;
         if (traps.RemoveAll(p => p.x == cx && p.y == cy) > 0) return;
+        if (treasures.RemoveAll(tr => tr.x == cx && tr.y == cy) > 0) return;
+        if (markers.RemoveAll(mk => mk.x == cx && mk.y == cy) > 0) return;
         if (notes.RemoveAll(nt => nt.x == cx && nt.y == cy) > 0) return;
         if (furniture.RemoveAll(f => Covers(f, cx, cy)) > 0) return;
         blocked.RemoveAll(c => c.x == cx && c.y == cy);
     }
 
-    void ToggleDoor(int x, int y, Side side, bool secret)
+    // un bord ne porte qu'une seule porte : poser un type remplace les deux autres
+    void ToggleDoor(int x, int y, Side side, List<DoorEntry> target)
     {
         string key = EdgeKey(x, y, side);
-        List<DoorEntry> target = secret ? secretDoors : doors;
-        List<DoorEntry> other = secret ? doors : secretDoors;
-
         if (target.RemoveAll(d => EdgeKey(d) == key) > 0) return;   // deja la : on la retire
-        other.RemoveAll(d => EdgeKey(d) == key);                    // sinon on remplace l'autre type
+
+        foreach (List<DoorEntry> other in new[] { doors, secretDoors, falseDoors })
+            if (other != target) other.RemoveAll(d => EdgeKey(d) == key);
         target.Add(new DoorEntry { x = x, y = y, side = side.ToString() });
     }
 
@@ -450,6 +591,39 @@ public class QuestEditorModel
         return "";
     }
 
+    // nom libre pour un nouvel allie : "allie1", "allie2"...
+    string NextAllyId()
+    {
+        for (int i = 1; ; i++)
+        {
+            string id = "allie" + i;
+            if (!allies.Exists(a => a.id == id)) return id;
+        }
+    }
+
+    // noms donnes aux monstres (pour les objectifs, les tresors et les primes)
+    public List<string> MonsterIds()
+    {
+        List<string> ids = new List<string>();
+        foreach (MonsterEntry m in monsters)
+            if (!string.IsNullOrEmpty(m.id) && !ids.Contains(m.id)) ids.Add(m.id);
+        return ids;
+    }
+
+    public List<string> AllyIds()
+    {
+        List<string> ids = new List<string>();
+        foreach (AllyEntry a in allies)
+            if (!string.IsNullOrEmpty(a.id) && !ids.Contains(a.id)) ids.Add(a.id);
+        return ids;
+    }
+
+    // salles du plateau, sans le couloir
+    public List<string> Rooms()
+    {
+        return zones.FindAll(z => z != ".");
+    }
+
     public static Side NearestSide(float fx, float fy)
     {
         float n = fy, s = 1f - fy, w = fx, e = 1f - fx;
@@ -481,6 +655,7 @@ public class QuestEditorModel
 
     // =====================================================================
     //  validation (memes regles que le QuestLoader, plus quelques controles de coherence)
+    //  les messages sont lus par les joueurs : phrases simples, sans noms de code
     // =====================================================================
 
     public void Validate()
@@ -490,37 +665,45 @@ public class QuestEditorModel
         warnings.Clear();
         if (map == null) return;
 
-        if (string.IsNullOrWhiteSpace(title)) warnings.Add("La quete n'a pas de titre.");
-        if (number < 1) errors.Add("Le numero de quete doit etre >= 1.");
+        if (string.IsNullOrWhiteSpace(title)) warnings.Add("La quête n'a pas de titre.");
+        if (number < 1) errors.Add("Le numéro de la quête doit être au moins 1.");
 
         // escalier et depart
         if (!InRect(stairs.x, stairs.y, stairs.width, stairs.height))
-            errors.Add("L'escalier sort du plateau.");
+            errors.Add("L'escalier dépasse du plateau.");
         if (startType == "room" && (startRoom == "." || !zones.Contains(startRoom)))
-            errors.Add("Salle de depart inconnue : \"" + startRoom + "\".");
+            errors.Add("Choisissez la salle de départ des héros.");
 
         // portes
         HashSet<string> edges = new HashSet<string>();
-        CheckDoors(doors, "Porte", edges);
-        CheckDoors(secretDoors, "Porte secrete", edges);
+        CheckDoors(doors, "Une porte", edges);
+        CheckDoors(secretDoors, "Une porte secrète", edges);
+        CheckDoors(falseDoors, "Une fausse porte", edges);
+
+        // zones de roche
+        foreach (string z in rockZones)
+            if (!zones.Contains(z)) errors.Add("Zone de roche inconnue : " + ZoneName(z) + ".");
 
         // cases bloquees
         foreach (CellEntry c in blocked)
-            if (!map.InBounds(c.x, c.y)) errors.Add("Case bloquee hors du plateau : (" + c.x + ", " + c.y + ").");
+            if (!map.InBounds(c.x, c.y)) errors.Add("Une case bloquée est hors du plateau " + Cell(c.x, c.y) + ".");
 
         // meubles
         Dictionary<Vector2Int, string> furnitureCells = new Dictionary<Vector2Int, string>();
         foreach (FurnitureEntry f in furniture)
         {
+            string name = QuestEditorNames.Of(ParseEnum(f.type, FurnitureType.Table));
             if (!InRect(f.x, f.y, f.width, f.height))
             {
-                errors.Add("Meuble " + f.type + " hors du plateau : (" + f.x + ", " + f.y + ").");
+                errors.Add(name + " dépasse du plateau " + Cell(f.x, f.y) + ".");
                 continue;
             }
             if (Array.IndexOf(RotationValues, ((f.rotation % 360) + 360) % 360) < 0)
-                warnings.Add("Meuble " + f.type + " : rotation " + f.rotation + " (attendu : 0, 90, 180 ou 270).");
+                warnings.Add(name + " : l'orientation doit être 0, 90, 180 ou 270 degrés.");
             if (!Enum.IsDefined(typeof(FurnitureType), f.type ?? ""))
                 errors.Add("Type de meuble inconnu : \"" + f.type + "\".");
+            if (!SingleZone(f.x, f.y, f.width, f.height))
+                errors.Add(name + " " + Cell(f.x, f.y) + " est à cheval sur deux pièces.");
 
             for (int y = f.y; y < f.y + f.height; y++)
             {
@@ -528,7 +711,7 @@ public class QuestEditorModel
                 {
                     Vector2Int cell = new Vector2Int(x, y);
                     if (furnitureCells.ContainsKey(cell))
-                        errors.Add("Meubles qui se chevauchent en (" + x + ", " + y + ").");
+                        errors.Add("Deux meubles se chevauchent " + Cell(x, y) + ".");
                     furnitureCells[cell] = f.type;
                 }
             }
@@ -536,26 +719,69 @@ public class QuestEditorModel
 
         // monstres
         HashSet<string> ids = new HashSet<string>();
-        HashSet<Vector2Int> monsterCells = new HashSet<Vector2Int>();
+        HashSet<Vector2Int> occupied = new HashSet<Vector2Int>();
         foreach (MonsterEntry m in monsters)
         {
+            string name = QuestEditorNames.Of(ParseEnum(m.type, MonsterClass.Gobelin));
             if (!map.InBounds(m.x, m.y))
             {
-                errors.Add("Monstre " + m.type + " hors du plateau : (" + m.x + ", " + m.y + ").");
+                errors.Add(name + " est hors du plateau " + Cell(m.x, m.y) + ".");
                 continue;
             }
             Vector2Int cell = new Vector2Int(m.x, m.y);
-            if (!monsterCells.Add(cell)) errors.Add("Deux monstres sur la case (" + m.x + ", " + m.y + ").");
-            if (furnitureCells.ContainsKey(cell)) errors.Add("Monstre " + m.type + " sur un meuble en (" + m.x + ", " + m.y + ").");
-            if (IsBlocked(m.x, m.y)) errors.Add("Monstre " + m.type + " sur une case bloquee en (" + m.x + ", " + m.y + ").");
-            if (!string.IsNullOrEmpty(m.id) && !ids.Add(m.id)) errors.Add("Id de monstre en double : \"" + m.id + "\".");
+            if (!occupied.Add(cell)) errors.Add("Deux personnages sur la même case " + Cell(m.x, m.y) + ".");
+            if (furnitureCells.ContainsKey(cell)) errors.Add(name + " est posé sur un meuble " + Cell(m.x, m.y) + ".");
+            if (IsBlocked(m.x, m.y)) errors.Add(name + " est sur une case bloquée " + Cell(m.x, m.y) + ".");
+            if (!string.IsNullOrEmpty(m.id) && !ids.Add(m.id)) errors.Add("Deux monstres portent le même nom : \"" + m.id + "\".");
+
+            MonsterTrigger wake = ParseEnum(m.wakeOn, MonsterTrigger.Aucun);
+            if (wake != MonsterTrigger.Aucun && !Rooms().Contains(m.wakeRoom ?? ""))
+                errors.Add(name + " " + Cell(m.x, m.y) + " : choisissez la salle qui le réveille.");
+        }
+
+        // allies
+        HashSet<string> allyIds = new HashSet<string>();
+        foreach (AllyEntry a in allies)
+        {
+            if (!map.InBounds(a.x, a.y))
+            {
+                errors.Add("L'allié \"" + a.id + "\" est hors du plateau " + Cell(a.x, a.y) + ".");
+                continue;
+            }
+            if (string.IsNullOrEmpty(a.id)) errors.Add("Un allié n'a pas de nom " + Cell(a.x, a.y) + ".");
+            else if (!allyIds.Add(a.id)) errors.Add("Deux alliés portent le même nom : \"" + a.id + "\".");
+            if (!occupied.Add(new Vector2Int(a.x, a.y))) errors.Add("Deux personnages sur la même case " + Cell(a.x, a.y) + ".");
+            if (a.body < 1) errors.Add("L'allié \"" + a.id + "\" doit avoir au moins 1 point de corps.");
         }
 
         // pieges
         foreach (TrapEntry t in traps)
         {
-            if (!map.InBounds(t.x, t.y)) errors.Add("Piege hors du plateau : (" + t.x + ", " + t.y + ").");
-            else if (furnitureCells.ContainsKey(new Vector2Int(t.x, t.y))) errors.Add("Piege sous un meuble en (" + t.x + ", " + t.y + ").");
+            if (!map.InBounds(t.x, t.y)) errors.Add("Un piège est hors du plateau " + Cell(t.x, t.y) + ".");
+            else if (furnitureCells.ContainsKey(new Vector2Int(t.x, t.y))) errors.Add("Un piège est sous un meuble " + Cell(t.x, t.y) + ".");
+        }
+
+        // tresors : toujours dans une salle (on ne fouille pas les couloirs)
+        foreach (TreasureEntry tr in treasures)
+        {
+            if (!map.InBounds(tr.x, tr.y))
+            {
+                errors.Add("Un trésor est hors du plateau " + Cell(tr.x, tr.y) + ".");
+                continue;
+            }
+            if (map.Get(tr.x, tr.y).IsCorridor()) errors.Add("Un trésor est dans un couloir " + Cell(tr.x, tr.y) + " : il doit être dans une salle.");
+            if (tr.gold <= 0 && string.IsNullOrWhiteSpace(tr.item)) warnings.Add("Le trésor " + Cell(tr.x, tr.y) + " ne contient rien.");
+            if (tr.trapped && tr.trapDamage < 1) warnings.Add("Le trésor piégé " + Cell(tr.x, tr.y) + " ne fait perdre aucun point de corps.");
+            if (tr.requiredKills != null)
+                foreach (string id in tr.requiredKills)
+                    if (!ids.Contains(id)) errors.Add("Le trésor " + Cell(tr.x, tr.y) + " attend la mort de \"" + id + "\", mais aucun monstre ne porte ce nom.");
+        }
+
+        // reperes
+        foreach (MarkerEntry mk in markers)
+        {
+            if (!map.InBounds(mk.x, mk.y)) errors.Add("Le repère " + mk.label + " est hors du plateau " + Cell(mk.x, mk.y) + ".");
+            if (string.IsNullOrWhiteSpace(mk.label)) warnings.Add("Un repère n'a pas d'étiquette " + Cell(mk.x, mk.y) + ".");
         }
 
         // l'escalier ne doit pas etre sous un meuble
@@ -575,26 +801,46 @@ public class QuestEditorModel
         {
             bool placed = note.x >= 0 || note.y >= 0;
             if (placed && !map.InBounds(note.x, note.y))
-                errors.Add("Note " + note.letter + " hors du plateau : (" + note.x + ", " + note.y + ").");
+                errors.Add("La note " + note.letter + " est hors du plateau " + Cell(note.x, note.y) + ".");
             if (string.IsNullOrWhiteSpace(note.text) && (string.IsNullOrEmpty(note.letter) || !lettersWithText.Contains(note.letter)))
-                warnings.Add("La note " + (string.IsNullOrEmpty(note.letter) ? "(sans lettre)" : note.letter) + " est vide.");
+                warnings.Add("La note " + (string.IsNullOrEmpty(note.letter) ? "sans lettre" : note.letter) + " est vide.");
         }
-        if (string.IsNullOrWhiteSpace(parchment)) warnings.Add("Pas de texte de parchemin.");
+        if (string.IsNullOrWhiteSpace(parchment)) warnings.Add("Le parchemin d'introduction est vide.");
+
+        // regles speciales
+        foreach (string r in rules)
+            if (!Enum.IsDefined(typeof(QuestRule), r ?? "")) errors.Add("Règle spéciale inconnue : \"" + r + "\".");
+
+        // recompense
+        if (goldShared < 0 || goldEach < 0) errors.Add("La récompense ne peut pas être négative.");
+        foreach (BountyEntry b in bounties)
+            if (b.gold < 0) errors.Add("Une prime ne peut pas être négative.");
 
         // victoire
-        if (objectives.Count == 0) errors.Add("Aucun objectif de victoire : la quete ne pourra jamais etre gagnee.");
+        if (objectives.Count == 0) errors.Add("Aucun objectif : la quête ne pourra jamais être gagnée.");
         foreach (ObjectiveEntry o in objectives)
         {
             ObjectiveType ot = ParseEnum(o.type, ObjectiveType.Escalier);
             if (ot == ObjectiveType.Tuer)
             {
-                if (string.IsNullOrEmpty(o.target)) errors.Add("Objectif Tuer sans cible.");
-                else if (!ids.Contains(o.target)) errors.Add("Objectif Tuer : aucun monstre n'a l'id \"" + o.target + "\".");
+                if (string.IsNullOrEmpty(o.target)) errors.Add("Objectif « Vaincre un monstre » : choisissez le monstre.");
+                else if (!ids.Contains(o.target)) errors.Add("Objectif « Vaincre un monstre » : aucun monstre ne s'appelle \"" + o.target + "\".");
             }
-            if (ot == ObjectiveType.TrouverObjet && (string.IsNullOrEmpty(o.room) || !zones.Contains(o.room)))
-                errors.Add("Objectif TrouverObjet : salle inconnue \"" + o.room + "\".");
-            if (ot == ObjectiveType.Rapporter && o.count < 1)
-                errors.Add("Objectif Rapporter : le nombre doit etre >= 1.");
+            if (ot == ObjectiveType.Escorter)
+            {
+                if (string.IsNullOrEmpty(o.target)) errors.Add("Objectif « Escorter » : choisissez l'allié à escorter.");
+                else if (!allyIds.Contains(o.target)) errors.Add("Objectif « Escorter » : aucun allié ne s'appelle \"" + o.target + "\".");
+            }
+            if (ot == ObjectiveType.TrouverObjet)
+            {
+                if (string.IsNullOrWhiteSpace(o.target)) errors.Add("Objectif « Trouver un objet » : indiquez l'objet.");
+                if (string.IsNullOrEmpty(o.room) || !Rooms().Contains(o.room)) errors.Add("Objectif « Trouver un objet » : choisissez la salle.");
+            }
+            if (ot == ObjectiveType.Rapporter)
+            {
+                if (string.IsNullOrWhiteSpace(o.target)) errors.Add("Objectif « Rapporter » : indiquez l'objet.");
+                if (o.count < 1) errors.Add("Objectif « Rapporter » : le nombre doit être au moins 1.");
+            }
         }
     }
 
@@ -605,26 +851,48 @@ public class QuestEditorModel
             Side side;
             if (!Enum.TryParse(d.side, out side) || !Enum.IsDefined(typeof(Side), side))
             {
-                errors.Add(label + " (" + d.x + ", " + d.y + ") : cote inconnu \"" + d.side + "\".");
+                errors.Add(label + " " + Cell(d.x, d.y) + " a un côté inconnu.");
                 continue;
             }
 
             Vector2Int n = Neighbor(d.x, d.y, side);
             if (!map.InBounds(d.x, d.y) || !map.InBounds(n.x, n.y))
             {
-                errors.Add(label + " (" + d.x + ", " + d.y + ", " + d.side + ") : hors du plateau.");
+                errors.Add(label + " " + Cell(d.x, d.y) + " donne hors du plateau.");
                 continue;
             }
             if (!map.HasWall(d.x, d.y, n.x, n.y))
-                errors.Add(label + " (" + d.x + ", " + d.y + ", " + d.side + ") : il n'y a pas de mur a cet endroit.");
+                errors.Add(label + " " + Cell(d.x, d.y) + ", côté " + QuestEditorNames.Of(side) + ", n'est pas sur un mur.");
             if (!edges.Add(EdgeKey(d.x, d.y, side)))
-                errors.Add(label + " en double sur le meme bord : (" + d.x + ", " + d.y + ", " + d.side + ").");
+                errors.Add("Deux portes au même endroit " + Cell(d.x, d.y) + ", côté " + QuestEditorNames.Of(side) + ".");
         }
+    }
+
+    // position lisible par un joueur : "(colonne 5, ligne 3)"
+    public static string Cell(int x, int y)
+    {
+        return "(colonne " + x + ", ligne " + y + ")";
+    }
+
+    public static string ZoneName(string zone)
+    {
+        if (zone == ".") return "les couloirs";
+        if (!string.IsNullOrEmpty(zone) && zone.StartsWith("S")) return "salle " + zone.Substring(1);
+        return "\"" + zone + "\"";
     }
 
     bool InRect(int x, int y, int w, int h)
     {
         return w >= 1 && h >= 1 && map.InBounds(x, y) && map.InBounds(x + w - 1, y + h - 1);
+    }
+
+    bool SingleZone(int x, int y, int w, int h)
+    {
+        string zone = map.Get(x, y).zone;
+        for (int yy = y; yy < y + h; yy++)
+            for (int xx = x; xx < x + w; xx++)
+                if (map.Get(xx, yy).zone != zone) return false;
+        return true;
     }
 
     bool IsBlocked(int x, int y)
@@ -664,5 +932,97 @@ public class QuestEditorModel
         T value;
         if (!string.IsNullOrEmpty(text) && Enum.TryParse(text, out value) && Enum.IsDefined(typeof(T), value)) return value;
         return fallback;
+    }
+}
+
+// noms affiches aux joueurs a la place des noms du code (enum)
+public static class QuestEditorNames
+{
+    public static string Of(MonsterClass v)
+    {
+        switch (v)
+        {
+            case MonsterClass.GuerrierDeLaTerreur: return "Guerrier de l'effroi";
+            default: return v.ToString();
+        }
+    }
+
+    public static string Of(FurnitureType v)
+    {
+        switch (v)
+        {
+            case FurnitureType.Trone: return "Trône";
+            case FurnitureType.EtabliAlchimiste: return "Établi d'alchimiste";
+            case FurnitureType.TableSorcier: return "Table du sorcier";
+            case FurnitureType.Bibliotheque: return "Bibliothèque";
+            case FurnitureType.Cheminee: return "Cheminée";
+            case FurnitureType.RatelierArmes: return "Râtelier d'armes";
+            default: return v.ToString();
+        }
+    }
+
+    public static string Of(TrapType v)
+    {
+        switch (v)
+        {
+            case TrapType.Fosse: return "Fosse";
+            case TrapType.BlocQuiTombe: return "Bloc qui tombe";
+            default: return "Lance";
+        }
+    }
+
+    public static string Of(Side v)
+    {
+        switch (v)
+        {
+            case Side.North: return "haut";
+            case Side.South: return "bas";
+            case Side.East: return "droite";
+            default: return "gauche";
+        }
+    }
+
+    public static string Of(VictoryMode v)
+    {
+        return v == VictoryMode.Tous ? "Tous les objectifs" : "Un seul objectif suffit";
+    }
+
+    public static string Of(ObjectiveType v)
+    {
+        switch (v)
+        {
+            case ObjectiveType.Tuer: return "Vaincre un monstre";
+            case ObjectiveType.TuerTous: return "Vaincre tous les monstres";
+            case ObjectiveType.TrouverObjet: return "Trouver un objet";
+            case ObjectiveType.Escorter: return "Escorter un allié";
+            case ObjectiveType.Rapporter: return "Rapporter des objets";
+            default: return "Revenir à l'escalier";
+        }
+    }
+
+    public static string Of(MonsterTrigger v)
+    {
+        switch (v)
+        {
+            case MonsterTrigger.EntrerSalle: return "Un héros entre dans la salle";
+            case MonsterTrigger.OuvrirPorte: return "Un héros ouvre la porte de la salle";
+            case MonsterTrigger.PiegeDeclenche: return "Le piège du coffre se déclenche";
+            default: return "Toujours actif";
+        }
+    }
+
+    public static string Of(QuestRule v)
+    {
+        switch (v)
+        {
+            case QuestRule.SauvetageRagnar: return "Sauvetage : quand l'allié est trouvé, l'alarme sonne et toutes les portes s'ouvrent";
+            case QuestRule.CoffresLourds: return "Coffres lourds : un héros ne porte qu'un coffre et ne lance qu'un dé pour se déplacer";
+            case QuestRule.SansEquipement: return "Sans équipement : ni armes ni sorts tant que l'équipement n'a pas été retrouvé";
+            case QuestRule.Teleportation: return "Portes magiques : passer une porte téléporte le héros sur un repère numéroté (2 dés)";
+            case QuestRule.OrDeLaMine: return "Or de la mine : le porter empêche d'attaquer et de se défendre, il ne vaut rien à la fin";
+            case QuestRule.EboulementDerriere: return "Éboulement : le bloc tombe tout seul après le passage du dernier héros";
+            case QuestRule.BlocsSansBlocage: return "Chutes de pierres : les blocs ne bloquent pas, mais peuvent blesser (1 dé)";
+            default: return v.ToString();
+        }
     }
 }
