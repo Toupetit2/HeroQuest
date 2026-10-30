@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
-public enum QuestPaintTool { Porte, PorteSecrete, FaussePorte, CaseBloquee, Meuble, Monstre, Piege, Tresor, Allie, Repere, Escalier, Note, Gomme }
+public enum QuestPaintTool { Selection, Porte, PorteSecrete, FaussePorte, CaseBloquee, Meuble, Monstre, Piege, Tresor, Allie, Repere, Escalier, DepartHeros, Note, Gomme }
 
 // donnees + logique de l'editeur de quetes, sans aucun dessin et sans UnityEditor :
 // la meme classe sert a la fenetre d'editeur (QuestGeneratorWindow) et au menu du jeu (QuestEditorMenu)
@@ -28,6 +28,8 @@ public class QuestEditorModel
     public List<DoorEntry> falseDoors = new List<DoorEntry>();
     public List<string> rockZones = new List<string>();
     public List<CellEntry> blocked = new List<CellEntry>();
+    public List<HeroStartEntry> heroStarts = new List<HeroStartEntry>();   // case de depart de H1 a H4 (slot 1 a 4)
+    public int heroSlot = 1;                                                // heros place par l'outil Depart (1 a 4)
     public List<FurnitureEntry> furniture = new List<FurnitureEntry>();
     public List<MonsterEntry> monsters = new List<MonsterEntry>();
     public List<TrapEntry> traps = new List<TrapEntry>();
@@ -97,6 +99,7 @@ public class QuestEditorModel
         if (falseDoors == null) falseDoors = new List<DoorEntry>();
         if (rockZones == null) rockZones = new List<string>();
         if (blocked == null) blocked = new List<CellEntry>();
+        if (heroStarts == null) heroStarts = new List<HeroStartEntry>();
         if (furniture == null) furniture = new List<FurnitureEntry>();
         if (monsters == null) monsters = new List<MonsterEntry>();
         if (traps == null) traps = new List<TrapEntry>();
@@ -271,6 +274,7 @@ public class QuestEditorModel
         falseDoors = new List<DoorEntry>();
         rockZones = new List<string>();
         blocked = new List<CellEntry>();
+        heroStarts = DefaultHeroStarts();
         furniture = new List<FurnitureEntry>();
         monsters = new List<MonsterEntry>();
         traps = new List<TrapEntry>();
@@ -330,6 +334,8 @@ public class QuestEditorModel
         falseDoors = ToList(q.falseDoors);
         rockZones = ToList(q.rockZones);
         blocked = ToList(q.blocked);
+        heroStarts = q.start != null ? ToList(q.start.heroes) : new List<HeroStartEntry>();
+        if (heroStarts.Count == 0) heroStarts = DefaultHeroStarts();   // ancienne quete sans le champ
         furniture = ToList(q.furniture);
         monsters = ToList(q.monsters);
         traps = ToList(q.traps);
@@ -372,6 +378,7 @@ public class QuestEditorModel
         q.falseDoors = falseDoors.ToArray();
         q.rockZones = rockZones.ToArray();
         q.blocked = blocked.ToArray();
+        q.start.heroes = SortedHeroStarts();
         q.furniture = furniture.ToArray();
         q.monsters = monsters.ToArray();
         q.traps = traps.ToArray();
@@ -509,6 +516,12 @@ public class QuestEditorModel
             case QuestPaintTool.Escalier:
                 stairs.x = cx;
                 stairs.y = cy;
+                if (startType == "stairs") heroStarts = DefaultHeroStarts();   // les heros restent sur l'escalier
+                break;
+
+            case QuestPaintTool.DepartHeros:
+                SetHeroStart(heroSlot, cx, cy);
+                heroSlot = heroSlot % HeroStartLayout.Count + 1;   // on enchaine : H1, H2, H3, H4, puis H1
                 break;
 
             case QuestPaintTool.Note:
@@ -536,6 +549,7 @@ public class QuestEditorModel
         if (treasures.RemoveAll(tr => tr.x == cx && tr.y == cy) > 0) return;
         if (markers.RemoveAll(mk => mk.x == cx && mk.y == cy) > 0) return;
         if (notes.RemoveAll(nt => nt.x == cx && nt.y == cy) > 0) return;
+        if (heroStarts.RemoveAll(c => c.x == cx && c.y == cy) > 0) return;
         if (furniture.RemoveAll(f => Covers(f, cx, cy)) > 0) return;
         blocked.RemoveAll(c => c.x == cx && c.y == cy);
     }
@@ -580,6 +594,46 @@ public class QuestEditorModel
         furnitureRot = ((furnitureRot + step) % 360 + 360) % 360;
     }
 
+    // positions par defaut (HeroStartLayout, partage avec le QuestLoader) :
+    // sur l'escalier, elles tournent avec son image ; dans une salle, les 4 premieres cases libres
+    public List<HeroStartEntry> DefaultHeroStarts()
+    {
+        Vector2Int[] cells;
+        if (startType == "room" && map != null)
+        {
+            string room = startRoom;
+            cells = HeroStartLayout.InRoom(map.width, map.height, (x, y) =>
+            {
+                if (map.Get(x, y).zone != room || IsBlocked(x, y)) return false;
+                foreach (FurnitureEntry f in furniture) if (Covers(f, x, y)) return false;
+                foreach (MonsterEntry m in monsters) if (m.x == x && m.y == y) return false;
+                return true;
+            });
+        }
+        else cells = HeroStartLayout.OnStairs(stairs.x, stairs.y, stairs.width, stairs.height, stairs.rotation);
+
+        List<HeroStartEntry> list = new List<HeroStartEntry>();
+        for (int i = 0; i < cells.Length; i++)
+            list.Add(new HeroStartEntry { slot = i + 1, x = cells[i].x, y = cells[i].y });
+        return list;
+    }
+
+    // place le heros "slot" sur la case ; un autre heros deja sur cette case lui laisse la place
+    public void SetHeroStart(int slot, int cx, int cy)
+    {
+        if (slot < 1 || slot > HeroStartLayout.Count) return;
+        heroStarts.RemoveAll(h => h.slot == slot || (h.x == cx && h.y == cy));
+        heroStarts.Add(new HeroStartEntry { slot = slot, x = cx, y = cy });
+        heroStarts.Sort((a, b) => a.slot.CompareTo(b.slot));
+    }
+
+    public HeroStartEntry[] SortedHeroStarts()
+    {
+        List<HeroStartEntry> sorted = new List<HeroStartEntry>(heroStarts);
+        sorted.Sort((a, b) => a.slot.CompareTo(b.slot));
+        return sorted.ToArray();
+    }
+
     // premiere lettre A..Z qui n'est pas encore utilisee par une note
     public string NextNoteLetter()
     {
@@ -608,6 +662,34 @@ public class QuestEditorModel
         foreach (MonsterEntry m in monsters)
             if (!string.IsNullOrEmpty(m.id) && !ids.Contains(m.id)) ids.Add(m.id);
         return ids;
+    }
+
+    // donne un nom au monstre s'il n'en a pas ("orc1", "orc2"...) et le renvoie
+    // permet de choisir n'importe quel monstre pose comme cible d'un objectif
+    public string EnsureMonsterId(MonsterEntry monster)
+    {
+        if (!string.IsNullOrEmpty(monster.id)) return monster.id;
+        string baseName = (monster.type ?? "monstre").ToLower();
+        for (int i = 1; ; i++)
+        {
+            string id = baseName + i;
+            if (!monsters.Exists(m => m.id == id))
+            {
+                monster.id = id;
+                return id;
+            }
+        }
+    }
+
+    // objets des tresors poses (pour l'objectif "Trouver un objet")
+    public List<TreasureEntry> TreasuresWithItem()
+    {
+        return treasures.FindAll(tr => !string.IsNullOrWhiteSpace(tr.item));
+    }
+
+    public string ZoneAt(int x, int y)
+    {
+        return map != null && map.InBounds(x, y) ? map.Get(x, y).zone : "";
     }
 
     public List<string> AllyIds()
@@ -782,6 +864,30 @@ public class QuestEditorModel
         {
             if (!map.InBounds(mk.x, mk.y)) errors.Add("Le repère " + mk.label + " est hors du plateau " + Cell(mk.x, mk.y) + ".");
             if (string.IsNullOrWhiteSpace(mk.label)) warnings.Add("Un repère n'a pas d'étiquette " + Cell(mk.x, mk.y) + ".");
+        }
+
+        // depart des heros : 4 cases libres, sur l'escalier ou dans la salle de depart
+        for (int slot = 1; slot <= HeroStartLayout.Count; slot++)
+            if (!heroStarts.Exists(h => h.slot == slot)) errors.Add("Le héros H" + slot + " n'a pas de case de départ (outil Départ).");
+        HashSet<Vector2Int> startCells = new HashSet<Vector2Int>();
+        HashSet<int> slots = new HashSet<int>();
+        foreach (HeroStartEntry c in heroStarts)
+        {
+            string who = "Le départ du héros H" + c.slot + " " + Cell(c.x, c.y);
+            if (c.slot < 1 || c.slot > HeroStartLayout.Count) errors.Add(who + " : le numéro doit aller de 1 à " + HeroStartLayout.Count + ".");
+            else if (!slots.Add(c.slot)) errors.Add("Le héros H" + c.slot + " a deux cases de départ.");
+            if (!map.InBounds(c.x, c.y))
+            {
+                errors.Add(who + " est hors du plateau.");
+                continue;
+            }
+            Vector2Int cell = new Vector2Int(c.x, c.y);
+            if (!startCells.Add(cell)) errors.Add("Deux héros partent de la même case " + Cell(c.x, c.y) + ".");
+            if (furnitureCells.ContainsKey(cell) || IsBlocked(c.x, c.y)) errors.Add(who + " est sur un meuble ou une case bloquée.");
+            if (occupied.Contains(cell)) errors.Add(who + " est sur la case d'un monstre ou d'un allié.");
+            bool onStairs = c.x >= stairs.x && c.x < stairs.x + stairs.width && c.y >= stairs.y && c.y < stairs.y + stairs.height;
+            if (startType == "stairs" && !onStairs) warnings.Add(who + " n'est pas sur l'escalier.");
+            if (startType == "room" && map.Get(c.x, c.y).zone != startRoom) warnings.Add(who + " n'est pas dans la salle de départ.");
         }
 
         // l'escalier ne doit pas etre sous un meuble
