@@ -44,6 +44,7 @@ public class RectEntry
     public int y;
     public int width;
     public int height;
+    public int rotation;   // 0, 90, 180 ou 270 (affichage seulement, sens des aiguilles d'une montre ; 0 = comme avant)
 }
 
 [Serializable]

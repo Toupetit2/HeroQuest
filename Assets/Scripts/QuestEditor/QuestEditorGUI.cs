@@ -32,7 +32,7 @@ public class QuestEditorGUI
     string notice;
     float noticeUntil;
 
-    GUIStyle centered, hint, bold, foldStyle, tag, tagWhite, zoneTag, errorBox, warningBox, okBox;
+    GUIStyle centered, hint, bold, foldStyle, tag, tagWhite, zoneTag, errorBox, warningBox, okBox, bubbleStyle, tipStyle;
 
     // Theme sombre / parchemin assorti aux menus de campagne.
     static readonly Color DarkBrown = new Color(0.14f, 0.08f, 0.05f);
@@ -169,6 +169,7 @@ public class QuestEditorGUI
         GUILayout.EndArea();
 
         if (locked) DrawConfirm(area);
+        else DrawTooltip(area);
         }
         finally { GUI.skin = previousSkin; }
     }
@@ -232,7 +233,21 @@ public class QuestEditorGUI
         warningBox.normal.textColor = Gold;
         okBox = new GUIStyle(errorBox);
         okBox.normal.textColor = new Color(0.62f, 0.91f, 0.63f);
+
+        // bulle d'aide : juste un "?" jaune, sans fond
+        bubbleStyle = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold, fontSize = 16 };
+        bubbleStyle.padding = new RectOffset(0, 0, 0, 0);
+        bubbleStyle.margin = new RectOffset(4, 4, 2, 2);
+        bubbleStyle.normal.background = null;
+        bubbleStyle.hover.background = null;
+        bubbleStyle.normal.textColor = Gold;
+        bubbleStyle.hover.textColor = new Color(1f, 0.95f, 0.65f);
+
+        tipStyle = new GUIStyle(GUI.skin.label) { wordWrap = true, alignment = TextAnchor.UpperLeft, fontSize = 12 };
+        tipStyle.padding = new RectOffset(8, 8, 6, 6);
+        tipStyle.normal.textColor = Ivory;
     }
+
 
     static void Fill(Rect r, Color c)
     {
@@ -269,6 +284,80 @@ public class QuestEditorGUI
         else if (!focused) intBuffers.Remove(name);
 
         return value;
+    }
+
+    // ---------- stats de base des monstres ----------
+    // lues dans les MonsterData (Resources/Monsters), les memes que celles utilisees par le jeu
+    Dictionary<MonsterClass, MonsterData> monsterBase;
+
+    MonsterData BaseStats(MonsterClass monsterClass)
+    {
+        if (monsterBase == null)
+        {
+            monsterBase = new Dictionary<MonsterClass, MonsterData>();
+            foreach (MonsterData d in Resources.LoadAll<MonsterData>("Monsters"))
+                if (d != null) monsterBase[d.monsterClass] = d;
+        }
+        MonsterData data;
+        monsterBase.TryGetValue(monsterClass, out data);
+        return data;
+    }
+
+    // champ de stat : affiche la stat de base tant qu'elle n'est pas modifiee
+    // "stored" vaut 0 dans la quete quand la stat est normale (c'est ce que lit le QuestLoader) :
+    // on n'enregistre donc une valeur que si elle est differente de la base, et 0 remet la base
+    int StatField(int stored, int baseValue, float width)
+    {
+        int shown = stored > 0 ? stored : baseValue;
+        int edited = IntField(shown, width);
+        if (edited <= 0 || edited == baseValue) return 0;
+        return edited;
+    }
+
+    // petite bulle "?" : l'explication s'affiche quand on passe la souris dessus (sans cliquer)
+    void HelpBubble(string tip)
+    {
+        GUILayout.Label(new GUIContent("?", tip), bubbleStyle, GUILayout.Width(18), GUILayout.Height(20));
+    }
+
+    // titre de section suivi de sa bulle d'aide
+    void TitleHelp(string title, string tip)
+    {
+        GUILayout.BeginHorizontal();
+        GUILayout.Label(title, bold, GUILayout.ExpandWidth(false));
+        HelpBubble(tip);
+        GUILayout.FlexibleSpace();
+        GUILayout.EndHorizontal();
+    }
+
+    // liste repliable avec sa bulle d'aide a droite du titre
+    bool FoldHelp(string key, string title, bool defaultOpen, string tip)
+    {
+        GUILayout.BeginHorizontal();
+        bool open = Fold(key, title, defaultOpen);
+        HelpBubble(tip);
+        GUILayout.EndHorizontal();
+        return open;
+    }
+
+    // dessine l'info-bulle de la bulle survolee, au-dessus de tout le reste
+    void DrawTooltip(Rect area)
+    {
+        Event e = Event.current;
+        if (e.type != EventType.Repaint || string.IsNullOrEmpty(GUI.tooltip)) return;
+
+        GUIContent content = new GUIContent(GUI.tooltip);
+        float width = Mathf.Min(360f, area.width - 16f);
+        float height = tipStyle.CalcHeight(content, width);
+
+        float x = Mathf.Clamp(e.mousePosition.x + 14f, area.x + 4f, area.xMax - width - 4f);
+        float y = e.mousePosition.y + 20f;
+        if (y + height > area.yMax - 4f) y = e.mousePosition.y - height - 8f;
+        Rect box = new Rect(x, Mathf.Max(area.y + 4f, y), width, height);
+
+        Fill(new Rect(box.x - 2f, box.y - 2f, box.width + 4f, box.height + 4f), Gold);
+        Fill(box, new Color(0.17f, 0.10f, 0.06f));
+        GUI.Label(box, content.text, tipStyle);
     }
 
     // width <= 0 : le champ prend la place disponible
@@ -344,6 +433,14 @@ public class QuestEditorGUI
     void DrawToolbar()
     {
         GUILayout.BeginHorizontal();
+
+        HelpBubble("COMMENT FONCTIONNE L'EDITEUR\n\n"
+            + "1. Choisissez un outil (Porte, Meuble, Monstre...) dans la barre au-dessus du plateau, puis cliquez sur une case. Le clic droit efface, quel que soit l'outil.\n"
+            + "2. Reglez la quete dans le panneau de droite : numero, titre, escalier, depart, victoire, parchemin.\n"
+            + "3. Les listes (Notes, Monstres, Meubles...) montrent tout ce qui est pose : on peut y corriger les valeurs ou supprimer une ligne avec x.\n"
+            + "4. Le cadre sous le plateau signale les erreurs (rouge : la quete risque de ne pas se charger) et les avertissements (jaune).\n"
+            + "5. Enregistrer ecrit quest_NN.json. Charger rouvre une quete. Nouvelle quete basee sur celle-ci copie la quete en cours sous le prochain numero.\n\n"
+            + "Coordonnees : (0, 0) = case en haut a gauche ; x vers la droite, y vers le bas. Les boutons < > passent a la valeur precedente / suivante.");
 
         if (RequestClose != null)
         {
@@ -430,11 +527,13 @@ public class QuestEditorGUI
         {
             case QuestPaintTool.Porte:
             case QuestPaintTool.PorteSecrete:
-                GUILayout.Label("Cliquez pres du bord d'une case pour poser (ou retirer) une porte sur ce bord. La porte doit etre sur un mur entre deux zones.", hint);
+                GUILayout.Label(model.tool == QuestPaintTool.PorteSecrete
+                    ? "Cliquez pres du bord d'une case pour poser (ou retirer) une porte secrete : elle reste invisible tant que les heros ne l'ont pas trouvee en fouillant. Elle doit etre sur un mur entre deux zones."
+                    : "Cliquez pres du bord d'une case pour poser (ou retirer) une porte sur ce bord. La porte doit etre sur un mur entre deux zones.", hint);
                 break;
 
             case QuestPaintTool.CaseBloquee:
-                GUILayout.Label("Clic = bloquer / debloquer la case.", hint);
+                GUILayout.Label("Clic = bloquer / debloquer la case. Une case bloquee est infranchissable (eboulis, rocher...).", hint);
                 break;
 
             case QuestPaintTool.Meuble:
@@ -457,13 +556,20 @@ public class QuestEditorGUI
                 Label("id", 16);
                 model.monsterId = StringField(model.monsterId, 120);
                 GUILayout.EndHorizontal();
-                GUILayout.Label("L'id (optionnel) sert aux objectifs \"Tuer\".", hint);
+                GUILayout.Label("L'id (optionnel) sert aux objectifs \"Tuer\". Un id ne sert qu'a un seul monstre.", hint);
+                MonsterData baseData = BaseStats(model.monsterType);
+                if (baseData != null)
+                    GUILayout.Label("Stats de base du " + model.monsterType + " : deplacement " + baseData.movementCases
+                        + ", attaque " + baseData.attackDices + ", defense " + baseData.defenseDices
+                        + ", corps " + baseData.health + ", esprit " + baseData.spirit
+                        + ". Modifiables dans la liste Monstres a droite (pour un boss, par exemple).", hint);
                 break;
 
             case QuestPaintTool.Piege:
                 GUILayout.BeginHorizontal();
                 EnumCycle(model.trapType, v => model.trapType = v, 190);
                 GUILayout.EndHorizontal();
+                GUILayout.Label("Clic = pose un piege sur la case. Il reste cache jusqu'a ce qu'un heros le declenche.", hint);
                 break;
 
             case QuestPaintTool.Escalier:
@@ -679,7 +785,7 @@ public class QuestEditorGUI
 
     void DrawSettings()
     {
-        GUILayout.Label("Quete", bold);
+        TitleHelp("Quete", "Numero : donne le nom du fichier (quest_NN.json). Titre : nom de la quete. Les autres reglages sont expliques a cote de chaque section.");
         GUILayout.BeginHorizontal();
         Label("Numero", 110);
         model.number = IntField(model.number, 60);
@@ -696,7 +802,7 @@ public class QuestEditorGUI
         GUILayout.EndHorizontal();
 
         GUILayout.Space(8);
-        GUILayout.Label("Escalier", bold);
+        TitleHelp("Escalier", "Position (coin haut-gauche) et taille de l'escalier, en cases. On peut aussi le poser avec l'outil Escalier. Le bouton rot tourne l'image de l'escalier de 90 degres a chaque clic (sens des aiguilles d'une montre). C'est la sortie des objectifs Escalier, Escorter et Rapporter.");
         GUILayout.BeginHorizontal();
         Label("x", 12);
         model.stairs.x = IntField(model.stairs.x, 34);
@@ -706,6 +812,9 @@ public class QuestEditorGUI
         model.stairs.width = Mathf.Max(1, IntField(model.stairs.width, 34));
         Label("haut", 30);
         model.stairs.height = Mathf.Max(1, IntField(model.stairs.height, 34));
+        int stairsRot = ((model.stairs.rotation % 360) + 360) % 360;
+        if (GUILayout.Button("rot " + stairsRot, GUILayout.Width(60)))
+            Defer(() => model.stairs.rotation = (stairsRot + 90) % 360);
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
@@ -713,6 +822,7 @@ public class QuestEditorGUI
         int startIndex = model.startType == "room" ? 1 : 0;
         int pickedStart = GUILayout.Toolbar(startIndex, new[] { "Escalier", "Une salle" }, GUILayout.Width(200));
         if (pickedStart != startIndex) Defer(() => model.startType = pickedStart == 1 ? "room" : "stairs");
+        HelpBubble("Escalier = les heros commencent sur l'escalier. Une salle = ils commencent dans la salle choisie.");
         GUILayout.EndHorizontal();
 
         if (model.startType == "room")
@@ -726,10 +836,17 @@ public class QuestEditorGUI
         GUILayout.BeginHorizontal();
         Label("Monstre errant", 110);
         EnumCycle(model.wanderingMonster, v => model.wanderingMonster = v, 200);
+        HelpBubble("Type de monstre qui peut apparaitre pendant la partie.");
         GUILayout.EndHorizontal();
 
         GUILayout.Space(8);
-        GUILayout.Label("Victoire", bold);
+        TitleHelp("Victoire", "Mode : Tous = tous les objectifs doivent etre remplis ; AuMoinsUn = un seul suffit. Ajoutez les objectifs avec + Objectif.\n\n"
+            + "Tuer : cible = id du monstre (voir l'outil Monstre).\n"
+            + "TuerTous : tous les monstres de la carte.\n"
+            + "TrouverObjet : cible = objet, salle = zone (ex : S3).\n"
+            + "Escorter : cible = id du personnage a amener a l'escalier.\n"
+            + "Rapporter : cible = objet, nb = quantite a rapporter.\n"
+            + "Escalier : revenir a l'escalier.");
         GUILayout.BeginHorizontal();
         Label("Mode", 110);
         EnumCycle(model.victoryMode, v => model.victoryMode = v, 200);
@@ -768,7 +885,7 @@ public class QuestEditorGUI
             Defer(() => model.objectives.Add(new ObjectiveEntry { type = ObjectiveType.Tuer.ToString() }));
 
         GUILayout.Space(8);
-        GUILayout.Label("Parchemin (lu a voix haute aux joueurs)", bold);
+        TitleHelp("Parchemin (lu a voix haute aux joueurs)", "Le texte d'introduction de la quete, affiche aux joueurs. La note secrete en dessous est reservee a Zargon.");
         model.parchment = GUILayout.TextArea(model.parchment ?? "", GUILayout.MinHeight(70));
         GUILayout.Label("Note secrete pour Zargon", bold);
         model.zargonNote = GUILayout.TextArea(model.zargonNote ?? "", GUILayout.MinHeight(40));
@@ -781,7 +898,7 @@ public class QuestEditorGUI
 
     void DrawLists()
     {
-        if (Fold("notes", "Notes A, B, C... (" + model.notes.Count + ")", true))
+        if (FoldHelp("notes", "Notes A, B, C... (" + model.notes.Count + ")", true, "Une lettre posee sur la carte renvoie a un texte reserve a Zargon. Une meme lettre peut etre posee plusieurs fois ; son texte n'est ecrit qu'une fois. x = y = -1 : la note n'est pas sur la carte."))
         {
             for (int i = 0; i < model.notes.Count; i++)
             {
@@ -804,7 +921,7 @@ public class QuestEditorGUI
             GUILayout.Space(6);
         }
 
-        if (Fold("monsters", "Monstres (" + model.monsters.Count + ")", false))
+        if (FoldHelp("monsters", "Monstres (" + model.monsters.Count + ")", false, "Chaque ligne : type, case (x, y) et id optionnel. Dessous, les stats : dep = deplacement, att / def = des d'attaque / de defense, corps = points de corps, esp = esprit. Les valeurs affichees sont celles du monstre de base ; changez-en une pour un boss. Mettre 0 (ou remettre la valeur de base) revient a la stat normale."))
         {
             for (int i = 0; i < model.monsters.Count; i++)
             {
@@ -823,22 +940,24 @@ public class QuestEditorGUI
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Space(16);
-                GUILayout.Label("stats speciales (0 = normal)", hint, GUILayout.Width(150));
+                MonsterData baseStats = BaseStats(QuestEditorModel.ParseEnum(m.type, MonsterClass.Gobelin));
+                bool custom = m.movement > 0 || m.attack > 0 || m.defense > 0 || m.body > 0 || m.mind > 0;
+                GUILayout.Label(custom ? "stats (modifiees)" : "stats (de base)", hint, GUILayout.Width(150));
                 Label("dep", 24);
-                m.movement = IntField(m.movement, 26);
+                m.movement = StatField(m.movement, baseStats != null ? baseStats.movementCases : 0, 26);
                 Label("att", 22);
-                m.attack = IntField(m.attack, 26);
+                m.attack = StatField(m.attack, baseStats != null ? baseStats.attackDices : 0, 26);
                 Label("def", 22);
-                m.defense = IntField(m.defense, 26);
+                m.defense = StatField(m.defense, baseStats != null ? baseStats.defenseDices : 0, 26);
                 Label("corps", 34);
-                m.body = IntField(m.body, 26);
+                m.body = StatField(m.body, baseStats != null ? baseStats.health : 0, 26);
                 Label("esp", 24);
-                m.mind = IntField(m.mind, 26);
+                m.mind = StatField(m.mind, baseStats != null ? baseStats.spirit : 0, 26);
                 GUILayout.EndHorizontal();
             }
         }
 
-        if (Fold("furniture", "Meubles (" + model.furniture.Count + ")", false))
+        if (FoldHelp("furniture", "Meubles (" + model.furniture.Count + ")", false, "Type, case (x, y), largeur et hauteur de chaque meuble. Le bouton d'angle tourne le meuble de 90 degres (largeur et hauteur s'echangent)."))
         {
             for (int i = 0; i < model.furniture.Count; i++)
             {
@@ -870,7 +989,7 @@ public class QuestEditorGUI
                 GUILayout.Label("colonnes : x, y, largeur, hauteur ; le bouton d'angle tourne de 90 deg (largeur et hauteur s'echangent)", hint);
         }
 
-        if (Fold("traps", "Pieges (" + model.traps.Count + ")", false))
+        if (FoldHelp("traps", "Pieges (" + model.traps.Count + ")", false, "Type et case (x, y) de chaque piege."))
         {
             for (int i = 0; i < model.traps.Count; i++)
             {
@@ -885,13 +1004,13 @@ public class QuestEditorGUI
             }
         }
 
-        if (Fold("doors", "Portes (" + model.doors.Count + ") et portes secretes (" + model.secretDoors.Count + ")", false))
+        if (FoldHelp("doors", "Portes (" + model.doors.Count + ") et portes secretes (" + model.secretDoors.Count + ")", false, "Une porte est posee sur le bord d'une case : x, y de la case et cote (North, South, East, West). Il doit y avoir un mur a cet endroit."))
         {
             DrawDoorList(model.doors, "Portes");
             DrawDoorList(model.secretDoors, "Portes secretes");
         }
 
-        if (Fold("blocked", "Cases bloquees (" + model.blocked.Count + ")", false))
+        if (FoldHelp("blocked", "Cases bloquees (" + model.blocked.Count + ")", false, "Cases infranchissables : x, y de chaque case."))
         {
             for (int i = 0; i < model.blocked.Count; i++)
             {

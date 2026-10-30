@@ -39,6 +39,7 @@ public class QuestLoader
         // escalier
         RectEntry s = quest.stairs;
         gameState.stairs = new RectInt(s.x, s.y, s.width, s.height);
+        gameState.stairsRotation = ((s.rotation % 360) + 360) % 360;
 
         // portes : elles doivent etre sur un mur
         foreach (DoorEntry d in quest.doors) AddDoor(d, false, false);
