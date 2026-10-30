@@ -77,6 +77,8 @@
   "wanderingMonster": "Orc",
 
   "intro": "Votre premiere epreuve : descendez dans les catacombes du tombeau de Fellmarg et detruisez Verag, la gargouille qui s'y cache. Restez unis, seuls vous n'y survivrez pas.",
+  "parchment": "Votre premiere epreuve : descendez dans les catacombes du tombeau de Fellmarg et detruisez Verag, la gargouille qui s'y cache. Restez unis, seuls vous n'y survivrez pas.",
+  "zargonNote": "Verag est la gargouille a vaincre. La momie qui garde le tombeau de Fellmarg lance 4 des d'attaque. Deux tresors d'or sont caches : 84 et 120 pieces.",
 
   "treasures": [
     { "x": 11, "y": 15 },

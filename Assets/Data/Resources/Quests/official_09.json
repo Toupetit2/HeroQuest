@@ -77,6 +77,8 @@
   },
 
   "intro": "Un guide vous a menes au fond d'un labyrinthe puis a souffle sa torche et s'est enfui. C'etait un piege : retrouvez l'escalier pour sortir.",
+  "parchment": "Un guide vous a menes au fond d'un labyrinthe puis a souffle sa torche et s'est enfui. C'etait un piege : retrouvez l'escalier pour sortir.",
+  "zargonNote": "Les heros commencent dans la salle A. B : chaque coffre contient 100 pieces d'or. C : coffre piege au gaz (3 points de corps) contenant l'elixir de vie. Il faut ressortir par l'escalier.",
 
   "treasures": [
     { "x": 6, "y": 10, "gold": 100 },

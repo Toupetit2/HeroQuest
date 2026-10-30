@@ -83,6 +83,8 @@
   },
 
   "intro": "Avec l'Epee de l'Esprit, retournez a Barak Tor et detruisez le seigneur sorcier avant qu'il ne lance son armee de morts-vivants sur les arrieres du roi.",
+  "parchment": "Avec l'Epee de l'Esprit, retournez a Barak Tor et detruisez le seigneur sorcier avant qu'il ne lance son armee de morts-vivants sur les arrieres du roi.",
+  "zargonNote": "A : le tombeau est vide. Le seigneur sorcier (deplacement 10, attaque 5, defense 6, corps 4, esprit 6) n'est blesse que par l'Epee de l'Esprit. Sorts : appel des morts, peur (deux fois), boule de feu, commandement et tempete. Vaincu, il disparait et laisse l'anneau de sort. Les heros survivants recoivent le titre de Champion.",
 
   "markers": [
     { "label": "X", "x": 23, "y": 3 }

@@ -68,6 +68,8 @@
   },
 
   "intro": "Le prince Magnus veut la fin d'Ulag, le seigneur orc qui a fait enfermer Sir Ragnar. Trouvez-le dans son repaire, detruisez-le, puis revenez a l'escalier.",
+  "parchment": "Le prince Magnus veut la fin d'Ulag, le seigneur orc qui a fait enfermer Sir Ragnar. Trouvez-le dans son repaire, detruisez-le, puis revenez a l'escalier.",
+  "zargonNote": "Ulag, le seigneur orc, est bien plus fort qu'un orc normal (deplacement 10, attaque 4, defense 5, corps 2, esprit 3). Tresors : un baton, puis une potion de soin et 24 pieces d'or. Recompense : 180 pieces d'or a partager pour la mort d'Ulag.",
 
   "treasures": [
     { "x": 3, "y": 3, "item": "Baton" },

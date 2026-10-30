@@ -338,10 +338,10 @@ public class QuestLoader
         return value;
     }
 
-    // charge Resources/Quests/quest_01.json ... quest_14.json
+    // charge une quete du livret : Resources/Quests/official_01.json ... official_14.json
     public void LoadQuest(int questNumber)
     {
-        TextAsset file = Resources.Load<TextAsset>("Quests/quest_" + questNumber.ToString("00"));
+        TextAsset file = Resources.Load<TextAsset>("Quests/official_" + questNumber.ToString("00"));
         if (file == null) throw new Exception("Quete " + questNumber + " introuvable dans Resources/Quests");
         Load(file.text);
     }

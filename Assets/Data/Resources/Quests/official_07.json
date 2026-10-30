@@ -74,6 +74,8 @@
   },
 
   "intro": "Wardoz, le mage personnel du roi, a disparu. Le roi craint qu'il ait ete tue ou corrompu par la magie de l'effroi. Decouvrez ce qui lui est arrive, puis revenez a l'escalier.",
+  "parchment": "Wardoz, le mage personnel du roi, a disparu. Le roi craint qu'il ait ete tue ou corrompu par la magie de l'effroi. Decouvrez ce qui lui est arrive, puis revenez a l'escalier.",
+  "zargonNote": "A : les guerriers de l'effroi sont en pierre et lancent 1 de de defense en plus. B : l'armure de Borin dans la salle d'armes. C : coffre piege (2 points de corps) contenant une fiole violette ; celui qui la boit devient une statue pendant 5 tours, sans pouvoir bouger ni etre blesse. D : le zombie en robe est Wardoz ; une fois detruit, la salle donne 144 pieces d'or et ses papiers. Recompense : 100 pieces d'or par heros au retour a l'escalier.",
 
   "treasures": [
     { "x": 7, "y": 13, "item": "FioleViolette", "trapped": true, "trapDamage": 2 },
